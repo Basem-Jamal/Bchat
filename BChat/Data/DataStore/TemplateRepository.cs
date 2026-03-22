@@ -1,13 +1,14 @@
 ﻿using Microsoft.Data.SqlClient;
 using BChat.Models;
+using BChat.Events;
 
 namespace BChat.Data.DataStore
 {
-    internal class TemplateRepository
+    public static class TemplateRepository
     {
-        private string _connectionString = DatabaseConfig.ConnectionString;
+        private static string _connectionString = DatabaseConfig.ConnectionString;
 
-        public List<Template> GetAll()
+        public static List<Template> GetAll()
         {
             List<Template> templates = new List<Template>();
 
@@ -36,7 +37,7 @@ namespace BChat.Data.DataStore
             return templates;
         }
 
-        public Template GetById(int id)
+        public static Template GetById(int id)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -67,8 +68,9 @@ namespace BChat.Data.DataStore
             return null;
         }
 
-        public bool Add(Template template)
+        public static bool Add(Template template)
         {
+            bool result = false;
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
@@ -80,13 +82,19 @@ namespace BChat.Data.DataStore
                     cmd.Parameters.AddWithValue("@Content", template.Content);
                     cmd.Parameters.AddWithValue("@Category", (object)template.Category ?? DBNull.Value);
 
-                    return cmd.ExecuteNonQuery() > 0;
+                    result = cmd.ExecuteNonQuery() > 0;
                 }
             }
+
+            AppEvents.ChangeRefreshTemplatesTable();
+
+            return result;
         }
 
-        public bool Update(Template template)
+        public static bool Update(Template template)
         {
+            bool result = false;
+
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
@@ -99,13 +107,19 @@ namespace BChat.Data.DataStore
                     cmd.Parameters.AddWithValue("@Content", template.Content);
                     cmd.Parameters.AddWithValue("@Category", (object)template.Category ?? DBNull.Value);
 
-                    return cmd.ExecuteNonQuery() > 0;
+                    result = cmd.ExecuteNonQuery() > 0;
                 }
             }
+
+            AppEvents.ChangeRefreshTemplatesTable();
+
+            return result;
+
         }
 
-        public bool Delete(int id)
+        public static bool Delete(int id)
         {
+            bool result = false;
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
@@ -114,9 +128,13 @@ namespace BChat.Data.DataStore
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@Id", id);
-                    return cmd.ExecuteNonQuery() > 0;
+                    result = cmd.ExecuteNonQuery() > 0;
                 }
             }
+
+            AppEvents.ChangeRefreshTemplatesTable(); 
+
+            return result;
         }
     }
 }

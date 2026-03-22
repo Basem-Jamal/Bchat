@@ -1,11 +1,12 @@
 // =====================================================================
-//  GradientPanel.cs — v3 (No System.Design dependency)
+//  GradientPanel.cs — v4 (Fixed Transparent Children)
 //  ✅ لا يحتاج System.Design.dll — يعمل في أي مشروع WinForms
 //  ✅ Gradient قابل للتخصيص من Designer
 //  ✅ Shadow ناعم من كل الاتجاهات
 //  ✅ Glassmorphism shimmer layer
 //  ✅ Hover Glow effect
 //  ✅ Drag & Drop في Designer بدون أخطاء
+//  ✅ العناصر الداخلية تتأثر بخلفية الـ Panel (Transparent Children Fix)
 // =====================================================================
 
 using System;
@@ -19,7 +20,7 @@ namespace BChat
     [ToolboxItem(true)]
     [DefaultProperty("GradientStartColor")]
     [Description("بانل عصري 2026 مع Gradient وShadow من كل الاتجاهات")]
-    public class GradientPanel : Panel          // ✅ Panel مباشرة — لا ContainerControl
+    public class GradientPanel : Panel
     {
         // ─────────────────────────────────────────
         //  Private Fields
@@ -52,6 +53,66 @@ namespace BChat
 
             BackColor = Color.Transparent;
             Size = new Size(300, 200);
+        }
+
+        // ─────────────────────────────────────────
+        //  ✅ FIX 1: منع Windows من مسح الخلفية
+        //     (بدونه تحدث وميض وتلوين خاطئ للأبناء)
+        // ─────────────────────────────────────────
+        protected override void OnPaintBackground(PaintEventArgs e)
+        {
+            // لا نستدعي base — نحن نرسم الخلفية يدوياً في OnPaint
+        }
+
+        // ─────────────────────────────────────────
+        //  ✅ FIX 2: تطبيق الشفافية تلقائياً
+        //     على أي عنصر يُضاف للـ Panel
+        // ─────────────────────────────────────────
+        protected override void OnControlAdded(ControlEventArgs e)
+        {
+            base.OnControlAdded(e);
+            ApplyTransparency(e.Control);
+        }
+
+        private void ApplyTransparency(Control ctrl)
+        {
+            // ✅ Buttons — تحتاج FlatStyle.Flat لدعم BackColor=Transparent
+            if (ctrl is ButtonBase btn)
+            {
+                if (btn.FlatStyle != FlatStyle.Flat &&
+                    btn.FlatStyle != FlatStyle.Popup)
+                {
+                    btn.FlatStyle = FlatStyle.Flat;
+                    btn.FlatAppearance.BorderSize = 0;
+                }
+
+                if (btn.BackColor == SystemColors.Control ||
+                    btn.BackColor == SystemColors.ButtonFace)
+                {
+                    btn.BackColor = Color.Transparent;
+                }
+            }
+            // ✅ Labels
+            else if (ctrl is Label lbl)
+            {
+                lbl.BackColor = Color.Transparent;
+            }
+            // ✅ PictureBox
+            else if (ctrl is PictureBox pb)
+            {
+                pb.BackColor = Color.Transparent;
+            }
+            // ✅ أي عنصر آخر يدعم SupportsTransparentBackColor
+            else
+            {
+                ctrl.SetStyle_IfSupported(ControlStyles.SupportsTransparentBackColor, true);
+                if (ctrl.BackColor == SystemColors.Control)
+                    ctrl.BackColor = Color.Transparent;
+            }
+
+            // طبّق على العناصر الفرعية بشكل متكرر
+            foreach (Control child in ctrl.Controls)
+                ApplyTransparency(child);
         }
 
         // ─────────────────────────────────────────
@@ -213,7 +274,7 @@ namespace BChat
                     g.DrawPath(glassPen, path);
             }
 
-            // ✅ base يرسم الـ Controls الداخلية
+            // ✅ base يرسم الـ Controls الداخلية فوق الـ Gradient
             base.OnPaint(e);
         }
 
@@ -309,5 +370,27 @@ namespace BChat
                 (int)(a.R + (b.R - a.R) * t),
                 (int)(a.G + (b.G - a.G) * t),
                 (int)(a.B + (b.B - a.B) * t));
+    }
+
+    // ─────────────────────────────────────────
+    //  ✅ Extension Method — SetStyle للأبناء
+    //  (لأن SetStyle محمية ولا يمكن استدعاؤها مباشرة)
+    // ─────────────────────────────────────────
+    internal static class ControlExtensions
+    {
+        public static void SetStyle_IfSupported(this Control ctrl, ControlStyles flag, bool value)
+        {
+            try
+            {
+                // SetStyle محمية — نصل إليها عبر Reflection
+                var method = typeof(Control).GetMethod(
+                    "SetStyle",
+                    System.Reflection.BindingFlags.Instance |
+                    System.Reflection.BindingFlags.NonPublic);
+
+                method?.Invoke(ctrl, new object[] { flag, value });
+            }
+            catch { /* تجاهل أي خطأ */ }
+        }
     }
 }

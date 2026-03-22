@@ -36,7 +36,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             Name = "ScheduledControl";
-            Size = new Size(1429, 747);
+            Size = new Size(1306, 890);
             ResumeLayout(false);
         }
 

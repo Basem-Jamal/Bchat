@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BChat.Controls;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -567,6 +568,11 @@ namespace BChat
                 p.CloseFigure();
                 return p;
             }
+        }
+
+        public static implicit operator AdvancedComboBox(ModernComboBox v)
+        {
+            throw new NotImplementedException();
         }
     }
 }

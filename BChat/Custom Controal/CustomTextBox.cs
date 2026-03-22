@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BChat.Controls;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -35,6 +36,14 @@ namespace BChat
         private bool _showCaret = true;
         private readonly Timer _caretTimer;
 
+        // ✅ MaxLength & TextAlign
+        private int _maxLength = 32767;
+        private HorizontalAlignment _textAlign = HorizontalAlignment.Left;
+
+        // ============================================================
+        //  Properties
+        // ============================================================
+
         [Category("Appearance")]
         public Image Icon { get => _icon; set { _icon = value; Invalidate(); } }
 
@@ -64,12 +73,7 @@ namespace BChat
         public int BorderRadius
         {
             get => _borderRadius;
-            set
-            {
-                _borderRadius = Math.Max(0, value);
-                Invalidate();
-                Update();
-            }
+            set { _borderRadius = Math.Max(0, value); Invalidate(); Update(); }
         }
 
         [Category("Appearance")]
@@ -100,6 +104,28 @@ namespace BChat
             }
         }
 
+        // ✅ MaxLength
+        [Category("Behavior")]
+        [Description("Maximum number of characters the user can type.")]
+        public int MaxLength
+        {
+            get => _maxLength;
+            set { _maxLength = Math.Max(0, value); Invalidate(); }
+        }
+
+        // ✅ TextAlign
+        [Category("Appearance")]
+        [Description("The alignment of the text inside the textbox.")]
+        public HorizontalAlignment TextAlign
+        {
+            get => _textAlign;
+            set { _textAlign = value; Invalidate(); }
+        }
+
+        // ============================================================
+        //  Constructor
+        // ============================================================
+
         public CustomTextBox()
         {
             DoubleBuffered = true;
@@ -112,7 +138,6 @@ namespace BChat
 
             TabStop = true;
 
-            // Caret blink timer
             _caretTimer = new Timer { Interval = 500 };
             _caretTimer.Tick += (s, e) =>
             {
@@ -121,6 +146,10 @@ namespace BChat
             };
             _caretTimer.Start();
         }
+
+        // ============================================================
+        //  Focus
+        // ============================================================
 
         protected override void OnGotFocus(EventArgs e)
         {
@@ -139,9 +168,15 @@ namespace BChat
             Invalidate();
         }
 
+        // ============================================================
+        //  Keyboard
+        // ============================================================
+
         protected override void OnKeyPress(KeyPressEventArgs e)
         {
-            base.OnKeyPress(e);
+            base.OnKeyPress(e); // ✅ يطلق الحدث للخارج أولاً
+
+            if (e.Handled) return; // ✅ إذا الخارج قال Handled = true، توقف
 
             if (_selectAll)
             {
@@ -160,6 +195,10 @@ namespace BChat
             }
             else if (!char.IsControl(e.KeyChar))
             {
+                // ✅ تطبيق MaxLength
+                if (_maxLength > 0 && _textValue.Length >= _maxLength)
+                    return;
+
                 _textValue = _textValue.Insert(_caretIndex, e.KeyChar.ToString());
                 _caretIndex++;
             }
@@ -173,7 +212,7 @@ namespace BChat
         {
             base.OnKeyDown(e);
 
-            // ✅ Ctrl + A : Select All
+            // Ctrl + A
             if (e.Control && e.KeyCode == Keys.A)
             {
                 _selectAll = true;
@@ -181,7 +220,7 @@ namespace BChat
                 e.SuppressKeyPress = true;
             }
 
-            // ✅ Ctrl + C : Copy
+            // Ctrl + C
             else if (e.Control && e.KeyCode == Keys.C)
             {
                 if (!string.IsNullOrEmpty(_textValue))
@@ -189,7 +228,7 @@ namespace BChat
                 e.SuppressKeyPress = true;
             }
 
-            // ✅ Ctrl + X : Cut
+            // Ctrl + X
             else if (e.Control && e.KeyCode == Keys.X)
             {
                 if (!string.IsNullOrEmpty(_textValue))
@@ -202,12 +241,18 @@ namespace BChat
                 e.SuppressKeyPress = true;
             }
 
-            // ✅ Ctrl + V : Paste
+            // Ctrl + V
             else if (e.Control && e.KeyCode == Keys.V)
             {
                 string clip = Clipboard.GetText();
                 if (!string.IsNullOrEmpty(clip))
                 {
+                    // ✅ احترام MaxLength عند اللصق
+                    int available = _maxLength - _textValue.Length;
+                    if (available <= 0) return;
+                    if (clip.Length > available)
+                        clip = clip.Substring(0, available);
+
                     _textValue = _textValue.Insert(_caretIndex, clip);
                     _caretIndex += clip.Length;
                     Invalidate();
@@ -215,13 +260,15 @@ namespace BChat
                 e.SuppressKeyPress = true;
             }
 
-            // ✅ Left / Right Arrows
+            // Left Arrow
             else if (e.KeyCode == Keys.Left)
             {
                 if (_caretIndex > 0) _caretIndex--;
                 _selectAll = false;
                 Invalidate();
             }
+
+            // Right Arrow
             else if (e.KeyCode == Keys.Right)
             {
                 if (_caretIndex < _textValue.Length) _caretIndex++;
@@ -229,23 +276,21 @@ namespace BChat
                 Invalidate();
             }
 
-            // ✅ Delete
+            // Delete
             else if (e.KeyCode == Keys.Delete)
             {
                 if (_textValue.Length > 0 && _caretIndex < _textValue.Length)
-                {
                     _textValue = _textValue.Remove(_caretIndex, 1);
-                }
                 _selectAll = false;
                 Invalidate();
             }
         }
 
-        private string GetCurrentWord()
-        {
-            // بسيطة جدًا — لاحقًا ممكن نطورها
-            return _textValue;
-        }
+        private string GetCurrentWord() => _textValue;
+
+        // ============================================================
+        //  Mouse
+        // ============================================================
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
@@ -253,6 +298,10 @@ namespace BChat
             _selectAll = false;
             base.OnMouseDown(e);
         }
+
+        // ============================================================
+        //  Paint
+        // ============================================================
 
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -268,6 +317,7 @@ namespace BChat
                 e.Graphics.DrawPath(pen, path);
             }
 
+            // حساب نقطة بداية النص (بعد الأيقونة إن وُجدت)
             int left = 10;
             if (_icon != null)
             {
@@ -276,36 +326,50 @@ namespace BChat
                 left += _iconSize + _iconPadding;
             }
 
-            // تحديد الكل
-            if (_selectAll && !string.IsNullOrEmpty(_textValue))
-            {
-                using (Brush selBrush = new SolidBrush(_selectionColor))
-                {
-                    float textWidth = e.Graphics.MeasureString(_textValue, Font).Width;
-                    var y = (Height - Font.Height) / 2f;
-                    e.Graphics.FillRectangle(selBrush, new RectangleF(left, y, textWidth, Font.Height));
-                }
-            }
-
-            // النص أو placeholder
+            // ✅ حساب X بناءً على TextAlign
             string drawText = string.IsNullOrEmpty(_textValue) ? _placeholderText : _textValue;
             Color drawColor = string.IsNullOrEmpty(_textValue) ? _placeholderColor : _textColor;
+            float textWidth = e.Graphics.MeasureString(drawText, Font).Width;
+            float y = (Height - Font.Height) / 2f;
+            float x;
 
-            using (Brush textBrush = new SolidBrush(drawColor))
+            switch (_textAlign)
             {
-                var y = (Height - Font.Height) / 2f;
-                e.Graphics.DrawString(drawText, Font, textBrush, new PointF(left, y));
+                case HorizontalAlignment.Center:
+                    x = left + (Width - left - textWidth) / 2f;
+                    break;
+                case HorizontalAlignment.Right:
+                    x = Width - textWidth - 10f;
+                    break;
+                default: // Left
+                    x = left;
+                    break;
             }
 
-            // المؤشر (Caret)
+            // تحديد الكل (Select All)
+            if (_selectAll && !string.IsNullOrEmpty(_textValue))
+            {
+                float selWidth = e.Graphics.MeasureString(_textValue, Font).Width;
+                using (Brush selBrush = new SolidBrush(_selectionColor))
+                    e.Graphics.FillRectangle(selBrush, new RectangleF(x, y, selWidth, Font.Height));
+            }
+
+            // رسم النص أو الـ Placeholder
+            using (Brush textBrush = new SolidBrush(drawColor))
+                e.Graphics.DrawString(drawText, Font, textBrush, new PointF(x, y));
+
+            // ✅ رسم المؤشر (Caret) مع مراعاة TextAlign
             if (_focused && !_selectAll && _showCaret)
             {
-                float textWidth = e.Graphics.MeasureString(_textValue.Substring(0, _caretIndex), Font).Width;
-                float caretX = left + textWidth;
-                float caretY = (Height - Font.Height) / 2f;
-                e.Graphics.DrawLine(Pens.Black, caretX, caretY, caretX, caretY + Font.Height);
+                float caretOffset = e.Graphics.MeasureString(_textValue.Substring(0, _caretIndex), Font).Width;
+                float caretX = x + caretOffset;
+                e.Graphics.DrawLine(Pens.Black, caretX, y, caretX, y + Font.Height);
             }
         }
+
+        // ============================================================
+        //  Helper
+        // ============================================================
 
         private GraphicsPath RoundedRect(Rectangle rect, int radius)
         {
@@ -317,6 +381,11 @@ namespace BChat
             path.AddArc(rect.X, rect.Bottom - d, d, d, 90, 90);
             path.CloseFigure();
             return path;
+        }
+
+        public static implicit operator CustomTextBox(ModernTextBox v)
+        {
+            throw new NotImplementedException();
         }
     }
 }

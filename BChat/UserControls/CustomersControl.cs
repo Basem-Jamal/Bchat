@@ -1,4 +1,6 @@
-﻿using BChat.Data.DataStore;
+﻿using BChat.Controls;
+using BChat.Data.DataStore;
+using BChat.Events;
 using BChat.Forms;
 using BChat.Models;
 
@@ -6,7 +8,6 @@ namespace BChat.UserControls
 {
     public partial class CustomersControl : UserControl
     {
-        private CustomerRepository _customerRepo = new CustomerRepository();
         private SlickTable _table;
 
         public CustomersControl()
@@ -15,6 +16,9 @@ namespace BChat.UserControls
             InitTable();
             LoadCustomers();
             _table.IsRtl = true;
+            _table.BorderRadius = 10;
+            _table.ShadowDepth = 0;
+            AppEvents.OnRefreshCustomersTable += LoadCustomers;
 
         }
 
@@ -41,12 +45,15 @@ namespace BChat.UserControls
 
             _table.DeleteClicked += Table_DeleteClicked;
             _table.ViewClicked += Table_ViewClicked;
-
+            _table.EditClicked += Table_EditClicked;
             pnlContent.Controls.Add(_table);
         }
         private void LoadCustomers()
         {
-            var customers = _customerRepo.GetAll();
+            var customers = CustomerRepository.GetAll();
+
+            stcdCoustomers.Value = customers.Count.ToString();
+
             var rows = new List<Dictionary<string, object>>();
 
             foreach (var c in customers)
@@ -76,6 +83,21 @@ namespace BChat.UserControls
             );
         }
 
+        private void Table_EditClicked(object sender, int rowIndex)
+        {
+            var row = _table.GetSelectedRow();
+            if (row == null) return;
+
+            Customer customer = new Customer()
+            {
+                Id = Convert.ToInt32(row["Id"]),
+                Name = row["Name"].ToString(),
+                Phone = row["Phone"].ToString(),
+                CreatedAt = Convert.ToDateTime(row["CreatedAt"])
+            };
+            AddCustomerForm updateCustomer = new AddCustomerForm(customer, CustomerStatus.Update);
+            updateCustomer.ShowDialog();
+        }
         private void Table_DeleteClicked(object sender, int rowIndex)
         {
             var row = _table.GetSelectedRow();
@@ -91,7 +113,7 @@ namespace BChat.UserControls
             if (confirm == DialogResult.Yes)
             {
                 int id = Convert.ToInt32(row["Id"]);
-                bool deleted = _customerRepo.Delete(id);
+                bool deleted = CustomerRepository.Delete(id);
 
                 if (deleted)
                 {
@@ -107,8 +129,23 @@ namespace BChat.UserControls
 
         private void btnAddCustomer_Click(object sender, EventArgs e)
         {
-            AddCustomerForm addCustomerForm = new AddCustomerForm();
+
+            var mainForm = this.FindForm();
+
+            var overlay = OverlayPanel.Show(mainForm);
+
+
+            Customer newCustomer = new Customer();
+            AddCustomerForm addCustomerForm = new AddCustomerForm(newCustomer, CustomerStatus.Add);
             addCustomerForm.ShowDialog();
+
+            overlay.Close(mainForm);
+
+        }
+
+        private void btnCustomers_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

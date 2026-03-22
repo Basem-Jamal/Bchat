@@ -1,4 +1,5 @@
-﻿using BChat.Models;
+﻿using BChat.Events;
+using BChat.Models;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -8,15 +9,15 @@ using System.Threading.Tasks;
 
 namespace BChat.Data.DataStore
 {
-    internal class CustomerRepository
+    public static class CustomerRepository
     {
-        private string _connectionString = DatabaseConfig.ConnectionString;
+        private static string _connectionString = DatabaseConfig.ConnectionString;
 
-        public List<Customer> GetAll()
+        public static List<Customer> GetAll()
         {
             List <Customer> customers = new List<Customer>();
 
-            using (SqlConnection conn = new SqlConnection(this._connectionString))
+            using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
 
@@ -42,7 +43,7 @@ namespace BChat.Data.DataStore
 
         }
 
-        public Customer GetById(int id)
+        public static Customer GetById(int id)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -72,8 +73,9 @@ namespace BChat.Data.DataStore
             return null;
         }
 
-        public bool Add(Customer customer)
+        public static void Add(Customer customer)
         {
+            bool Status = false;
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
@@ -84,13 +86,18 @@ namespace BChat.Data.DataStore
                     cmd.Parameters.AddWithValue("@Name", customer.Name);
                     cmd.Parameters.AddWithValue("@Phone", customer.Phone);
 
-                    return cmd.ExecuteNonQuery() > 0;
+                    cmd.ExecuteNonQuery();
+
+                    
                 }
             }
+            AppEvents.ChangeRefreshCustomesTable();
+             
         }
 
-        public bool Delete(int id)
+        public static bool Delete(int id)
         {
+            bool result = false;
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
@@ -99,12 +106,41 @@ namespace BChat.Data.DataStore
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@Id", id);
-                    return cmd.ExecuteNonQuery() > 0;
+                   result = cmd.ExecuteNonQuery() > 0;
+
                 }
             }
+
+            AppEvents.ChangeRefreshCustomesTable();
+            
+            return result;
         }
 
-        public bool TestConnection()
+        public static void Update(Customer customer)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                string query = @"UPDATE Customers SET
+                               Name = @Name,                                                           
+                               Phone= @Phone
+                               WHERE Id = @Id";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Id", customer.Id);
+                    cmd.Parameters.AddWithValue("@Name", customer.Name);
+                    cmd.Parameters.AddWithValue("@Phone", customer.Phone);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+            AppEvents.ChangeRefreshCustomesTable();
+        }
+
+        public static bool TestConnection()
         {
             try
             {
