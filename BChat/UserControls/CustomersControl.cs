@@ -142,10 +142,5 @@ namespace BChat.UserControls
             overlay.Close(mainForm);
 
         }
-
-        private void btnCustomers_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

@@ -21,5 +21,13 @@ namespace BChat.Events
         {
             OnRefreshTemplatesTable?.Invoke();
         }
+
+        public static event Action OnRefreshMessagesTable;
+
+        public static void ChangeRefreshMessagesTable()
+        {
+            OnRefreshMessagesTable?.Invoke();
+        }
+
     }
 }

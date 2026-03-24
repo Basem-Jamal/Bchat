@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BChat.Models
 {
-    internal class ChatMessage
+    public class ChatMessage
     {
         public int Id { get; set; }
         public int CustomerId { get; set; }

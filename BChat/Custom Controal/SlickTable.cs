@@ -45,7 +45,7 @@ namespace BChat
 
         // ── Layout ───────────────────────────────────────────
         private int _rowHeight = 52;
-        private int _headerHeight = 44;
+        private int _headerHeight = 74;
         private int _scrollOffset = 0;
         private int _selectedRow = -1;
         private int _hoverRow = -1;

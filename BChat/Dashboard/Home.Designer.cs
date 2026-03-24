@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            label1 = new Label();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pnlMenuSidebar = new GradientPanel();
+            btnSettings = new FontAwesome.Sharp.IconButton();
             modernButton2 = new BChat.Controls.ModernButton();
             btnScheduledMessages = new FontAwesome.Sharp.IconButton();
             btnTemplates = new FontAwesome.Sharp.IconButton();
@@ -46,7 +46,7 @@
             customPanel1 = new Car_Rental_System.CustomControls.CustomPanel();
             guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(components);
             pnlHeader = new Car_Rental_System.CustomControls.CustomPanel();
-            modernButton1 = new BChat.Controls.ModernButton();
+            picClose = new PictureBox();
             pnlMain = new Car_Rental_System.CustomControls.CustomPanel();
             pnlTop = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             pnlContent = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
@@ -54,26 +54,15 @@
             pnlMenuSidebar.SuspendLayout();
             customPanel1.SuspendLayout();
             pnlHeader.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)picClose).BeginInit();
             pnlMain.SuspendLayout();
             pnlTop.SuspendLayout();
             SuspendLayout();
             // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.BackColor = Color.Transparent;
-            label1.Cursor = Cursors.Hand;
-            label1.Font = new Font("Segoe UI Semibold", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(1210, 5);
-            label1.Name = "label1";
-            label1.Size = new Size(34, 37);
-            label1.TabIndex = 0;
-            label1.Text = "X";
-            label1.Click += label1_Click;
-            // 
             // pnlMenuSidebar
             // 
             pnlMenuSidebar.BackColor = Color.Transparent;
+            pnlMenuSidebar.Controls.Add(btnSettings);
             pnlMenuSidebar.Controls.Add(modernButton2);
             pnlMenuSidebar.Controls.Add(btnScheduledMessages);
             pnlMenuSidebar.Controls.Add(btnTemplates);
@@ -92,6 +81,26 @@
             pnlMenuSidebar.ShadowRadius = 0;
             pnlMenuSidebar.Size = new Size(147, 1065);
             pnlMenuSidebar.TabIndex = 2;
+            // 
+            // btnSettings
+            // 
+            btnSettings.BackColor = Color.Transparent;
+            btnSettings.BackgroundImageLayout = ImageLayout.Zoom;
+            btnSettings.Cursor = Cursors.Hand;
+            btnSettings.FlatAppearance.BorderSize = 0;
+            btnSettings.FlatAppearance.MouseDownBackColor = Color.Transparent;
+            btnSettings.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            btnSettings.FlatStyle = FlatStyle.Flat;
+            btnSettings.ForeColor = SystemColors.ControlText;
+            btnSettings.IconChar = FontAwesome.Sharp.IconChar.Cog;
+            btnSettings.IconColor = Color.FromArgb(150, 255, 255, 255);
+            btnSettings.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnSettings.IconSize = 45;
+            btnSettings.Location = new Point(28, 945);
+            btnSettings.Name = "btnSettings";
+            btnSettings.Size = new Size(86, 90);
+            btnSettings.TabIndex = 5;
+            btnSettings.UseVisualStyleBackColor = false;
             // 
             // modernButton2
             // 
@@ -119,7 +128,7 @@
             btnScheduledMessages.IconColor = Color.FromArgb(150, 255, 255, 255);
             btnScheduledMessages.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnScheduledMessages.IconSize = 45;
-            btnScheduledMessages.Location = new Point(17, 534);
+            btnScheduledMessages.Location = new Point(28, 618);
             btnScheduledMessages.Name = "btnScheduledMessages";
             btnScheduledMessages.Size = new Size(86, 90);
             btnScheduledMessages.TabIndex = 4;
@@ -136,11 +145,11 @@
             btnTemplates.FlatAppearance.MouseOverBackColor = Color.Transparent;
             btnTemplates.FlatStyle = FlatStyle.Flat;
             btnTemplates.ForeColor = SystemColors.ControlText;
-            btnTemplates.IconChar = FontAwesome.Sharp.IconChar.BookReader;
+            btnTemplates.IconChar = FontAwesome.Sharp.IconChar.Scroll;
             btnTemplates.IconColor = Color.FromArgb(150, 255, 255, 255);
             btnTemplates.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnTemplates.IconSize = 45;
-            btnTemplates.Location = new Point(17, 723);
+            btnTemplates.Location = new Point(28, 723);
             btnTemplates.Name = "btnTemplates";
             btnTemplates.Size = new Size(86, 90);
             btnTemplates.TabIndex = 3;
@@ -161,7 +170,7 @@
             btnOrders.IconColor = Color.FromArgb(150, 255, 255, 255);
             btnOrders.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnOrders.IconSize = 45;
-            btnOrders.Location = new Point(17, 424);
+            btnOrders.Location = new Point(28, 508);
             btnOrders.Name = "btnOrders";
             btnOrders.Size = new Size(86, 90);
             btnOrders.TabIndex = 2;
@@ -182,7 +191,7 @@
             btnMessages.IconColor = Color.FromArgb(150, 255, 255, 255);
             btnMessages.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnMessages.IconSize = 45;
-            btnMessages.Location = new Point(17, 314);
+            btnMessages.Location = new Point(28, 398);
             btnMessages.Name = "btnMessages";
             btnMessages.Size = new Size(86, 90);
             btnMessages.TabIndex = 1;
@@ -203,7 +212,7 @@
             btnCustomers.IconColor = Color.FromArgb(150, 255, 255, 255);
             btnCustomers.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnCustomers.IconSize = 45;
-            btnCustomers.Location = new Point(17, 204);
+            btnCustomers.Location = new Point(28, 288);
             btnCustomers.Name = "btnCustomers";
             btnCustomers.Size = new Size(86, 90);
             btnCustomers.TabIndex = 0;
@@ -243,8 +252,7 @@
             pnlHeader.BorderColor = Color.LightGray;
             pnlHeader.BorderRadius = 10;
             pnlHeader.BorderThickness = 1;
-            pnlHeader.Controls.Add(modernButton1);
-            pnlHeader.Controls.Add(label1);
+            pnlHeader.Controls.Add(picClose);
             pnlHeader.Font = new Font("Segoe UI", 10F);
             pnlHeader.ForeColor = Color.Black;
             pnlHeader.Location = new Point(17, -3);
@@ -256,17 +264,17 @@
             pnlHeader.UseShadow = true;
             pnlHeader.MouseDown += customPanel3_MouseDown;
             // 
-            // modernButton1
+            // picClose
             // 
-            modernButton1.BackColor = Color.FromArgb(139, 128, 255);
-            modernButton1.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
-            modernButton1.Icon = null;
-            modernButton1.Location = new Point(968, 3);
-            modernButton1.Name = "modernButton1";
-            modernButton1.RightToLeft = RightToLeft.Yes;
-            modernButton1.Size = new Size(130, 44);
-            modernButton1.TabIndex = 0;
-            modernButton1.Text = "modernButton1";
+            picClose.Cursor = Cursors.Hand;
+            picClose.Image = Properties.Resources.close;
+            picClose.Location = new Point(1196, 3);
+            picClose.Name = "picClose";
+            picClose.Size = new Size(56, 49);
+            picClose.SizeMode = PictureBoxSizeMode.Zoom;
+            picClose.TabIndex = 2;
+            picClose.TabStop = false;
+            picClose.Click += picClose_Click;
             // 
             // pnlMain
             // 
@@ -295,34 +303,34 @@
             pnlTop.BackColor = Color.White;
             pnlTop.BorderThickness = 4;
             pnlTop.Controls.Add(pnlHeader);
-            pnlTop.CustomizableEdges = customizableEdges1;
+            pnlTop.CustomizableEdges = customizableEdges7;
             pnlTop.Location = new Point(3, 3);
             pnlTop.Name = "pnlTop";
-            pnlTop.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            pnlTop.ShadowDecoration.CustomizableEdges = customizableEdges8;
             pnlTop.Size = new Size(1312, 69);
             pnlTop.TabIndex = 8;
             // 
             // pnlContent
             // 
             pnlContent.BackColor = Color.Transparent;
-            pnlContent.CustomizableEdges = customizableEdges3;
+            pnlContent.CustomizableEdges = customizableEdges9;
             pnlContent.FillColor = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor2 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor3 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor4 = Color.FromArgb(248, 247, 255);
             pnlContent.Location = new Point(3, 78);
             pnlContent.Name = "pnlContent";
-            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges10;
             pnlContent.Size = new Size(1306, 890);
             pnlContent.TabIndex = 0;
             // 
             // pnlBottom
             // 
-            pnlBottom.CustomizableEdges = customizableEdges5;
+            pnlBottom.CustomizableEdges = customizableEdges11;
             pnlBottom.Dock = DockStyle.Bottom;
             pnlBottom.Location = new Point(0, 983);
             pnlBottom.Name = "pnlBottom";
-            pnlBottom.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            pnlBottom.ShadowDecoration.CustomizableEdges = customizableEdges12;
             pnlBottom.Size = new Size(1316, 60);
             pnlBottom.TabIndex = 9;
             // 
@@ -341,15 +349,13 @@
             pnlMenuSidebar.ResumeLayout(false);
             customPanel1.ResumeLayout(false);
             pnlHeader.ResumeLayout(false);
-            pnlHeader.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)picClose).EndInit();
             pnlMain.ResumeLayout(false);
             pnlTop.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
-
-        private Label label1;
         private GradientPanel pnlMenuSidebar;
         private Guna.UI2.WinForms.Guna2BorderlessForm guna2BorderlessForm1;
         private Car_Rental_System.CustomControls.CustomPanel pnlHeader;
@@ -362,8 +368,9 @@
         private FontAwesome.Sharp.IconButton btnMessages;
         private FontAwesome.Sharp.IconButton btnTemplates;
         private FontAwesome.Sharp.IconButton btnScheduledMessages;
-        private Controls.ModernButton modernButton1;
         private Controls.ModernButton modernButton2;
         private Car_Rental_System.CustomControls.CustomPanel customPanel1;
+        private PictureBox picClose;
+        private FontAwesome.Sharp.IconButton btnSettings;
     }
 }

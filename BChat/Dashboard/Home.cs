@@ -1,4 +1,5 @@
 using BChat.UserControls;
+using FontAwesome.Sharp;
 using Guna.UI2.WinForms;
 using System.Runtime.InteropServices;
 using static Guna.UI2.WinForms.Suite.Descriptions;
@@ -22,17 +23,10 @@ namespace BChat
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer |
                           ControlStyles.AllPaintingInWmPaint |
                           ControlStyles.UserPaint, true);
-
         }
 
         private void Home_Load(object sender, EventArgs e)
         {
-        }
-
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-            this.Close();
         }
 
         private void customPanel3_MouseDown(object sender, MouseEventArgs e)
@@ -153,12 +147,9 @@ namespace BChat
             }
         }
 
-
-        private void pnlLeft_Paint(object sender, PaintEventArgs e)
+        private void picClose_Click(object sender, EventArgs e)
         {
-
+            this.Close();
         }
-
-       
     }
 }

@@ -21,8 +21,6 @@ namespace BChat.Forms
             InitializeComponent();
 
             txbCustomerPhone.MaxLength = 15; // تحديد عدد الأرقام
-            txbCustomerPhone.TextAlign = HorizontalAlignment.Right;
-            txbCustomerName.TextAlign  = HorizontalAlignment.Right;
 
             _customer = customer;
             _status = status;

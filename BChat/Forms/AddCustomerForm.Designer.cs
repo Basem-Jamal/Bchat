@@ -34,13 +34,15 @@
             guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(components);
             picClose = new PictureBox();
             lblCustomerName = new ReaLTaiizor.Controls.BigLabel();
-            txbCustomerName = new CustomTextBox();
-            txbCustomerPhone = new CustomTextBox();
-            btnAddCustomer = new Guna.UI2.WinForms.Guna2Button();
             lblCustomerPhone = new ReaLTaiizor.Controls.BigLabel();
             pictureBox1 = new PictureBox();
+            btnAddCustomer = new BChat.Controls.ModernButton();
+            guna2CustomGradientPanel1 = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
+            txbCustomerPhone = new BChat.Controls.ModernTextBox();
+            txbCustomerName = new BChat.Controls.ModernTextBox();
             ((System.ComponentModel.ISupportInitialize)picClose).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            guna2CustomGradientPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // guna2BorderlessForm1
@@ -66,86 +68,23 @@
             // 
             lblCustomerName.AutoSize = true;
             lblCustomerName.BackColor = Color.Transparent;
-            lblCustomerName.Font = new Font("Segoe UI", 20F);
+            lblCustomerName.Font = new Font("IBM Plex Sans Arabic", 20F);
             lblCustomerName.ForeColor = Color.FromArgb(80, 80, 80);
-            lblCustomerName.Location = new Point(567, 245);
+            lblCustomerName.Location = new Point(605, 158);
             lblCustomerName.Name = "lblCustomerName";
-            lblCustomerName.Size = new Size(145, 37);
+            lblCustomerName.Size = new Size(136, 46);
             lblCustomerName.TabIndex = 2;
             lblCustomerName.Text = "اسم العميل";
-            // 
-            // txbCustomerName
-            // 
-            txbCustomerName.BackColorEx = Color.White;
-            txbCustomerName.BorderColor = Color.Silver;
-            txbCustomerName.BorderRadius = 10;
-            txbCustomerName.BorderThickness = 1;
-            txbCustomerName.FocusBorderColor = Color.DeepSkyBlue;
-            txbCustomerName.Font = new Font("Segoe UI", 10F);
-            txbCustomerName.Icon = null;
-            txbCustomerName.IconPadding = 6;
-            txbCustomerName.IconSize = 18;
-            txbCustomerName.Location = new Point(268, 307);
-            txbCustomerName.MaxLength = 32767;
-            txbCustomerName.Name = "txbCustomerName";
-            txbCustomerName.PlaceholderColor = Color.Gray;
-            txbCustomerName.PlaceholderText = "";
-            txbCustomerName.Size = new Size(444, 70);
-            txbCustomerName.TabIndex = 4;
-            txbCustomerName.TextAlign = HorizontalAlignment.Left;
-            txbCustomerName.TextColor = Color.Black;
-            // 
-            // txbCustomerPhone
-            // 
-            txbCustomerPhone.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            txbCustomerPhone.BackColorEx = Color.White;
-            txbCustomerPhone.BorderColor = Color.Silver;
-            txbCustomerPhone.BorderRadius = 10;
-            txbCustomerPhone.BorderThickness = 1;
-            txbCustomerPhone.FocusBorderColor = Color.DeepSkyBlue;
-            txbCustomerPhone.Font = new Font("Segoe UI", 10F);
-            txbCustomerPhone.Icon = null;
-            txbCustomerPhone.IconPadding = 6;
-            txbCustomerPhone.IconSize = 18;
-            txbCustomerPhone.Location = new Point(268, 468);
-            txbCustomerPhone.MaxLength = 32767;
-            txbCustomerPhone.Name = "txbCustomerPhone";
-            txbCustomerPhone.PlaceholderColor = Color.Gray;
-            txbCustomerPhone.PlaceholderText = "";
-            txbCustomerPhone.Size = new Size(444, 70);
-            txbCustomerPhone.TabIndex = 5;
-            txbCustomerPhone.TextAlign = HorizontalAlignment.Left;
-            txbCustomerPhone.TextColor = Color.Black;
-            txbCustomerPhone.KeyPress += txbCustomerPhone_KeyPress;
-            // 
-            // btnAddCustomer
-            // 
-            btnAddCustomer.BorderRadius = 20;
-            btnAddCustomer.Cursor = Cursors.Hand;
-            btnAddCustomer.CustomizableEdges = customizableEdges1;
-            btnAddCustomer.DisabledState.BorderColor = Color.DarkGray;
-            btnAddCustomer.DisabledState.CustomBorderColor = Color.DarkGray;
-            btnAddCustomer.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
-            btnAddCustomer.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
-            btnAddCustomer.Font = new Font("Segoe UI", 13F);
-            btnAddCustomer.ForeColor = Color.White;
-            btnAddCustomer.Location = new Point(309, 656);
-            btnAddCustomer.Name = "btnAddCustomer";
-            btnAddCustomer.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            btnAddCustomer.Size = new Size(180, 45);
-            btnAddCustomer.TabIndex = 6;
-            btnAddCustomer.Text = "اضافة";
-            btnAddCustomer.Click += btnAddCustomer_Click;
             // 
             // lblCustomerPhone
             // 
             lblCustomerPhone.AutoSize = true;
             lblCustomerPhone.BackColor = Color.Transparent;
-            lblCustomerPhone.Font = new Font("Segoe UI", 20F);
+            lblCustomerPhone.Font = new Font("IBM Plex Sans Arabic", 20F);
             lblCustomerPhone.ForeColor = Color.FromArgb(80, 80, 80);
-            lblCustomerPhone.Location = new Point(574, 412);
+            lblCustomerPhone.Location = new Point(605, 358);
             lblCustomerPhone.Name = "lblCustomerPhone";
-            lblCustomerPhone.Size = new Size(138, 37);
+            lblCustomerPhone.Size = new Size(129, 46);
             lblCustomerPhone.TabIndex = 7;
             lblCustomerPhone.Text = "رقم العميل";
             // 
@@ -153,34 +92,91 @@
             // 
             pictureBox1.Cursor = Cursors.Hand;
             pictureBox1.Image = Properties.Resources.add_f;
-            pictureBox1.Location = new Point(354, 45);
+            pictureBox1.Location = new Point(338, 43);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(135, 98);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 8;
             pictureBox1.TabStop = false;
             // 
+            // btnAddCustomer
+            // 
+            btnAddCustomer.BackColor = Color.Transparent;
+            btnAddCustomer.BorderRadius = 23;
+            btnAddCustomer.Font = new Font("IBM Plex Sans Arabic", 12F, FontStyle.Bold);
+            btnAddCustomer.Icon = Properties.Resources.plus;
+            btnAddCustomer.Location = new Point(26, 762);
+            btnAddCustomer.Name = "btnAddCustomer";
+            btnAddCustomer.RightToLeft = RightToLeft.Yes;
+            btnAddCustomer.Size = new Size(162, 62);
+            btnAddCustomer.TabIndex = 10;
+            btnAddCustomer.Text = "اضافة ";
+            btnAddCustomer.Click += btnAddCustomer_Click;
+            // 
+            // guna2CustomGradientPanel1
+            // 
+            guna2CustomGradientPanel1.Controls.Add(lblCustomerPhone);
+            guna2CustomGradientPanel1.Controls.Add(txbCustomerPhone);
+            guna2CustomGradientPanel1.Controls.Add(txbCustomerName);
+            guna2CustomGradientPanel1.Controls.Add(lblCustomerName);
+            guna2CustomGradientPanel1.CustomizableEdges = customizableEdges1;
+            guna2CustomGradientPanel1.Location = new Point(12, 169);
+            guna2CustomGradientPanel1.Name = "guna2CustomGradientPanel1";
+            guna2CustomGradientPanel1.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            guna2CustomGradientPanel1.Size = new Size(788, 569);
+            guna2CustomGradientPanel1.TabIndex = 9;
+            // 
+            // txbCustomerPhone
+            // 
+            txbCustomerPhone.BackColor = Color.Transparent;
+            txbCustomerPhone.BackColorEx = Color.FromArgb(237, 235, 255);
+            txbCustomerPhone.BorderRadius = 14;
+            txbCustomerPhone.FocusBorderColor = Color.FromArgb(124, 111, 247);
+            txbCustomerPhone.Font = new Font("IBM Plex Sans Arabic", 12F);
+            txbCustomerPhone.LabelText = "";
+            txbCustomerPhone.Location = new Point(115, 358);
+            txbCustomerPhone.MaxLength = 32767;
+            txbCustomerPhone.Name = "txbCustomerPhone";
+            txbCustomerPhone.PlaceholderText = "";
+            txbCustomerPhone.RightToLeft = RightToLeft.Yes;
+            txbCustomerPhone.Size = new Size(460, 70);
+            txbCustomerPhone.TabIndex = 2;
+            // 
+            // txbCustomerName
+            // 
+            txbCustomerName.BackColor = Color.Transparent;
+            txbCustomerName.BackColorEx = Color.FromArgb(237, 235, 255);
+            txbCustomerName.BorderRadius = 14;
+            txbCustomerName.FocusBorderColor = Color.FromArgb(124, 111, 247);
+            txbCustomerName.Font = new Font("IBM Plex Sans Arabic", 12F);
+            txbCustomerName.LabelText = "";
+            txbCustomerName.Location = new Point(115, 158);
+            txbCustomerName.MaxLength = 32767;
+            txbCustomerName.Name = "txbCustomerName";
+            txbCustomerName.PlaceholderText = "";
+            txbCustomerName.RightToLeft = RightToLeft.Yes;
+            txbCustomerName.Size = new Size(460, 70);
+            txbCustomerName.TabIndex = 1;
+            // 
             // AddCustomerForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.WhiteSmoke;
-            ClientSize = new Size(795, 763);
+            BackColor = Color.White;
+            ClientSize = new Size(812, 851);
             Controls.Add(pictureBox1);
-            Controls.Add(lblCustomerPhone);
-            Controls.Add(btnAddCustomer);
-            Controls.Add(txbCustomerPhone);
-            Controls.Add(txbCustomerName);
-            Controls.Add(lblCustomerName);
             Controls.Add(picClose);
+            Controls.Add(btnAddCustomer);
+            Controls.Add(guna2CustomGradientPanel1);
             FormBorderStyle = FormBorderStyle.None;
             Name = "AddCustomerForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "AddCustomerForm";
             ((System.ComponentModel.ISupportInitialize)picClose).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            guna2CustomGradientPanel1.ResumeLayout(false);
+            guna2CustomGradientPanel1.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -190,10 +186,12 @@
         private ReaLTaiizor.Controls.BigLabel bigLabel3;
         private ReaLTaiizor.Controls.BigLabel bigLabel2;
         private ReaLTaiizor.Controls.BigLabel lblCustomerName;
-        private CustomTextBox txbCustomerPhone;
-        private CustomTextBox txbCustomerName;
-        private Guna.UI2.WinForms.Guna2Button btnAddCustomer;
         private ReaLTaiizor.Controls.BigLabel lblCustomerPhone;
         private PictureBox pictureBox1;
+        private Controls.ModernButton btnAddCustomer;
+        private Guna.UI2.WinForms.Guna2CustomGradientPanel guna2CustomGradientPanel1;
+        private Controls.ModernTextBox txbCustomerName;
+        private Controls.ModernTextBox txbCustomerPhone;
+        private Guna.UI2.WinForms.Guna2Button btnAddTemplate;
     }
 }

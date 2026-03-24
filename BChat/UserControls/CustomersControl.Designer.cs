@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pnlContent = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             pictureBox1 = new PictureBox();
             stcdCoustomers = new BChat.Controls.StatCard();
@@ -40,21 +40,21 @@
             // 
             // pnlContent
             // 
-            pnlContent.CustomizableEdges = customizableEdges3;
+            pnlContent.CustomizableEdges = customizableEdges1;
             pnlContent.FillColor = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor2 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor3 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor4 = Color.FromArgb(248, 247, 255);
-            pnlContent.Location = new Point(0, 178);
+            pnlContent.Location = new Point(0, 229);
             pnlContent.Name = "pnlContent";
-            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges2;
             pnlContent.Size = new Size(1306, 461);
             pnlContent.TabIndex = 0;
             // 
             // pictureBox1
             // 
             pictureBox1.Cursor = Cursors.Hand;
-            pictureBox1.Image = Properties.Resources.Customers;
+            pictureBox1.Image = Properties.Resources.users2;
             pictureBox1.Location = new Point(84, 22);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(135, 98);
@@ -102,14 +102,16 @@
             // btnAddCustomer
             // 
             btnAddCustomer.BackColor = Color.Transparent;
+            btnAddCustomer.BorderRadius = 20;
             btnAddCustomer.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
             btnAddCustomer.Icon = Properties.Resources.plus;
-            btnAddCustomer.Location = new Point(37, 740);
+            btnAddCustomer.Location = new Point(1068, 50);
             btnAddCustomer.Name = "btnAddCustomer";
             btnAddCustomer.RightToLeft = RightToLeft.Yes;
             btnAddCustomer.Size = new Size(209, 70);
             btnAddCustomer.TabIndex = 11;
             btnAddCustomer.Text = "اضافة عميل";
+            btnAddCustomer.Click += btnAddCustomer_Click;
             // 
             // CustomersControl
             // 

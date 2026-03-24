@@ -24,7 +24,10 @@ namespace BChat.UserControls
             InitializeComponent();
             InitTable();
             LoadTemplates();
+
             _table.IsRtl = true;
+            _table.BorderRadius = 10;
+            _table.ShadowDepth = 0;
 
             AppEvents.OnRefreshTemplatesTable += LoadTemplates;
 
@@ -47,7 +50,7 @@ namespace BChat.UserControls
             _table.SetColumns(new List<GridColumn>
             {
                 new GridColumn { Header = "اسم القالب",          Field = "Name",      Width = 200, CellType = GridCellType.Avatar },
-                new GridColumn { Header = "نص القالب",    Field = "Content",     Width = 150 },
+                new GridColumn { Header = "المحتوى",    Field = "Content",     Width = 150 },
                 new GridColumn { Header = "التصنيف",       Field = "Category", Width = 150 },
                 new GridColumn { Header = "إجراءات",        Field = "Actions",   Width = 130, CellType = GridCellType.Actions },
             });
@@ -62,7 +65,7 @@ namespace BChat.UserControls
         {
             var templates = TemplateRepository.GetAll();
 
-            btnCountTemplates.Text = "Templates: " + templates.Count.ToString();
+            stcdTemplates.Value = templates.Count.ToString();
 
             var rows = new List<Dictionary<string, object>>();
 
@@ -88,7 +91,7 @@ namespace BChat.UserControls
             if (row == null) return;
 
             MessageBox.Show(
-                $"الاسم: {row["Name"]}\nالهاتف: {row["Phone"]}",
+                $"اسم القالب: {row["Name"]}\nالمحتوى: {row["Content"]}",
                 "تفاصيل العميل",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information
@@ -117,7 +120,7 @@ namespace BChat.UserControls
             if (row == null) return;
 
             var confirm = MessageBox.Show(
-                $"هل تريد حذف القالب: {row["Name"]}؟",
+                $"هل تريد حذف قالب: {row["Name"]}؟",
                 "تأكيد الحذف",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Warning

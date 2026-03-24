@@ -30,95 +30,89 @@
         {
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            pictureBox1 = new PictureBox();
-            btnCountTemplates = new Guna.UI2.WinForms.Guna2Button();
-            btnAddTemplate = new Guna.UI2.WinForms.Guna2Button();
             pnlContent = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            btnAddTemplate = new BChat.Controls.ModernButton();
+            stcdTemplates = new BChat.Controls.StatCard();
+            picTemplates = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)picTemplates).BeginInit();
             SuspendLayout();
-            // 
-            // pictureBox1
-            // 
-            pictureBox1.Cursor = Cursors.Hand;
-            pictureBox1.Image = Properties.Resources.resize;
-            pictureBox1.Location = new Point(623, 47);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(135, 98);
-            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox1.TabIndex = 12;
-            pictureBox1.TabStop = false;
-            // 
-            // btnCountTemplates
-            // 
-            btnCountTemplates.BorderRadius = 10;
-            btnCountTemplates.Cursor = Cursors.Hand;
-            btnCountTemplates.CustomizableEdges = customizableEdges1;
-            btnCountTemplates.DisabledState.BorderColor = Color.DarkGray;
-            btnCountTemplates.DisabledState.CustomBorderColor = Color.DarkGray;
-            btnCountTemplates.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
-            btnCountTemplates.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
-            btnCountTemplates.Font = new Font("Segoe UI", 13F);
-            btnCountTemplates.ForeColor = Color.White;
-            btnCountTemplates.Location = new Point(-15, 57);
-            btnCountTemplates.Name = "btnCountTemplates";
-            btnCountTemplates.ShadowDecoration.BorderRadius = 1;
-            btnCountTemplates.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            btnCountTemplates.Size = new Size(283, 51);
-            btnCountTemplates.TabIndex = 11;
-            btnCountTemplates.Text = "عدد القوالب: 0";
-            // 
-            // btnAddTemplate
-            // 
-            btnAddTemplate.BorderRadius = 20;
-            btnAddTemplate.Cursor = Cursors.Hand;
-            btnAddTemplate.CustomizableEdges = customizableEdges3;
-            btnAddTemplate.DisabledState.BorderColor = Color.DarkGray;
-            btnAddTemplate.DisabledState.CustomBorderColor = Color.DarkGray;
-            btnAddTemplate.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
-            btnAddTemplate.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
-            btnAddTemplate.Font = new Font("Segoe UI", 13F);
-            btnAddTemplate.ForeColor = Color.White;
-            btnAddTemplate.Location = new Point(1113, 57);
-            btnAddTemplate.Name = "btnAddTemplate";
-            btnAddTemplate.ShadowDecoration.CustomizableEdges = customizableEdges4;
-            btnAddTemplate.Size = new Size(180, 45);
-            btnAddTemplate.TabIndex = 10;
-            btnAddTemplate.Text = "اضافة قالب";
-            btnAddTemplate.Click += btnAddTemplate_Click;
             // 
             // pnlContent
             // 
-            pnlContent.CustomizableEdges = customizableEdges5;
-            pnlContent.Location = new Point(0, 175);
+            pnlContent.BackColor = Color.FromArgb(248, 247, 255);
+            pnlContent.CustomizableEdges = customizableEdges1;
+            pnlContent.FillColor = Color.FromArgb(248, 247, 255);
+            pnlContent.FillColor2 = Color.FromArgb(248, 247, 255);
+            pnlContent.FillColor3 = Color.FromArgb(248, 247, 255);
+            pnlContent.FillColor4 = Color.FromArgb(248, 247, 255);
+            pnlContent.Location = new Point(0, 229);
             pnlContent.Name = "pnlContent";
-            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges6;
-            pnlContent.Size = new Size(1306, 572);
+            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            pnlContent.Size = new Size(1306, 461);
             pnlContent.TabIndex = 13;
+            // 
+            // btnAddTemplate
+            // 
+            btnAddTemplate.BackColor = Color.Transparent;
+            btnAddTemplate.BorderRadius = 20;
+            btnAddTemplate.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
+            btnAddTemplate.Icon = Properties.Resources.plus;
+            btnAddTemplate.Location = new Point(1068, 50);
+            btnAddTemplate.Name = "btnAddTemplate";
+            btnAddTemplate.RightToLeft = RightToLeft.Yes;
+            btnAddTemplate.Size = new Size(209, 70);
+            btnAddTemplate.TabIndex = 14;
+            btnAddTemplate.Text = "اضافة قالب";
+            btnAddTemplate.Click += btnAddTemplate_Click;
+            // 
+            // stcdTemplates
+            // 
+            stcdTemplates.AccentColor = Color.FromArgb(32, 201, 151);
+            stcdTemplates.BackColor = Color.Transparent;
+            stcdTemplates.CardColor = Color.White;
+            stcdTemplates.IconBgColor = Color.FromArgb(220, 245, 235);
+            stcdTemplates.IconColor = Color.FromArgb(32, 201, 151);
+            stcdTemplates.Location = new Point(814, 708);
+            stcdTemplates.Name = "stcdTemplates";
+            stcdTemplates.ShadowColor = Color.FromArgb(30, 0, 0, 0);
+            stcdTemplates.Size = new Size(425, 135);
+            stcdTemplates.TabIndex = 15;
+            stcdTemplates.Text = "statCard1";
+            stcdTemplates.Title = "القوالب النشطة";
+            stcdTemplates.TitleColor = Color.FromArgb(150, 160, 175);
+            stcdTemplates.Value = "0";
+            stcdTemplates.ValueColor = Color.FromArgb(25, 35, 60);
+            // 
+            // picTemplates
+            // 
+            picTemplates.Cursor = Cursors.Hand;
+            picTemplates.Image = Properties.Resources.templates;
+            picTemplates.Location = new Point(84, 22);
+            picTemplates.Name = "picTemplates";
+            picTemplates.Size = new Size(135, 98);
+            picTemplates.SizeMode = PictureBoxSizeMode.Zoom;
+            picTemplates.TabIndex = 16;
+            picTemplates.TabStop = false;
             // 
             // TemplatesControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.White;
-            Controls.Add(pnlContent);
-            Controls.Add(pictureBox1);
-            Controls.Add(btnCountTemplates);
+            BackColor = Color.FromArgb(248, 247, 255);
+            Controls.Add(picTemplates);
+            Controls.Add(stcdTemplates);
             Controls.Add(btnAddTemplate);
+            Controls.Add(pnlContent);
             Name = "TemplatesControl";
             Size = new Size(1306, 890);
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)picTemplates).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
-
-        private PictureBox pictureBox1;
-        private Guna.UI2.WinForms.Guna2Button btnCountTemplates;
-        private Guna.UI2.WinForms.Guna2Button btnAddTemplate;
         private Guna.UI2.WinForms.Guna2CustomGradientPanel pnlContent;
+        private Controls.ModernButton btnAddTemplate;
+        private Controls.StatCard stcdTemplates;
+        private PictureBox picTemplates;
     }
 }

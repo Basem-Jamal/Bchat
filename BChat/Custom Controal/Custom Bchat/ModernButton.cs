@@ -7,7 +7,9 @@ using System.Windows.Forms;
 
 namespace BChat.Controls
 {
-    public enum ButtonVariant { Primary, Secondary, Ghost, Danger, OnPrimary }
+    public enum ButtonVariant { Primary, Secondary, Ghost, Danger, OnPrimary,
+        CustomBasem
+    }
 
     [DefaultEvent("Click")]
     [ToolboxItem(true)]
@@ -40,6 +42,10 @@ namespace BChat.Controls
 
         private static readonly Color OnPrimaryBg = Color.White;
         private static readonly Color OnPrimaryFg = Color.FromArgb(85, 69, 205);
+
+
+        private static readonly Color CustomBasemBg = Color.FromArgb(87, 92, 126);
+        private static readonly Color CustomBasemFg = Color.White;
 
         // ─── Properties ───────────────────────────────────────
         [Category("BChat")]
@@ -205,17 +211,23 @@ namespace BChat.Controls
 
         // ─── Color Helpers ────────────────────────────────────
         private Color GetBgColor() => _variant switch
-        {
+
+        {   ButtonVariant.CustomBasem => CustomBasemBg,
             ButtonVariant.Primary => _isHovered ? PrimaryHover : PrimaryBg,
             ButtonVariant.Secondary => SecondaryBg,
             ButtonVariant.Ghost => _isHovered ? GhostHover : GhostBg,
             ButtonVariant.Danger => _isHovered ? DangerHover : DangerBg,
             ButtonVariant.OnPrimary => OnPrimaryBg,
             _ => PrimaryBg
+
+
+
         };
 
         private Color GetFgColor() => _variant switch
         {
+            ButtonVariant.CustomBasem => CustomBasemFg,
+
             ButtonVariant.Primary => PrimaryFg,
             ButtonVariant.Secondary => SecondaryFg,
             ButtonVariant.Ghost => GhostFg,

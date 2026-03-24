@@ -3,11 +3,54 @@ using BChat.Models;
 
 namespace BChat.Data.DataStore
 {
-    internal class MessageRepository
+    public static class MessageRepository
     {
-        private string _connectionString = DatabaseConfig.ConnectionString;
+        private static string _connectionString = DatabaseConfig.ConnectionString;
 
-        public List<ChatMessage> GetAll()
+
+        public static List<MessageDetail> GetAllWithDetails()
+        {
+            var list = new List<MessageDetail>();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                string query = @"
+            SELECT 
+                m.Id,
+                c.Name AS CustomerName,
+                c.Phone AS CustomerPhone,
+                t.Name AS TemplateName,
+                m.Status,
+                m.TriggerType,
+                m.SentAt
+            FROM Messages m
+            LEFT JOIN Customers c ON m.CustomerId = c.Id
+            LEFT JOIN Templates t ON m.TemplateId = t.Id
+            ORDER BY m.SentAt DESC";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        list.Add(new MessageDetail
+                        {
+                            Id = reader.GetInt32(0),
+                            CustomerName = reader.IsDBNull(1) ? "-" : reader.GetString(1),
+                            CustomerPhone = reader.IsDBNull(2) ? "-" : reader.GetString(2),
+                            TemplateName = reader.IsDBNull(3) ? "-" : reader.GetString(3),
+                            Status = reader.GetString(4),
+                            TriggerType = reader.IsDBNull(5) ? "-" : reader.GetString(5),
+                            SentAt = reader.GetDateTime(6)
+                        });
+                    }
+                }
+            }
+
+            return list;
+        }
+        public static List<ChatMessage> GetAll()
         {
             List<ChatMessage> messages = new List<ChatMessage>();
 
@@ -37,7 +80,7 @@ namespace BChat.Data.DataStore
             return messages;
         }
 
-        public List<ChatMessage> GetByCustomerId(int customerId)
+        public static List<ChatMessage> GetByCustomerId(int customerId)
         {
             List<ChatMessage> messages = new List<ChatMessage>();
 
@@ -71,7 +114,7 @@ namespace BChat.Data.DataStore
             return messages;
         }
 
-        public bool Add(ChatMessage message)
+        public static bool Add(ChatMessage message)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -91,7 +134,7 @@ namespace BChat.Data.DataStore
             }
         }
 
-        public bool UpdateStatus(int id, string status)
+        public static bool UpdateStatus(int id, string status)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -103,6 +146,20 @@ namespace BChat.Data.DataStore
                     cmd.Parameters.AddWithValue("@Id", id);
                     cmd.Parameters.AddWithValue("@Status", status);
 
+                    return cmd.ExecuteNonQuery() > 0;
+                }
+            }
+        }
+
+        public static bool Delete(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                string query = "DELETE FROM Messages WHERE Id = @Id";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Id", id);
                     return cmd.ExecuteNonQuery() > 0;
                 }
             }
