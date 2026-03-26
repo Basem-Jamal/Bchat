@@ -29,15 +29,15 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pnlMenuSidebar = new GradientPanel();
+            modernPictureBox1 = new BChat.Controls.ModernPictureBox();
             btnSettings = new FontAwesome.Sharp.IconButton();
-            modernButton2 = new BChat.Controls.ModernButton();
             btnScheduledMessages = new FontAwesome.Sharp.IconButton();
             btnTemplates = new FontAwesome.Sharp.IconButton();
             btnOrders = new FontAwesome.Sharp.IconButton();
@@ -61,9 +61,9 @@
             // 
             // pnlMenuSidebar
             // 
-            pnlMenuSidebar.BackColor = Color.Transparent;
+            pnlMenuSidebar.BackColor = Color.FromArgb(26, 31, 60);
+            pnlMenuSidebar.Controls.Add(modernPictureBox1);
             pnlMenuSidebar.Controls.Add(btnSettings);
-            pnlMenuSidebar.Controls.Add(modernButton2);
             pnlMenuSidebar.Controls.Add(btnScheduledMessages);
             pnlMenuSidebar.Controls.Add(btnTemplates);
             pnlMenuSidebar.Controls.Add(btnOrders);
@@ -81,6 +81,22 @@
             pnlMenuSidebar.ShadowRadius = 0;
             pnlMenuSidebar.Size = new Size(147, 1065);
             pnlMenuSidebar.TabIndex = 2;
+            // 
+            // modernPictureBox1
+            // 
+            modernPictureBox1.BackColor = Color.FromArgb(230, 230, 235);
+            modernPictureBox1.BorderColor = Color.FromArgb(80, 255, 255, 255);
+            modernPictureBox1.HoverZoom = true;
+            modernPictureBox1.Image = Properties.Resources.Logo_Blue;
+            modernPictureBox1.ImageFit = BChat.Controls.ImageFit.Stretch;
+            modernPictureBox1.Location = new Point(31, 26);
+            modernPictureBox1.Name = "modernPictureBox1";
+            modernPictureBox1.OverlayColor = Color.FromArgb(80, 0, 0, 0);
+            modernPictureBox1.ShadowColor = Color.FromArgb(60, 0, 0, 0);
+            modernPictureBox1.ShowShadow = true;
+            modernPictureBox1.Size = new Size(83, 77);
+            modernPictureBox1.TabIndex = 6;
+            modernPictureBox1.Text = "modernPictureBox1";
             // 
             // btnSettings
             // 
@@ -101,18 +117,6 @@
             btnSettings.Size = new Size(86, 90);
             btnSettings.TabIndex = 5;
             btnSettings.UseVisualStyleBackColor = false;
-            // 
-            // modernButton2
-            // 
-            modernButton2.BackColor = Color.Violet;
-            modernButton2.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
-            modernButton2.Icon = null;
-            modernButton2.Location = new Point(10, 82);
-            modernButton2.Name = "modernButton2";
-            modernButton2.RightToLeft = RightToLeft.Yes;
-            modernButton2.Size = new Size(130, 44);
-            modernButton2.TabIndex = 0;
-            modernButton2.Text = "modernButton2";
             // 
             // btnScheduledMessages
             // 
@@ -303,34 +307,34 @@
             pnlTop.BackColor = Color.White;
             pnlTop.BorderThickness = 4;
             pnlTop.Controls.Add(pnlHeader);
-            pnlTop.CustomizableEdges = customizableEdges7;
+            pnlTop.CustomizableEdges = customizableEdges1;
             pnlTop.Location = new Point(3, 3);
             pnlTop.Name = "pnlTop";
-            pnlTop.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            pnlTop.ShadowDecoration.CustomizableEdges = customizableEdges2;
             pnlTop.Size = new Size(1312, 69);
             pnlTop.TabIndex = 8;
             // 
             // pnlContent
             // 
             pnlContent.BackColor = Color.Transparent;
-            pnlContent.CustomizableEdges = customizableEdges9;
+            pnlContent.CustomizableEdges = customizableEdges3;
             pnlContent.FillColor = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor2 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor3 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor4 = Color.FromArgb(248, 247, 255);
             pnlContent.Location = new Point(3, 78);
             pnlContent.Name = "pnlContent";
-            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges10;
+            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges4;
             pnlContent.Size = new Size(1306, 890);
             pnlContent.TabIndex = 0;
             // 
             // pnlBottom
             // 
-            pnlBottom.CustomizableEdges = customizableEdges11;
+            pnlBottom.CustomizableEdges = customizableEdges5;
             pnlBottom.Dock = DockStyle.Bottom;
             pnlBottom.Location = new Point(0, 983);
             pnlBottom.Name = "pnlBottom";
-            pnlBottom.ShadowDecoration.CustomizableEdges = customizableEdges12;
+            pnlBottom.ShadowDecoration.CustomizableEdges = customizableEdges6;
             pnlBottom.Size = new Size(1316, 60);
             pnlBottom.TabIndex = 9;
             // 
@@ -368,9 +372,9 @@
         private FontAwesome.Sharp.IconButton btnMessages;
         private FontAwesome.Sharp.IconButton btnTemplates;
         private FontAwesome.Sharp.IconButton btnScheduledMessages;
-        private Controls.ModernButton modernButton2;
         private Car_Rental_System.CustomControls.CustomPanel customPanel1;
         private PictureBox picClose;
         private FontAwesome.Sharp.IconButton btnSettings;
+        private Controls.ModernPictureBox modernPictureBox1;
     }
 }

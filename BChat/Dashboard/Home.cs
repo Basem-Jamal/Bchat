@@ -19,7 +19,6 @@ namespace BChat
         {
             InitializeComponent();
 
-            // ✅ يمنع الفلكشن بشكل كامل
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer |
                           ControlStyles.AllPaintingInWmPaint |
                           ControlStyles.UserPaint, true);
@@ -28,6 +27,7 @@ namespace BChat
         private void Home_Load(object sender, EventArgs e)
         {
         }
+
 
         private void customPanel3_MouseDown(object sender, MouseEventArgs e)
         {

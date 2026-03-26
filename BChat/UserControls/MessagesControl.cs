@@ -1,5 +1,6 @@
 ﻿using BChat.Controls;
 using BChat.Data.DataStore;
+using BChat.Events;
 using BChat.Forms;
 using BChat.Models;
 
@@ -18,6 +19,7 @@ namespace BChat.UserControls
             _table.BorderRadius = 10;
             _table.ShadowDepth = 0;
 
+            AppEvents.OnRefreshMessagesTable += LoadMessages;
         }
 
         private void InitTable()
@@ -51,6 +53,8 @@ namespace BChat.UserControls
         private void LoadMessages()
         {
             var messages = MessageRepository.GetAllWithDetails();
+
+            stcdCountCampaign.Value = messages.Count.ToString();
 
             var rows = new List<Dictionary<string, object>>();
 

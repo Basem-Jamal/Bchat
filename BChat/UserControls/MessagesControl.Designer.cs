@@ -31,7 +31,7 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             picTemplates = new PictureBox();
-            stcdTemplates = new BChat.Controls.StatCard();
+            stcdCountCampaign = new BChat.Controls.StatCard();
             btnCreateACampaign = new BChat.Controls.ModernButton();
             pnlContent = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             ((System.ComponentModel.ISupportInitialize)picTemplates).BeginInit();
@@ -48,23 +48,23 @@
             picTemplates.TabIndex = 20;
             picTemplates.TabStop = false;
             // 
-            // stcdTemplates
+            // stcdCountCampaign
             // 
-            stcdTemplates.AccentColor = Color.FromArgb(32, 201, 151);
-            stcdTemplates.BackColor = Color.Transparent;
-            stcdTemplates.CardColor = Color.White;
-            stcdTemplates.IconBgColor = Color.FromArgb(220, 245, 235);
-            stcdTemplates.IconColor = Color.FromArgb(32, 201, 151);
-            stcdTemplates.Location = new Point(814, 708);
-            stcdTemplates.Name = "stcdTemplates";
-            stcdTemplates.ShadowColor = Color.FromArgb(30, 0, 0, 0);
-            stcdTemplates.Size = new Size(425, 135);
-            stcdTemplates.TabIndex = 19;
-            stcdTemplates.Text = "statCard1";
-            stcdTemplates.Title = "القوالب النشطة";
-            stcdTemplates.TitleColor = Color.FromArgb(150, 160, 175);
-            stcdTemplates.Value = "0";
-            stcdTemplates.ValueColor = Color.FromArgb(25, 35, 60);
+            stcdCountCampaign.AccentColor = Color.FromArgb(32, 201, 151);
+            stcdCountCampaign.BackColor = Color.Transparent;
+            stcdCountCampaign.CardColor = Color.White;
+            stcdCountCampaign.IconBgColor = Color.FromArgb(220, 245, 235);
+            stcdCountCampaign.IconColor = Color.FromArgb(32, 201, 151);
+            stcdCountCampaign.Location = new Point(814, 708);
+            stcdCountCampaign.Name = "stcdCountCampaign";
+            stcdCountCampaign.ShadowColor = Color.FromArgb(30, 0, 0, 0);
+            stcdCountCampaign.Size = new Size(425, 135);
+            stcdCountCampaign.TabIndex = 19;
+            stcdCountCampaign.Text = "statCard1";
+            stcdCountCampaign.Title = "الحملات المرسلة";
+            stcdCountCampaign.TitleColor = Color.FromArgb(150, 160, 175);
+            stcdCountCampaign.Value = "0";
+            stcdCountCampaign.ValueColor = Color.FromArgb(25, 35, 60);
             // 
             // btnCreateACampaign
             // 
@@ -100,7 +100,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(248, 247, 255);
             Controls.Add(picTemplates);
-            Controls.Add(stcdTemplates);
+            Controls.Add(stcdCountCampaign);
             Controls.Add(btnCreateACampaign);
             Controls.Add(pnlContent);
             Name = "MessagesControl";
@@ -112,7 +112,7 @@
         #endregion
 
         private PictureBox picTemplates;
-        private Controls.StatCard stcdTemplates;
+        private Controls.StatCard stcdCountCampaign;
         private Controls.ModernButton btnCreateACampaign;
         private Guna.UI2.WinForms.Guna2CustomGradientPanel pnlContent;
     }

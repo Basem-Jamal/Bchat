@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using BChat.Models;
+using BChat.Events;
 
 namespace BChat.Data.DataStore
 {
@@ -116,8 +117,10 @@ namespace BChat.Data.DataStore
 
         public static bool Add(ChatMessage message)
         {
+            bool result = false;
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
+                
                 conn.Open();
                 string query = @"INSERT INTO Messages (CustomerId, TemplateId, Status, TriggerType) 
                                  VALUES (@CustomerId, @TemplateId, @Status, @TriggerType)";
@@ -129,9 +132,13 @@ namespace BChat.Data.DataStore
                     cmd.Parameters.AddWithValue("@Status", message.Status);
                     cmd.Parameters.AddWithValue("@TriggerType", (object)message.TriggerType ?? DBNull.Value);
 
-                    return cmd.ExecuteNonQuery() > 0;
+                    result = cmd.ExecuteNonQuery() > 0;
                 }
             }
+
+            AppEvents.ChangeRefreshMessagesTable();
+
+            return result;
         }
 
         public static bool UpdateStatus(int id, string status)

@@ -11,9 +11,10 @@ namespace BChat.Services
 
         public WhatsAppService()
         {
-            _accessToken = "EAAUaVvZBRoRwBRLLbshethbD56eT1CIMew7ZCYV4sZB8nIf5a5olHlYkLFpHeIkHXvM432IJBcPicwcrPfIxEXopjHieOnzcZAEmiO47kgtsaAkuKniVEZC" +
-                "pAjgsM1qIOLIRVc7fhHr9BHwkZAGXIbvsvN4NY5oZBq0Sk8g1WkktIeOvMli7ycgEGydYHuChb8byp4jSeZB0tO5ZBCgoteiLPeSNSPZB1LikSTGY6OvKnR60xM6tmrNHK21" +
-                "ix5JLQRPf1ICE25o7QVCIh9gunuszZAZB";
+            _accessToken = "EAAUaVvZBRoRwBRLpfluJ827dKKYbLqycH3QuJt0kSB4KCZCWQ4P4yjzt4hxgZBFGRoZBHbyhK3GocizVR6a9QPHtpwwVISKqRtQ3MKg0Snn6H" +
+                "oPdV9fZBG6ptdoZAZA5STR6vzZBAguKhEK81V2IerKI3OGOLKuQcmRZA" +
+                "E25SLPIRDvSxWuXnkfgNEYtC8rAAxGwA1HojGjInrIAZCbMRWgSpNUI4paXSInjQLQiv" +
+                "tfc0b5pCgvYAV22stSahcLI0rwJ6aEZCnQRp3PenZACl6hP2oZCK";
             _phoneNumberId = "969555369583968";
             _httpClient = new HttpClient();
         }
@@ -36,8 +37,8 @@ namespace BChat.Services
                     type = "template",
                     template = new
                     {
-                        name = "eid_distributions",
-                        language = new { code = "ar" }
+                        name = "test1",
+                        language = new { code = "en" }
                     }
 
                 };
