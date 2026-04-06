@@ -142,5 +142,7 @@ namespace BChat.UserControls
             overlay.Close(mainForm);
 
         }
+
+
     }
 }

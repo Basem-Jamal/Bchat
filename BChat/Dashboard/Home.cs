@@ -1,3 +1,4 @@
+using BChat.Salla;
 using BChat.UserControls;
 using FontAwesome.Sharp;
 using Guna.UI2.WinForms;
@@ -150,6 +151,12 @@ namespace BChat
         private void picClose_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            MainForm frm = new MainForm();
+            frm.ShowDialog();
         }
     }
 }
