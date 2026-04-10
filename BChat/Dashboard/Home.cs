@@ -15,6 +15,15 @@ namespace BChat
         public static extern bool ReleaseCapture();
         [DllImport("User32.dll")]
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        private void pnlHeader_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+            }
+
+        }
 
         public Home()
         {
@@ -30,20 +39,20 @@ namespace BChat
         }
 
 
-        private void customPanel3_MouseDown(object sender, MouseEventArgs e)
+        private void btnNavHome_Click(object sender, EventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
-            {
-                ReleaseCapture();
-                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
-            }
+            ResetButtons();
+            btnNavHome.IsActive = true;
+
+            pnlContent.Controls.Clear();
+
 
         }
 
         private void btnCustomers_Click(object sender, EventArgs e)
         {
             ResetButtons();
-            btnCustomers.IconColor = Color.WhiteSmoke;
+            btnNavCustomers.IsActive = true;
 
 
             if (!pnlContent.Controls.ContainsKey("Customers_View"))
@@ -60,7 +69,7 @@ namespace BChat
         private void btnMessages_Click(object sender, EventArgs e)
         {
             ResetButtons();
-            btnMessages.IconColor = Color.WhiteSmoke;
+            btnNavMessages.IsActive = true;
 
 
             if (!pnlContent.Controls.ContainsKey("Messages_View"))
@@ -134,16 +143,12 @@ namespace BChat
         {
             foreach (Control ctrl in pnlMenuSidebar.Controls)
             {
-                if (ctrl is FontAwesome.Sharp.IconButton btn)
+                if (ctrl is BChat.Controls.ModernNavButton btn)
                 {
 
-                    btn.BackColor = Color.Transparent;
-                    btn.IconColor = Color.FromArgb(150, 255, 255, 255);
-
-                    btn.FlatStyle = FlatStyle.Flat;
-                    btn.FlatAppearance.MouseOverBackColor = Color.Transparent;
-                    btn.FlatAppearance.BorderSize = 0;
-
+                    btn.BaseBackground = Color.FromArgb(37, 43, 74);
+                    btn.NormalTextColor = Color.Gray;
+                    btn.IsActive = false;
                 }
             }
         }
@@ -158,5 +163,24 @@ namespace BChat
             MainForm frm = new MainForm();
             frm.ShowDialog();
         }
+
+        private void btnNavCustomerGroups_Click(object sender, EventArgs e)
+        {
+            ResetButtons();
+            btnNavCustomerGroups.IsActive = true;
+
+
+            if (!pnlContent.Controls.ContainsKey("CustomerGroups_View"))
+            {
+                CustomerGroupsControl customerGroupsPage = new CustomerGroupsControl();
+                customerGroupsPage.Name = "CustomerGroups_View";
+                customerGroupsPage.Dock = DockStyle.Fill;
+                pnlContent.Controls.Add(customerGroupsPage);
+            }
+
+            pnlContent.Controls["CustomerGroups_View"].BringToFront();
+
+        }
+
     }
 }

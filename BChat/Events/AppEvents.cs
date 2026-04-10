@@ -29,5 +29,14 @@ namespace BChat.Events
             OnRefreshMessagesTable?.Invoke();
         }
 
+        public static class Groups
+        {
+            public static event Action OnRefreshGroupsTable;
+
+            public static void ChangeRefreshGroupsTable()
+            {
+                OnRefreshGroupsTable?.Invoke();
+            }
+        }
     }
 }

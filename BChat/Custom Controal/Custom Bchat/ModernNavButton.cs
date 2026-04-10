@@ -7,44 +7,177 @@ using System.Windows.Forms;
 
 namespace BChat.Controls
 {
-    /// <summary>
-    /// زر القائمة الجانبية.
-    /// عند IsActive = true يظهر الشريط البنفسجي على اليمين + نص ملون.
-    /// </summary>
     [DefaultEvent("Click")]
     [ToolboxItem(true)]
     public class ModernNavButton : Control
     {
-        // ─── Fields ───────────────────────────────────────────
+        private int _cardPadding;
+        private bool _activeBarFullHeight = true;
+        private int _activeBarPadding = 0;
+        // ─── Fields ───────────────────────────────
         private Image? _icon;
-        private bool _isActive = false;
-        private bool _isHovered = false;
+        private bool _isActive;
+        private bool _isHovered;
 
-        private Color _activeBg      = Color.FromArgb(37, 43, 74);    // sidebar-hover #252B4A
-        private Color _activeText    = Color.FromArgb(124, 111, 247); // sidebar-accent #7C6FF7
-        private Color _activeBar     = Color.FromArgb(124, 111, 247); // شريط يمين
-        private Color _hoverBg       = Color.FromArgb(37, 43, 74);
-        private Color _normalText    = Color.FromArgb(148, 163, 184); // slate-400
-        private Color _hoverText     = Color.White;
-        private int   _activeBarW    = 4;
+        // ─── Colors ───────────────────────────────
+        private Color _baseBackground = Color.Transparent;
+        private Color _hoverBackground = Color.Transparent;
+        private Color _activeBackground = Color.Transparent;
 
-        // ─── Properties ───────────────────────────────────────
-        [Category("BChat")]
+        private Color _normalText = Color.White;
+        private Color _hoverText = Color.White;
+        private Color _activeText = Color.White;
+
+        private Color _activeBarColor = Color.Transparent;
+
+        // ─── Behavior ─────────────────────────────
+        private bool _useHoverEffect = true;
+        private bool _useActiveEffect = true;
+
+        // ─── Layout ───────────────────────────────
+        private int _borderRadius = 8;
+        private int _activeBarWidth = 4;
+        private int _iconSize = 20;
+        private int _contentPadding = 12;
+
+        // ─── Properties ───────────────────────────
+
+        [Category("BChat - Layout")]
+        public int CardPadding
+        {
+            get => _cardPadding;
+            set { _cardPadding = value; Invalidate(); }
+        }
+
+        [Category("BChat - Layout")]
+        public bool ActiveBarFullHeight
+        {
+            get => _activeBarFullHeight;
+            set { _activeBarFullHeight = value; Invalidate(); }
+        }
+
+        [Category("BChat - Layout")]
+        public int ActiveBarPadding
+        {
+            get => _activeBarPadding;
+            set { _activeBarPadding = value; Invalidate(); }
+        }
+        [Category("BChat - Data")]
         public Image? Icon
         {
             get => _icon;
             set { _icon = value; Invalidate(); }
         }
 
-        [Category("BChat")]
-        [DefaultValue(false)]
+        [Category("BChat - State")]
         public bool IsActive
         {
             get => _isActive;
             set { _isActive = value; Invalidate(); }
         }
 
-        // ─── Constructor ──────────────────────────────────────
+        // ─── Backgrounds ─────────────────────────
+
+        [Category("BChat - Colors")]
+        public Color BaseBackground
+        {
+            get => _baseBackground;
+            set { _baseBackground = value; Invalidate(); }
+        }
+
+        [Category("BChat - Colors")]
+        public Color HoverBackground
+        {
+            get => _hoverBackground;
+            set { _hoverBackground = value; Invalidate(); }
+        }
+
+        [Category("BChat - Colors")]
+        public Color ActiveBackground
+        {
+            get => _activeBackground;
+            set { _activeBackground = value; Invalidate(); }
+        }
+
+        // ─── Text Colors ─────────────────────────
+
+        [Category("BChat - Colors")]
+        public Color NormalTextColor
+        {
+            get => _normalText;
+            set { _normalText = value; Invalidate(); }
+        }
+
+        [Category("BChat - Colors")]
+        public Color HoverTextColor
+        {
+            get => _hoverText;
+            set { _hoverText = value; Invalidate(); }
+        }
+
+        [Category("BChat - Colors")]
+        public Color ActiveTextColor
+        {
+            get => _activeText;
+            set { _activeText = value; Invalidate(); }
+        }
+
+        // ─── Active Bar ─────────────────────────
+
+        [Category("BChat - Colors")]
+        public Color ActiveBarColor
+        {
+            get => _activeBarColor;
+            set { _activeBarColor = value; Invalidate(); }
+        }
+
+        // ─── Behavior ───────────────────────────
+
+        [Category("BChat - Behavior")]
+        public bool UseHoverEffect
+        {
+            get => _useHoverEffect;
+            set { _useHoverEffect = value; Invalidate(); }
+        }
+
+        [Category("BChat - Behavior")]
+        public bool UseActiveEffect
+        {
+            get => _useActiveEffect;
+            set { _useActiveEffect = value; Invalidate(); }
+        }
+
+        // ─── Layout ─────────────────────────────
+
+        [Category("BChat - Layout")]
+        public int BorderRadius
+        {
+            get => _borderRadius;
+            set { _borderRadius = value; Invalidate(); }
+        }
+
+        [Category("BChat - Layout")]
+        public int ActiveBarWidth
+        {
+            get => _activeBarWidth;
+            set { _activeBarWidth = value; Invalidate(); }
+        }
+
+        [Category("BChat - Layout")]
+        public int IconSize
+        {
+            get => _iconSize;
+            set { _iconSize = value; Invalidate(); }
+        }
+
+        [Category("BChat - Layout")]
+        public int ContentPadding
+        {
+            get => _contentPadding;
+            set { _contentPadding = value; Invalidate(); }
+        }
+
+        // ─── Constructor ─────────────────────────
         public ModernNavButton()
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint |
@@ -55,107 +188,124 @@ namespace BChat.Controls
 
             DoubleBuffered = true;
             Size = new Size(220, 46);
-            Font = new Font("IBM Plex Sans Arabic", 9.5f,
-                            FontStyle.Bold);
+            Font = new Font("IBM Plex Sans Arabic", 9.5f, FontStyle.Bold);
             BackColor = Color.Transparent;
             Cursor = Cursors.Hand;
             RightToLeft = RightToLeft.Yes;
         }
 
-        // ─── Mouse ────────────────────────────────────────────
+        // ─── Mouse ───────────────────────────────
         protected override void OnMouseEnter(EventArgs e)
         {
-            _isHovered = true; Invalidate();
+            _isHovered = true;
+            Invalidate();
             base.OnMouseEnter(e);
         }
 
         protected override void OnMouseLeave(EventArgs e)
         {
-            _isHovered = false; Invalidate();
+            _isHovered = false;
+            Invalidate();
             base.OnMouseLeave(e);
         }
 
-        // ─── Paint ────────────────────────────────────────────
+        // ─── Paint ───────────────────────────────
         protected override void OnPaint(PaintEventArgs e)
         {
             var g = e.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
-            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            g.Clear(Parent?.BackColor ?? Color.FromArgb(26, 31, 60));
 
-            bool showBg = _isActive || _isHovered;
+            var rect = new Rectangle(
+                0, 2,
+                Width - (_isActive ? _activeBarWidth : 0),
+                Height - 4);
 
-            // ── Background ────────────────────────────────────
-            if (showBg)
+            // Base
+            DrawBackground(g, rect, _baseBackground);
+
+            // Hover
+            if (_isHovered && _useHoverEffect)
+                DrawBackground(g, rect, _hoverBackground);
+
+            // Active
+            if (_isActive && _useActiveEffect)
+                DrawBackground(g, rect, _activeBackground);
+
+            // ✅ Active Bar (FULL HEIGHT)
+            if (_isActive && _activeBarWidth > 0)
             {
-                // شكل مستطيل مع حواف دائرية فقط على اليسار
-                var bgRect = new Rectangle(0, 2, Width - (_isActive ? _activeBarW : 0), Height - 4);
-                using var bgBrush = new SolidBrush(_isActive ? _activeBg : _hoverBg);
-                using var bgPath  = LeftRoundedRect(bgRect, 8);
-                g.FillPath(bgBrush, bgPath);
+                int y = _activeBarFullHeight ? 0 : _activeBarPadding;
+                int h = _activeBarFullHeight ? Height : Height - (_activeBarPadding * 2);
+
+                var barRect = new Rectangle(
+                    Width - _activeBarWidth,
+                    y,
+                    _activeBarWidth,
+                    h);
+                using var brush = new SolidBrush(_activeBarColor);
+
+                // رسم مستقيم بدون حواف (احترافي أكثر)
+                g.FillRectangle(brush, barRect);
             }
 
-            // ── Active Bar (شريط أيمن بنفسجي) ────────────────
-            if (_isActive)
-            {
-                using var barBrush = new SolidBrush(_activeBar);
-                var barRect = new Rectangle(Width - _activeBarW, 2, _activeBarW, Height - 4);
-                using var barPath = RoundedRect(barRect, 3);
-                g.FillPath(barBrush, barPath);
-            }
+            // Text Color
+            Color textColor = _normalText;
 
-            // ── Icon ──────────────────────────────────────────
-            Color textColor = _isActive ? _activeText
-                            : _isHovered ? _hoverText
-                            : _normalText;
+            if (_isActive && _useActiveEffect)
+                textColor = _activeText;
+            else if (_isHovered && _useHoverEffect)
+                textColor = _hoverText;
 
+            // Icon
             if (_icon != null)
             {
-                int iconSize = 20;
-                int iconX = Width - 46;          // يمين مع padding
-                int iconY = (Height - iconSize) / 2;
+                int x = Width - _contentPadding - _iconSize;
+                int y = (Height - _iconSize) / 2;
+
                 DrawTintedImage(g, _icon,
-                    new Rectangle(iconX, iconY, iconSize, iconSize), textColor);
+                    new Rectangle(x, y, _iconSize, _iconSize),
+                    textColor);
             }
 
-            // ── Text ──────────────────────────────────────────
-            if (!string.IsNullOrEmpty(Text))
+            // Text
+            using var textBrush = new SolidBrush(textColor);
+
+            var textRect = new RectangleF(
+                0,
+                0,
+                Width - (_icon != null ? _iconSize + _contentPadding * 2 : _contentPadding),
+                Height);
+
+            var sf = new StringFormat
             {
-                using var brush = new SolidBrush(textColor);
-                var textRect = new RectangleF(0, 0, Width - 58, Height);
-                var sf = new StringFormat
-                {
-                    Alignment     = StringAlignment.Far,
-                    LineAlignment = StringAlignment.Center
-                };
-                g.DrawString(Text, Font, brush, textRect, sf);
-            }
+                Alignment = StringAlignment.Far,
+                LineAlignment = StringAlignment.Center
+            };
+
+            g.DrawString(Text, Font, textBrush, textRect, sf);
         }
 
-        // ─── Helpers ──────────────────────────────────────────
-        /// <summary>مستطيل بحواف دائرية على الجانب الأيسر فقط</summary>
+        // ─── Helpers ─────────────────────────────
+
+        private void DrawBackground(Graphics g, Rectangle rect, Color color)
+        {
+            if (color.A == 0) return;
+
+            using var path = LeftRoundedRect(rect, _borderRadius);
+            using var brush = new SolidBrush(color);
+
+            g.FillPath(brush, path);
+        }
+
         private static GraphicsPath LeftRoundedRect(Rectangle r, int radius)
         {
             var path = new GraphicsPath();
             int d = radius * 2;
-            // top-right: حاد
-            path.AddLine(r.Right, r.Y, r.Right, r.Bottom);
-            // bottom-left: دائري
-            path.AddArc(r.X, r.Bottom - d, d, d, 90, 90);
-            // top-left: دائري
-            path.AddArc(r.X, r.Y, d, d, 180, 90);
-            path.CloseFigure();
-            return path;
-        }
 
-        private static GraphicsPath RoundedRect(Rectangle r, int radius)
-        {
-            var path = new GraphicsPath();
-            int d = radius * 2;
-            path.AddArc(r.X, r.Y, d, d, 180, 90);
-            path.AddArc(r.Right - d, r.Y, d, d, 270, 90);
-            path.AddArc(r.Right - d, r.Bottom - d, d, d, 0, 90);
+            path.AddLine(r.Right, r.Y, r.Right, r.Bottom);
             path.AddArc(r.X, r.Bottom - d, d, d, 90, 90);
+            path.AddArc(r.X, r.Y, d, d, 180, 90);
+
             path.CloseFigure();
             return path;
         }
@@ -170,8 +320,10 @@ namespace BChat.Controls
                 new[] { 0f, 0, 0, 1f, 0 },
                 new[] { 0f, 0, 0, 0, 1f }
             });
+
             var attr = new System.Drawing.Imaging.ImageAttributes();
             attr.SetColorMatrix(cm);
+
             g.DrawImage(img, rect, 0, 0, img.Width, img.Height,
                 GraphicsUnit.Pixel, attr);
         }

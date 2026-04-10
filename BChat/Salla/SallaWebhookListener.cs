@@ -56,8 +56,26 @@ namespace BChat.Salla
                 string eventName = json.GetProperty("event").GetString() ?? "";
                 Debug.WriteLine($"📥 Event: {eventName}");
 
-                OnEventReceived?.Invoke(eventName, json);
+                if (eventName == "app.store.authorize")
+                {
+                    var data = json.GetProperty("data");
 
+                    var token = new BChat.Models.StoreToken
+                    {
+                        StoreId = json.GetProperty("merchant").GetInt64().ToString(),
+                        AccessToken = data.GetProperty("access_token").GetString() ?? "",
+                        RefreshToken = data.TryGetProperty("refresh_token", out var rt) ? rt.GetString() : null,
+                        ExpiresAt = data.TryGetProperty("expires", out var exp)
+                                       ? DateTimeOffset.FromUnixTimeSeconds(exp.GetInt64()).UtcDateTime
+                                       : null
+                    };
+
+                    BChat.Data.DataStore.StoreTokenRepository.Save(token);
+                    Debug.WriteLine($"✅ Token saved for store: {token.StoreId}");
+                }
+           
+
+                OnEventReceived?.Invoke(eventName, json);
                 context.Response.StatusCode = 200;
                 context.Response.Close();
             }

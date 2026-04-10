@@ -52,27 +52,27 @@ namespace BChat.UserControls
 
         private void LoadMessages()
         {
-            var messages = MessageRepository.GetAllWithDetails();
+            ////var messages = MessageRepository.GetAllWithDetails();
 
-            stcdCountCampaign.Value = messages.Count.ToString();
+            //stcdCountCampaign.Value = messages.Count.ToString();
 
-            var rows = new List<Dictionary<string, object>>();
+            //var rows = new List<Dictionary<string, object>>();
 
-            foreach (var m in messages)
-            {
-                rows.Add(new Dictionary<string, object>
-                {
-                    { "Id",           m.Id },
-                    { "CustomerName", m.CustomerName },
-                    { "CustomerPhone",m.CustomerPhone },
-                    { "TemplateName", m.TemplateName },
-                    { "TriggerType",  m.TriggerType },
-                    { "Status",       m.Status },
-                    { "SentAt",       m.SentAt.ToString("yyyy/MM/dd HH:mm") }
-                });
-            }
+            //foreach (var m in messages)
+            //{
+            //    rows.Add(new Dictionary<string, object>
+            //    {
+            //        { "Id",           m.Id },
+            //        { "CustomerName", m.CustomerName },
+            //        { "CustomerPhone",m.CustomerPhone },
+            //        { "TemplateName", m.TemplateName },
+            //        { "TriggerType",  m.TriggerType },
+            //        { "Status",       m.Status },
+            //        { "SentAt",       m.SentAt.ToString("yyyy/MM/dd HH:mm") }
+            //    });
+            //}
 
-            _table.SetData(rows);
+            //_table.SetData(rows);
         }
 
         private void Table_ViewClicked(object sender, int rowIndex)
@@ -94,24 +94,24 @@ namespace BChat.UserControls
 
         private void Table_DeleteClicked(object sender, int rowIndex)
         {
-            var row = _table.GetSelectedRow();
-            if (row == null) return;
+            //var row = _table.GetSelectedRow();
+            //if (row == null) return;
 
-            var confirm = MessageBox.Show(
-                $"هل تريد حذف سجل هذه الرسالة؟",
-                "تأكيد الحذف",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning
-            );
+            //var confirm = MessageBox.Show(
+            //    $"هل تريد حذف سجل هذه الرسالة؟",
+            //    "تأكيد الحذف",
+            //    MessageBoxButtons.YesNo,
+            //    MessageBoxIcon.Warning
+            //);
 
-            if (confirm == DialogResult.Yes)
-            {
-                int id = Convert.ToInt32(row["Id"]);
-                bool deleted = MessageRepository.Delete(id);
+            //if (confirm == DialogResult.Yes)
+            //{
+            //    int id = Convert.ToInt32(row["Id"]);
+            //    bool deleted = MessageRepository.Delete(id);
 
-                if (deleted)
-                    LoadMessages();
-            }
+            //    if (deleted)
+            //        LoadMessages();
+            //}
         }
 
         private void btnCreateACampaign_Click(object sender, EventArgs e)

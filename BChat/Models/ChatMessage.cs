@@ -9,11 +9,42 @@ namespace BChat.Models
     public class ChatMessage
     {
         public int Id { get; set; }
-        public int CustomerId { get; set; }
-        public int? TemplateId { get; set; }
-        public string Status { get; set; }       // sent / failed / pending
-        public string TriggerType { get; set; }  // manual / abandoned_cart / order_status / review
-        public DateTime SentAt { get; set; }
 
+        // المحتوى
+        public string Text { get; set; }
+
+        // الاتجاه
+        public bool IsOutgoing { get; set; }
+
+        // الوقت
+        public DateTime Time { get; set; }
+
+        // المستخدم
+        public string SenderName { get; set; }
+        public Image Avatar { get; set; }
+
+        // نوع الرسالة
+        public MessageType Type { get; set; }
+
+        // مرفقات
+        public string AttachmentName { get; set; }
+        public long? AttachmentSize { get; set; }
+
+        // الحالة
+        public MessageStatus Status { get; set; }
+    }
+
+    public enum MessageType
+    {
+        Text,
+        Attachment,
+        Image
+    }
+
+    public enum MessageStatus
+    {
+        Sent,
+        Pending,
+        Failed
     }
 }

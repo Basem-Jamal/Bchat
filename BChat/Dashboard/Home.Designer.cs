@@ -36,13 +36,15 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pnlMenuSidebar = new GradientPanel();
+            btnNavMessages = new BChat.Controls.ModernNavButton();
             modernPictureBox1 = new BChat.Controls.ModernPictureBox();
+            btnNavHome = new BChat.Controls.ModernNavButton();
+            btnNavCustomers = new BChat.Controls.ModernNavButton();
+            btnNavCustomerGroups = new BChat.Controls.ModernNavButton();
             btnSettings = new FontAwesome.Sharp.IconButton();
             btnScheduledMessages = new FontAwesome.Sharp.IconButton();
             btnTemplates = new FontAwesome.Sharp.IconButton();
             btnOrders = new FontAwesome.Sharp.IconButton();
-            btnMessages = new FontAwesome.Sharp.IconButton();
-            btnCustomers = new FontAwesome.Sharp.IconButton();
             customPanel1 = new Car_Rental_System.CustomControls.CustomPanel();
             guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(components);
             pnlHeader = new Car_Rental_System.CustomControls.CustomPanel();
@@ -50,6 +52,8 @@
             pnlMain = new Car_Rental_System.CustomControls.CustomPanel();
             pnlTop = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             pnlContent = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
+            gradientPanel1 = new GradientPanel();
+            iconButton1 = new FontAwesome.Sharp.IconButton();
             pnlBottom = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             pnlMenuSidebar.SuspendLayout();
             customPanel1.SuspendLayout();
@@ -57,30 +61,62 @@
             ((System.ComponentModel.ISupportInitialize)picClose).BeginInit();
             pnlMain.SuspendLayout();
             pnlTop.SuspendLayout();
+            pnlContent.SuspendLayout();
+            gradientPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // pnlMenuSidebar
             // 
             pnlMenuSidebar.BackColor = Color.FromArgb(26, 31, 60);
+            pnlMenuSidebar.Controls.Add(btnNavMessages);
             pnlMenuSidebar.Controls.Add(modernPictureBox1);
+            pnlMenuSidebar.Controls.Add(btnNavHome);
+            pnlMenuSidebar.Controls.Add(btnNavCustomers);
+            pnlMenuSidebar.Controls.Add(btnNavCustomerGroups);
             pnlMenuSidebar.Controls.Add(btnSettings);
-            pnlMenuSidebar.Controls.Add(btnScheduledMessages);
-            pnlMenuSidebar.Controls.Add(btnTemplates);
-            pnlMenuSidebar.Controls.Add(btnOrders);
-            pnlMenuSidebar.Controls.Add(btnMessages);
-            pnlMenuSidebar.Controls.Add(btnCustomers);
             pnlMenuSidebar.CornerRadius = 0;
             pnlMenuSidebar.GradientEndColor = Color.FromArgb(26, 31, 60);
-            pnlMenuSidebar.GradientMidColor = Color.Empty;
+            pnlMenuSidebar.GradientMidColor = Color.FromArgb(26, 31, 60);
             pnlMenuSidebar.GradientStartColor = Color.FromArgb(26, 31, 60);
             pnlMenuSidebar.HoverGlow = false;
             pnlMenuSidebar.HoverGlowColor = Color.Transparent;
-            pnlMenuSidebar.Location = new Point(-3, -4);
+            pnlMenuSidebar.Location = new Point(6, -10);
             pnlMenuSidebar.Name = "pnlMenuSidebar";
             pnlMenuSidebar.ShadowColor = Color.Transparent;
             pnlMenuSidebar.ShadowRadius = 0;
-            pnlMenuSidebar.Size = new Size(147, 1065);
+            pnlMenuSidebar.Size = new Size(242, 1065);
             pnlMenuSidebar.TabIndex = 2;
+            // 
+            // btnNavMessages
+            // 
+            btnNavMessages.ActiveBackground = Color.White;
+            btnNavMessages.ActiveBarColor = Color.FromArgb(124, 111, 247);
+            btnNavMessages.ActiveBarFullHeight = false;
+            btnNavMessages.ActiveBarPadding = 2;
+            btnNavMessages.ActiveBarWidth = 5;
+            btnNavMessages.ActiveTextColor = Color.FromArgb(124, 111, 247);
+            btnNavMessages.BackColor = Color.Transparent;
+            btnNavMessages.BaseBackground = Color.FromArgb(37, 43, 74);
+            btnNavMessages.BorderRadius = 8;
+            btnNavMessages.CardPadding = 0;
+            btnNavMessages.ContentPadding = 12;
+            btnNavMessages.Font = new Font("IBM Plex Sans Arabic", 13.5F, FontStyle.Bold);
+            btnNavMessages.ForeColor = Color.Transparent;
+            btnNavMessages.HoverBackground = Color.Transparent;
+            btnNavMessages.HoverTextColor = Color.Gray;
+            btnNavMessages.Icon = Properties.Resources.message;
+            btnNavMessages.IconSize = 25;
+            btnNavMessages.IsActive = false;
+            btnNavMessages.Location = new Point(22, 397);
+            btnNavMessages.Name = "btnNavMessages";
+            btnNavMessages.NormalTextColor = Color.Gray;
+            btnNavMessages.RightToLeft = RightToLeft.Yes;
+            btnNavMessages.Size = new Size(200, 65);
+            btnNavMessages.TabIndex = 8;
+            btnNavMessages.Text = "الرسائل";
+            btnNavMessages.UseActiveEffect = true;
+            btnNavMessages.UseHoverEffect = true;
+            btnNavMessages.Click += btnMessages_Click;
             // 
             // modernPictureBox1
             // 
@@ -89,7 +125,7 @@
             modernPictureBox1.HoverZoom = true;
             modernPictureBox1.Image = Properties.Resources.Logo_Blue;
             modernPictureBox1.ImageFit = BChat.Controls.ImageFit.Stretch;
-            modernPictureBox1.Location = new Point(31, 26);
+            modernPictureBox1.Location = new Point(91, 46);
             modernPictureBox1.Name = "modernPictureBox1";
             modernPictureBox1.OverlayColor = Color.FromArgb(80, 0, 0, 0);
             modernPictureBox1.ShadowColor = Color.FromArgb(60, 0, 0, 0);
@@ -97,6 +133,99 @@
             modernPictureBox1.Size = new Size(83, 77);
             modernPictureBox1.TabIndex = 6;
             modernPictureBox1.Text = "modernPictureBox1";
+            // 
+            // btnNavHome
+            // 
+            btnNavHome.ActiveBackground = Color.White;
+            btnNavHome.ActiveBarColor = Color.FromArgb(124, 111, 247);
+            btnNavHome.ActiveBarFullHeight = false;
+            btnNavHome.ActiveBarPadding = 2;
+            btnNavHome.ActiveBarWidth = 5;
+            btnNavHome.ActiveTextColor = Color.FromArgb(124, 111, 247);
+            btnNavHome.BackColor = Color.Transparent;
+            btnNavHome.BaseBackground = Color.Transparent;
+            btnNavHome.BorderRadius = 8;
+            btnNavHome.CardPadding = 0;
+            btnNavHome.ContentPadding = 12;
+            btnNavHome.Font = new Font("IBM Plex Sans Arabic", 13.5F, FontStyle.Bold);
+            btnNavHome.ForeColor = Color.Transparent;
+            btnNavHome.HoverBackground = Color.Transparent;
+            btnNavHome.HoverTextColor = Color.Gray;
+            btnNavHome.Icon = Properties.Resources.home;
+            btnNavHome.IconSize = 30;
+            btnNavHome.IsActive = true;
+            btnNavHome.Location = new Point(22, 222);
+            btnNavHome.Name = "btnNavHome";
+            btnNavHome.NormalTextColor = Color.FromArgb(148, 163, 184);
+            btnNavHome.RightToLeft = RightToLeft.Yes;
+            btnNavHome.Size = new Size(200, 65);
+            btnNavHome.TabIndex = 7;
+            btnNavHome.Text = "الرئيسة";
+            btnNavHome.UseActiveEffect = true;
+            btnNavHome.UseHoverEffect = true;
+            btnNavHome.Click += btnNavHome_Click;
+            // 
+            // btnNavCustomers
+            // 
+            btnNavCustomers.ActiveBackground = Color.White;
+            btnNavCustomers.ActiveBarColor = Color.FromArgb(124, 111, 247);
+            btnNavCustomers.ActiveBarFullHeight = false;
+            btnNavCustomers.ActiveBarPadding = 2;
+            btnNavCustomers.ActiveBarWidth = 5;
+            btnNavCustomers.ActiveTextColor = Color.FromArgb(124, 111, 247);
+            btnNavCustomers.BackColor = Color.Transparent;
+            btnNavCustomers.BaseBackground = Color.FromArgb(37, 43, 74);
+            btnNavCustomers.BorderRadius = 8;
+            btnNavCustomers.CardPadding = 0;
+            btnNavCustomers.ContentPadding = 12;
+            btnNavCustomers.Font = new Font("IBM Plex Sans Arabic", 13.5F, FontStyle.Bold);
+            btnNavCustomers.ForeColor = Color.Transparent;
+            btnNavCustomers.HoverBackground = Color.Transparent;
+            btnNavCustomers.HoverTextColor = Color.Gray;
+            btnNavCustomers.Icon = Properties.Resources.users_static;
+            btnNavCustomers.IconSize = 25;
+            btnNavCustomers.IsActive = false;
+            btnNavCustomers.Location = new Point(22, 572);
+            btnNavCustomers.Name = "btnNavCustomers";
+            btnNavCustomers.NormalTextColor = Color.Gray;
+            btnNavCustomers.RightToLeft = RightToLeft.Yes;
+            btnNavCustomers.Size = new Size(200, 65);
+            btnNavCustomers.TabIndex = 6;
+            btnNavCustomers.Text = "العملاء";
+            btnNavCustomers.UseActiveEffect = true;
+            btnNavCustomers.UseHoverEffect = true;
+            btnNavCustomers.Click += btnCustomers_Click;
+            // 
+            // btnNavCustomerGroups
+            // 
+            btnNavCustomerGroups.ActiveBackground = Color.White;
+            btnNavCustomerGroups.ActiveBarColor = Color.FromArgb(124, 111, 247);
+            btnNavCustomerGroups.ActiveBarFullHeight = false;
+            btnNavCustomerGroups.ActiveBarPadding = 2;
+            btnNavCustomerGroups.ActiveBarWidth = 5;
+            btnNavCustomerGroups.ActiveTextColor = Color.FromArgb(124, 111, 247);
+            btnNavCustomerGroups.BackColor = Color.Transparent;
+            btnNavCustomerGroups.BaseBackground = Color.FromArgb(37, 43, 74);
+            btnNavCustomerGroups.BorderRadius = 8;
+            btnNavCustomerGroups.CardPadding = 0;
+            btnNavCustomerGroups.ContentPadding = 12;
+            btnNavCustomerGroups.Font = new Font("IBM Plex Sans Arabic", 13.5F, FontStyle.Bold);
+            btnNavCustomerGroups.ForeColor = Color.Transparent;
+            btnNavCustomerGroups.HoverBackground = Color.Transparent;
+            btnNavCustomerGroups.HoverTextColor = Color.Gray;
+            btnNavCustomerGroups.Icon = Properties.Resources.groups;
+            btnNavCustomerGroups.IconSize = 30;
+            btnNavCustomerGroups.IsActive = false;
+            btnNavCustomerGroups.Location = new Point(28, 747);
+            btnNavCustomerGroups.Name = "btnNavCustomerGroups";
+            btnNavCustomerGroups.NormalTextColor = Color.Gray;
+            btnNavCustomerGroups.RightToLeft = RightToLeft.Yes;
+            btnNavCustomerGroups.Size = new Size(200, 65);
+            btnNavCustomerGroups.TabIndex = 2;
+            btnNavCustomerGroups.Text = "مجموعات العملاء";
+            btnNavCustomerGroups.UseActiveEffect = true;
+            btnNavCustomerGroups.UseHoverEffect = true;
+            btnNavCustomerGroups.Click += btnNavCustomerGroups_Click;
             // 
             // btnSettings
             // 
@@ -133,7 +262,7 @@
             btnScheduledMessages.IconColor = Color.FromArgb(150, 255, 255, 255);
             btnScheduledMessages.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnScheduledMessages.IconSize = 45;
-            btnScheduledMessages.Location = new Point(28, 618);
+            btnScheduledMessages.Location = new Point(49, 251);
             btnScheduledMessages.Name = "btnScheduledMessages";
             btnScheduledMessages.Size = new Size(86, 90);
             btnScheduledMessages.TabIndex = 4;
@@ -154,7 +283,7 @@
             btnTemplates.IconColor = Color.FromArgb(150, 255, 255, 255);
             btnTemplates.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnTemplates.IconSize = 45;
-            btnTemplates.Location = new Point(28, 723);
+            btnTemplates.Location = new Point(49, 356);
             btnTemplates.Name = "btnTemplates";
             btnTemplates.Size = new Size(86, 90);
             btnTemplates.TabIndex = 3;
@@ -175,54 +304,12 @@
             btnOrders.IconColor = Color.FromArgb(150, 255, 255, 255);
             btnOrders.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnOrders.IconSize = 45;
-            btnOrders.Location = new Point(28, 508);
+            btnOrders.Location = new Point(49, 141);
             btnOrders.Name = "btnOrders";
             btnOrders.Size = new Size(86, 90);
             btnOrders.TabIndex = 2;
             btnOrders.UseVisualStyleBackColor = false;
             btnOrders.Click += btnOrders_Click;
-            // 
-            // btnMessages
-            // 
-            btnMessages.BackColor = Color.Transparent;
-            btnMessages.BackgroundImageLayout = ImageLayout.Zoom;
-            btnMessages.Cursor = Cursors.Hand;
-            btnMessages.FlatAppearance.BorderSize = 0;
-            btnMessages.FlatAppearance.MouseDownBackColor = Color.Transparent;
-            btnMessages.FlatAppearance.MouseOverBackColor = Color.Transparent;
-            btnMessages.FlatStyle = FlatStyle.Flat;
-            btnMessages.ForeColor = SystemColors.ControlText;
-            btnMessages.IconChar = FontAwesome.Sharp.IconChar.Message;
-            btnMessages.IconColor = Color.FromArgb(150, 255, 255, 255);
-            btnMessages.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnMessages.IconSize = 45;
-            btnMessages.Location = new Point(28, 398);
-            btnMessages.Name = "btnMessages";
-            btnMessages.Size = new Size(86, 90);
-            btnMessages.TabIndex = 1;
-            btnMessages.UseVisualStyleBackColor = false;
-            btnMessages.Click += btnMessages_Click;
-            // 
-            // btnCustomers
-            // 
-            btnCustomers.BackColor = Color.Transparent;
-            btnCustomers.BackgroundImageLayout = ImageLayout.Zoom;
-            btnCustomers.Cursor = Cursors.Hand;
-            btnCustomers.FlatAppearance.BorderSize = 0;
-            btnCustomers.FlatAppearance.MouseDownBackColor = Color.Transparent;
-            btnCustomers.FlatAppearance.MouseOverBackColor = Color.Transparent;
-            btnCustomers.FlatStyle = FlatStyle.Flat;
-            btnCustomers.ForeColor = SystemColors.ControlText;
-            btnCustomers.IconChar = FontAwesome.Sharp.IconChar.Users;
-            btnCustomers.IconColor = Color.FromArgb(150, 255, 255, 255);
-            btnCustomers.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnCustomers.IconSize = 45;
-            btnCustomers.Location = new Point(28, 288);
-            btnCustomers.Name = "btnCustomers";
-            btnCustomers.Size = new Size(86, 90);
-            btnCustomers.TabIndex = 0;
-            btnCustomers.UseVisualStyleBackColor = false;
-            btnCustomers.Click += btnCustomers_Click;
             // 
             // customPanel1
             // 
@@ -235,11 +322,11 @@
             customPanel1.Dock = DockStyle.Right;
             customPanel1.Font = new Font("Segoe UI", 10F);
             customPanel1.ForeColor = Color.Black;
-            customPanel1.Location = new Point(1316, 0);
+            customPanel1.Location = new Point(1321, 0);
             customPanel1.Name = "customPanel1";
             customPanel1.ShadowColor = Color.FromArgb(80, 0, 0, 0);
             customPanel1.ShadowSize = 0;
-            customPanel1.Size = new Size(137, 1043);
+            customPanel1.Size = new Size(240, 1043);
             customPanel1.TabIndex = 4;
             customPanel1.UseShadow = true;
             // 
@@ -264,10 +351,10 @@
             pnlHeader.Name = "pnlHeader";
             pnlHeader.ShadowColor = Color.FromArgb(80, 0, 0, 0);
             pnlHeader.ShadowSize = 6;
-            pnlHeader.Size = new Size(1272, 63);
+            pnlHeader.Size = new Size(1301, 63);
             pnlHeader.TabIndex = 3;
             pnlHeader.UseShadow = true;
-            pnlHeader.MouseDown += customPanel3_MouseDown;
+            pnlHeader.MouseDown += pnlHeader_MouseDown;
             // 
             // picClose
             // 
@@ -299,7 +386,7 @@
             pnlMain.Name = "pnlMain";
             pnlMain.ShadowColor = Color.FromArgb(80, 0, 0, 0);
             pnlMain.ShadowSize = 6;
-            pnlMain.Size = new Size(1453, 1043);
+            pnlMain.Size = new Size(1561, 1043);
             pnlMain.TabIndex = 3;
             pnlMain.UseShadow = true;
             // 
@@ -318,6 +405,7 @@
             // pnlContent
             // 
             pnlContent.BackColor = Color.Transparent;
+            pnlContent.Controls.Add(gradientPanel1);
             pnlContent.CustomizableEdges = customizableEdges3;
             pnlContent.FillColor = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor2 = Color.FromArgb(248, 247, 255);
@@ -326,8 +414,48 @@
             pnlContent.Location = new Point(3, 78);
             pnlContent.Name = "pnlContent";
             pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges4;
-            pnlContent.Size = new Size(1306, 890);
+            pnlContent.Size = new Size(1312, 890);
             pnlContent.TabIndex = 0;
+            // 
+            // gradientPanel1
+            // 
+            gradientPanel1.BackColor = Color.FromArgb(26, 31, 60);
+            gradientPanel1.Controls.Add(iconButton1);
+            gradientPanel1.Controls.Add(btnOrders);
+            gradientPanel1.Controls.Add(btnTemplates);
+            gradientPanel1.Controls.Add(btnScheduledMessages);
+            gradientPanel1.CornerRadius = 0;
+            gradientPanel1.GradientEndColor = Color.FromArgb(26, 31, 60);
+            gradientPanel1.GradientMidColor = Color.FromArgb(26, 31, 60);
+            gradientPanel1.GradientStartColor = Color.FromArgb(26, 31, 60);
+            gradientPanel1.HoverGlow = false;
+            gradientPanel1.HoverGlowColor = Color.Transparent;
+            gradientPanel1.Location = new Point(9, 47);
+            gradientPanel1.Name = "gradientPanel1";
+            gradientPanel1.ShadowColor = Color.Transparent;
+            gradientPanel1.ShadowRadius = 0;
+            gradientPanel1.Size = new Size(226, 590);
+            gradientPanel1.TabIndex = 9;
+            // 
+            // iconButton1
+            // 
+            iconButton1.BackColor = Color.Transparent;
+            iconButton1.BackgroundImageLayout = ImageLayout.Zoom;
+            iconButton1.Cursor = Cursors.Hand;
+            iconButton1.FlatAppearance.BorderSize = 0;
+            iconButton1.FlatAppearance.MouseDownBackColor = Color.Transparent;
+            iconButton1.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            iconButton1.FlatStyle = FlatStyle.Flat;
+            iconButton1.ForeColor = SystemColors.ControlText;
+            iconButton1.IconChar = FontAwesome.Sharp.IconChar.Cog;
+            iconButton1.IconColor = Color.FromArgb(150, 255, 255, 255);
+            iconButton1.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconButton1.IconSize = 45;
+            iconButton1.Location = new Point(28, 945);
+            iconButton1.Name = "iconButton1";
+            iconButton1.Size = new Size(86, 90);
+            iconButton1.TabIndex = 5;
+            iconButton1.UseVisualStyleBackColor = false;
             // 
             // pnlBottom
             // 
@@ -336,7 +464,7 @@
             pnlBottom.Location = new Point(0, 983);
             pnlBottom.Name = "pnlBottom";
             pnlBottom.ShadowDecoration.CustomizableEdges = customizableEdges6;
-            pnlBottom.Size = new Size(1316, 60);
+            pnlBottom.Size = new Size(1321, 60);
             pnlBottom.TabIndex = 9;
             // 
             // Home
@@ -344,7 +472,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
-            ClientSize = new Size(1453, 1043);
+            ClientSize = new Size(1561, 1043);
             Controls.Add(pnlMain);
             FormBorderStyle = FormBorderStyle.None;
             Name = "Home";
@@ -357,6 +485,8 @@
             ((System.ComponentModel.ISupportInitialize)picClose).EndInit();
             pnlMain.ResumeLayout(false);
             pnlTop.ResumeLayout(false);
+            pnlContent.ResumeLayout(false);
+            gradientPanel1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -367,15 +497,19 @@
         private Car_Rental_System.CustomControls.CustomPanel pnlMain;
         private Guna.UI2.WinForms.Guna2CustomGradientPanel pnlBottom;
         private Guna.UI2.WinForms.Guna2CustomGradientPanel pnlTop;
-        private FontAwesome.Sharp.IconButton btnCustomers;
         private Guna.UI2.WinForms.Guna2CustomGradientPanel pnlContent;
         private FontAwesome.Sharp.IconButton btnOrders;
-        private FontAwesome.Sharp.IconButton btnMessages;
         private FontAwesome.Sharp.IconButton btnTemplates;
         private FontAwesome.Sharp.IconButton btnScheduledMessages;
         private Car_Rental_System.CustomControls.CustomPanel customPanel1;
         private PictureBox picClose;
         private FontAwesome.Sharp.IconButton btnSettings;
         private Controls.ModernPictureBox modernPictureBox1;
+        private Controls.ModernNavButton btnNavCustomerGroups;
+        private Controls.ModernNavButton btnNavCustomers;
+        private Controls.ModernNavButton btnNavHome;
+        private Controls.ModernNavButton btnNavMessages;
+        private GradientPanel gradientPanel1;
+        private FontAwesome.Sharp.IconButton iconButton1;
     }
 }
