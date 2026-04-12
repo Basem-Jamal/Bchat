@@ -143,6 +143,9 @@ namespace BChat.UserControls
 
         }
 
-
+        private void btnRefreshData_Click(object sender, EventArgs e)
+        {
+            LoadCustomers();
+        }
     }
 }

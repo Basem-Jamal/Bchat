@@ -35,6 +35,7 @@
             stcdCoustomers = new BChat.Controls.StatCard();
             statCard1 = new BChat.Controls.StatCard();
             btnAddCustomer = new BChat.Controls.ModernButton();
+            btnRefreshData = new BChat.Controls.ModernButton();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -113,11 +114,26 @@
             btnAddCustomer.Text = "اضافة عميل";
             btnAddCustomer.Click += btnAddCustomer_Click;
             // 
+            // btnRefreshData
+            // 
+            btnRefreshData.BackColor = Color.Transparent;
+            btnRefreshData.BorderRadius = 20;
+            btnRefreshData.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
+            btnRefreshData.Icon = Properties.Resources.refersh;
+            btnRefreshData.Location = new Point(245, 41);
+            btnRefreshData.Name = "btnRefreshData";
+            btnRefreshData.RightToLeft = RightToLeft.Yes;
+            btnRefreshData.Size = new Size(110, 66);
+            btnRefreshData.TabIndex = 12;
+            btnRefreshData.Text = "تحديث";
+            btnRefreshData.Click += btnRefreshData_Click;
+            // 
             // CustomersControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(248, 247, 255);
+            Controls.Add(btnRefreshData);
             Controls.Add(btnAddCustomer);
             Controls.Add(statCard1);
             Controls.Add(stcdCoustomers);
@@ -136,5 +152,6 @@
         private Controls.StatCard stcdCoustomers;
         private Controls.StatCard statCard1;
         private Controls.ModernButton btnAddCustomer;
+        private Controls.ModernButton btnRefreshData;
     }
 }

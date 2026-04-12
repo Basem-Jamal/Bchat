@@ -151,6 +151,9 @@
   <data name="user-group" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Customers Icon\user-group.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="add_group" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Customers Icon\add_group.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Customers1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Customers Icon\Customers.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -208,7 +211,7 @@
   <data name="message" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Customers Icon\message.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="add_group" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\Icon\Customers Icon\add_group.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="refersh" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\refersh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
