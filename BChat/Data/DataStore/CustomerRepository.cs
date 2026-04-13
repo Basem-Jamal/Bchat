@@ -73,7 +73,7 @@ namespace BChat.Data.DataStore
             return null;
         }
 
-        public static void Add(Customer customer)
+        public static bool Add(Customer customer)
         {
             bool Status = false;
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -86,13 +86,20 @@ namespace BChat.Data.DataStore
                     cmd.Parameters.AddWithValue("@Name", customer.Name);
                     cmd.Parameters.AddWithValue("@Phone", customer.Phone);
 
-                    cmd.ExecuteNonQuery();
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        AppEvents.ChangeRefreshCustomesTable();
+                        return true;
 
-                    
+                    }
+                    catch (SqlException ex) when (ex.Number == 2627)
+                    {
+                        return false;
+
+                    }
                 }
             }
-            AppEvents.ChangeRefreshCustomesTable();
-             
         }
 
         public static bool Delete(int id)

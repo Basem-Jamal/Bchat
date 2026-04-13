@@ -67,10 +67,18 @@ namespace BChat.Forms
                     Name = txbCustomerName.Text,
                     Phone = phone.ToString(),
                 };
-                CustomerRepository.Add(customer);
+                bool added = CustomerRepository.Add(customer);
 
+                if (added)
+                {
+                    MessageBox.Show("تمت الإضافة بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                MessageBox.Show("تم اضافة العميل بنجاح!", "النظام", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("رقم الجوال مسجل مسبقاً", "تكرار", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
 
             }
             
