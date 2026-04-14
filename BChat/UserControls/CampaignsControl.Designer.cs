@@ -1,6 +1,6 @@
 ﻿namespace BChat.UserControls
 {
-    partial class MessagesControl
+    partial class CampaignsControl
     {
         /// <summary> 
         /// Required designer variable.

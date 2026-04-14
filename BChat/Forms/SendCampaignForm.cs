@@ -25,7 +25,7 @@ namespace BChat.Forms
 
             var templates = TemplateRepository.GetAll();
             cmbTemplate.ClearItems();
-            cmbTemplate.AddItems(templates.Select(t => t.Name));
+            //cmbTemplate.شيي(templates.Select(t => t.Name));
         }
 
         private void picClose_Click(object sender, EventArgs e)
@@ -41,72 +41,83 @@ namespace BChat.Forms
 
         private async void btnSendCampaign_Click(object sender, EventArgs e)
         {
-            //// ── 1. تحقق من اختيار قالب ─────────────────────────
-            //if (cmbTemplate.SelectedIndex < 0)
-            //{
-            //    MessageBox.Show("يجب اختيار قالب!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            //    return;
-            //}
+            // ── 1. تحقق من اختيار قالب ─────────────────────────
+            if (cmbTemplate.SelectedIndex < 0)
+            {
+                MessageBox.Show("يجب اختيار قالب!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-            //// ── 2. جيب القالب والعملاء ─────────────────────────
-            //var templates = TemplateRepository.GetAll();
-            //var template = templates[cmbTemplate.SelectedIndex];
-            //var customers = CustomerRepository.GetAll();
+            // ── 2. جيب القالب والعملاء ─────────────────────────
+            var templates = TemplateRepository.GetAll();
+            var template = templates[cmbTemplate.SelectedIndex];
+            var customers = CustomerRepository.GetAll();
 
-            //if (customers.Count == 0)
-            //{
-            //    MessageBox.Show("لا يوجد عملاء!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            //    return;
-            //}
+            if (customers.Count == 0)
+            {
+                MessageBox.Show("لا يوجد عملاء!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-            //// ── 3. تأكيد الإرسال ───────────────────────────────
-            //var confirm = MessageBox.Show(
-            //    $"سيتم إرسال الرسالة لـ {customers.Count} عميل\nهل أنت متأكد؟",
-            //    "تأكيد الإرسال",
-            //    MessageBoxButtons.YesNo,
-            //    MessageBoxIcon.Question
-            //);
+            // ── 3. إذا القالب فيه صورة — اطلب رابطها ──────────
+            string imageUrl = "";
+            if (template.HeaderType == "IMAGE")
+            {
+                imageUrl = Microsoft.VisualBasic.Interaction.InputBox(
+                    "هذا القالب يحتوي على صورة\nأدخل رابط الصورة:",
+                    "رابط الصورة",
+                    ""
+                );
 
-            //if (confirm != DialogResult.Yes) return;
+                if (string.IsNullOrWhiteSpace(imageUrl))
+                {
+                    MessageBox.Show("يجب إدخال رابط الصورة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
 
-            //// ── 4. إرسال الرسائل ────────────────────────────────
-            //var service = new BChat.Services.WhatsAppService();
-            //int success = 0;
-            //int failed = 0;
+            // ── 4. تأكيد الإرسال ───────────────────────────────
+            var confirm = MessageBox.Show(
+                $"سيتم إرسال القالب [{template.Name}] لـ {customers.Count} عميل\nهل أنت متأكد؟",
+                "تأكيد الإرسال",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
 
-            //btnSendCampaign.Enabled = false;
-            //btnSendCampaign.Text = "جاري الإرسال...";
+            if (confirm != DialogResult.Yes) return;
 
-            //foreach (var customer in customers)
-            //{
-            //    bool sent = await service.SendTextMessage(customer.Phone, template.Content);
+            // ── 5. إرسال الرسائل ────────────────────────────────
+            var service = new BChat.Services.WhatsAppService();
+            int success = 0;
+            int failed = 0;
 
-            //    // سجّل الرسالة في الداتابيز
-            //    MessageRepository.Add(new BChat.Models.ChatMessage
-            //    {
-            //        CustomerId = customer.Id,
-            //        TemplateId = template.Id,
-            //        Status = sent ? "sent" : "failed",
-            //        TriggerType = "manual"
-            //    });
+            btnSendCampaign.Enabled = false;
+            btnSendCampaign.Text = "جاري الإرسال...";
 
-            //    if (sent) success++;
-            //    else failed++;
-            //}
+            foreach (var customer in customers)
+            {
+                bool sent = await service.SendTemplateMessage(
+                    customer.Phone,
+                    template.Name,
+                    template.Language ?? "ar",
+                    template.HeaderType,
+                    imageUrl
+                );
 
-            //// ── 5. النتيجة ─────────────────────────────────────
-            //MessageBox.Show(
-            //    $"✅ تم الإرسال: {success}\n❌ فشل: {failed}",
-            //    "نتيجة الحملة",
-            //    MessageBoxButtons.OK,
-            //    MessageBoxIcon.Information
-            //);
+                if (sent) success++;
+                else failed++;
+            }
 
-            //btnSendCampaign.Enabled = true;
-            //btnSendCampaign.Text = "إرسال الحملة";
+            // ── 6. النتيجة ─────────────────────────────────────
+            MessageBox.Show(
+                $"✅ تم الإرسال: {success}\n❌ فشل: {failed}",
+                "نتيجة الحملة",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information
+            );
 
-            this.Close();
-
+            btnSendCampaign.Enabled = true;
+            btnSendCampaign.Text = "إرسال الحملة";
         }
     }
 }

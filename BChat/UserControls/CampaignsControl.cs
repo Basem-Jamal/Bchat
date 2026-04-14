@@ -6,11 +6,11 @@ using BChat.Models;
 
 namespace BChat.UserControls
 {
-    public partial class MessagesControl : UserControl
+    public partial class CampaignsControl : UserControl
     {
         private SlickTable _table;
 
-        public MessagesControl()
+        public CampaignsControl()
         {
             InitializeComponent();
             InitTable();

@@ -120,7 +120,6 @@
             // cmbTemplate
             // 
             cmbTemplate.BackColor = Color.Transparent;
-            cmbTemplate.BorderRadius = 14;
             cmbTemplate.Font = new Font("IBM Plex Sans Arabic", 12F);
             cmbTemplate.LabelText = "";
             cmbTemplate.Location = new Point(92, 303);
@@ -128,7 +127,6 @@
             cmbTemplate.PlaceholderText = "";
             cmbTemplate.RightToLeft = RightToLeft.Yes;
             cmbTemplate.SelectedIndex = -1;
-            cmbTemplate.SelectedValue = null;
             cmbTemplate.Size = new Size(664, 57);
             cmbTemplate.TabIndex = 3;
             cmbTemplate.Text = "modernComboBox1";

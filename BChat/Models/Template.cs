@@ -18,7 +18,12 @@ namespace BChat.Models
         public string Content { get; set; }
         public string Category { get; set; }
         public DateTime CreatedAt { get; set; }
-
         public TemplateStatus Status { get; set; }
+
+        // ✅ أضف هذي
+        public string Language { get; set; }
+        public string HeaderType { get; set; }
+        public string HeaderText { get; set; }
+        public string ComponentsJson { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using BChat.Data.DataStore;
 using BChat.Events;
 using BChat.Forms;
 using BChat.Models;
+using BChat.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,20 +23,28 @@ namespace BChat.UserControls
         public TemplatesControl()
         {
             InitializeComponent();
-            InitTable();
-            LoadTemplates();
+
+            this.Load += TemplatesControl_Load;
+
+
+        }
+
+        private async void TemplatesControl_Load(object sender, EventArgs e)
+        {
+            await InitTable();   // ✅ انتظر إنشاء الجدول
+            LoadTemplates();     // ✅ بعدها حمّل البيانات
 
             _table.IsRtl = true;
             _table.BorderRadius = 10;
             _table.ShadowDepth = 0;
 
             AppEvents.OnRefreshTemplatesTable += LoadTemplates;
-
+            await LoadTemplatesCombo();
 
         }
-
-        private void InitTable()
+        private async Task InitTable()
         {
+
             _table = new SlickTable
             {
                 Dock = DockStyle.Fill,
@@ -60,28 +69,59 @@ namespace BChat.UserControls
             _table.EditClicked += Table_EditClicked;
             pnlContent.Controls.Add(_table);
         }
-
-        private void LoadTemplates()
+        private async Task LoadTemplatesCombo()
         {
-            var templates = TemplateRepository.GetAll();
+            var templates =  TemplateRepository.GetAll();
+
+            cmbTemplate.Items.Clear();
+            foreach (var t in templates)
+            {
+                cmbTemplate.Items.Add(t.Name);
+            }
+        }
+        private async void LoadTemplates()
+        {
+            //var templates = TemplateRepository.GetAll();
+
+            //stcdTemplates.Value = templates.Count.ToString();
+
+            //var rows = new List<Dictionary<string, object>>();
+
+            //foreach (var t in templates)
+            //{
+            //    rows.Add(new Dictionary<string, object>
+            //    {
+            //        { "Id",        t.Id },
+            //        { "Name",      t.Name },
+            //        { "Content",    t.Content },
+            //        { "Category",     t.Category },
+            //        { "CreatedAt", t.CreatedAt.ToString("yyyy/MM/dd") }
+            //    });
+            //}
+
+            //_table.SetData(rows);
+
+
+            var service = new WhatsAppService();
+            var templates = await service.GetTemplatesAsync();
 
             stcdTemplates.Value = templates.Count.ToString();
 
             var rows = new List<Dictionary<string, object>>();
-
             foreach (var t in templates)
             {
                 rows.Add(new Dictionary<string, object>
                 {
-                    { "Id",        t.Id },
-                    { "Name",      t.Name },
-                    { "Content",    t.Content },
-                    { "Category",     t.Category },
-                    { "CreatedAt", t.CreatedAt.ToString("yyyy/MM/dd") }
+                    { "Id",       t.Name },   // ← أضف هذا
+                    { "Name",     t.Name },
+                    { "Content",  t.BodyText },
+                    { "Category", t.Category },
+                    { "CreatedAt", "-" },        // ← أضف هذا
+
                 });
             }
-
             _table.SetData(rows);
+
         }
 
 
@@ -109,7 +149,7 @@ namespace BChat.UserControls
                 Name = row["Name"].ToString(),
                 Content = row["Content"].ToString(),
                 Category = row["Category"].ToString(),
-                CreatedAt = Convert.ToDateTime(row["CreatedAt"])
+                CreatedAt = Convert.ToDateTime(row["CreatedAt"]) // "-" مو تاريخ
             };
             AddTemplateForm updateTemplate = new AddTemplateForm(template, TemplateStatus.Update);
             updateTemplate.ShowDialog();
@@ -156,6 +196,15 @@ namespace BChat.UserControls
             addTemplateForm.ShowDialog();
 
             overlay.Close(mainForm);
+
+        }
+
+        private async void btnSyncTemplates_Click(object sender, EventArgs e)
+        {
+            var service = new WhatsAppService();
+            await service.SyncTemplatesToDatabase();
+            MessageBox.Show("✅ تمت المزامنة بنجاح!", "مزامنة", MessageBoxButtons.OK);
+            LoadTemplates(); // تحديث الجدول
 
         }
     }

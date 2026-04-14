@@ -31,15 +31,19 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pnlContent = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
+            cmbTemplate = new ComboBox();
             btnAddTemplate = new BChat.Controls.ModernButton();
             stcdTemplates = new BChat.Controls.StatCard();
             picTemplates = new PictureBox();
+            btnSyncTemplates = new BChat.Controls.ModernButton();
+            pnlContent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)picTemplates).BeginInit();
             SuspendLayout();
             // 
             // pnlContent
             // 
             pnlContent.BackColor = Color.FromArgb(248, 247, 255);
+            pnlContent.Controls.Add(cmbTemplate);
             pnlContent.CustomizableEdges = customizableEdges1;
             pnlContent.FillColor = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor2 = Color.FromArgb(248, 247, 255);
@@ -51,13 +55,21 @@
             pnlContent.Size = new Size(1306, 461);
             pnlContent.TabIndex = 13;
             // 
+            // cmbTemplate
+            // 
+            cmbTemplate.FormattingEnabled = true;
+            cmbTemplate.Location = new Point(500, 42);
+            cmbTemplate.Name = "cmbTemplate";
+            cmbTemplate.Size = new Size(446, 23);
+            cmbTemplate.TabIndex = 0;
+            // 
             // btnAddTemplate
             // 
             btnAddTemplate.BackColor = Color.Transparent;
             btnAddTemplate.BorderRadius = 20;
             btnAddTemplate.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
             btnAddTemplate.Icon = Properties.Resources.plus;
-            btnAddTemplate.Location = new Point(1068, 50);
+            btnAddTemplate.Location = new Point(1064, 50);
             btnAddTemplate.Name = "btnAddTemplate";
             btnAddTemplate.RightToLeft = RightToLeft.Yes;
             btnAddTemplate.Size = new Size(209, 70);
@@ -94,17 +106,34 @@
             picTemplates.TabIndex = 16;
             picTemplates.TabStop = false;
             // 
+            // btnSyncTemplates
+            // 
+            btnSyncTemplates.BackColor = Color.Transparent;
+            btnSyncTemplates.BorderRadius = 20;
+            btnSyncTemplates.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
+            btnSyncTemplates.Icon = Properties.Resources.refersh;
+            btnSyncTemplates.Location = new Point(341, 50);
+            btnSyncTemplates.Name = "btnSyncTemplates";
+            btnSyncTemplates.RightToLeft = RightToLeft.Yes;
+            btnSyncTemplates.Size = new Size(157, 70);
+            btnSyncTemplates.TabIndex = 17;
+            btnSyncTemplates.Text = "مزامنة";
+            btnSyncTemplates.Click += btnSyncTemplates_Click;
+            // 
             // TemplatesControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(248, 247, 255);
+            Controls.Add(btnSyncTemplates);
             Controls.Add(picTemplates);
             Controls.Add(stcdTemplates);
             Controls.Add(btnAddTemplate);
             Controls.Add(pnlContent);
             Name = "TemplatesControl";
             Size = new Size(1306, 890);
+            Load += TemplatesControl_Load;
+            pnlContent.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)picTemplates).EndInit();
             ResumeLayout(false);
         }
@@ -114,5 +143,7 @@
         private Controls.ModernButton btnAddTemplate;
         private Controls.StatCard stcdTemplates;
         private PictureBox picTemplates;
+        private ComboBox cmbTemplate;
+        private Controls.ModernButton btnSyncTemplates;
     }
 }

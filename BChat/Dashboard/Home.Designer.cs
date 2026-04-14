@@ -70,6 +70,7 @@
             pnlMenuSidebar.BackColor = Color.FromArgb(26, 31, 60);
             pnlMenuSidebar.Controls.Add(btnNavMessages);
             pnlMenuSidebar.Controls.Add(modernPictureBox1);
+            pnlMenuSidebar.Controls.Add(btnTemplates);
             pnlMenuSidebar.Controls.Add(btnNavHome);
             pnlMenuSidebar.Controls.Add(btnNavCustomers);
             pnlMenuSidebar.Controls.Add(btnNavCustomerGroups);
@@ -283,7 +284,7 @@
             btnTemplates.IconColor = Color.FromArgb(150, 255, 255, 255);
             btnTemplates.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnTemplates.IconSize = 45;
-            btnTemplates.Location = new Point(49, 356);
+            btnTemplates.Location = new Point(88, 849);
             btnTemplates.Name = "btnTemplates";
             btnTemplates.Size = new Size(86, 90);
             btnTemplates.TabIndex = 3;
@@ -422,7 +423,6 @@
             gradientPanel1.BackColor = Color.FromArgb(26, 31, 60);
             gradientPanel1.Controls.Add(iconButton1);
             gradientPanel1.Controls.Add(btnOrders);
-            gradientPanel1.Controls.Add(btnTemplates);
             gradientPanel1.Controls.Add(btnScheduledMessages);
             gradientPanel1.CornerRadius = 0;
             gradientPanel1.GradientEndColor = Color.FromArgb(26, 31, 60);
