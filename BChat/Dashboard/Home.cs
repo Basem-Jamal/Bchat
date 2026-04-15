@@ -2,6 +2,7 @@ using BChat.Salla;
 using BChat.UserControls;
 using FontAwesome.Sharp;
 using Guna.UI2.WinForms;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using static Guna.UI2.WinForms.Suite.Descriptions;
 
@@ -34,10 +35,31 @@ namespace BChat
                           ControlStyles.UserPaint, true);
         }
 
-        private void Home_Load(object sender, EventArgs e)
+        private async void Home_Load(object sender, EventArgs e)
         {
-        }
 
+        }
+        private void UpdateAzureIP()
+        {
+            try
+            {
+                var psi = new ProcessStartInfo
+                {
+                    FileName = "powershell.exe",
+                    Arguments = "-ExecutionPolicy Bypass -WindowStyle Hidden -File \"C:\\Scripts\\update-azure-firewall.ps1\"",
+                    UseShellExecute = false,
+                    CreateNoWindow  = true,
+                };
+
+                using (var process = Process.Start(psi))
+                {
+                    process.WaitForExit(30000);
+                }
+
+            }
+            catch { /* تجاهل لو فشل */ }
+
+        }
 
         private void btnNavHome_Click(object sender, EventArgs e)
         {

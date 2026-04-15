@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace BChat
 {
     internal static class Program
@@ -13,7 +15,10 @@ namespace BChat
 
 
             ApplicationConfiguration.Initialize();
+
+
             Application.Run(new Home());
         }
+
     }
 }

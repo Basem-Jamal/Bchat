@@ -14,7 +14,7 @@ namespace BChat.Services
 
         public WhatsAppService()
         {
-            _accessToken = "EAAUFWHIkrd8BRJ1PP5t9WIUuIlCIw2gIn5RZBCyEjqWmCHBSLF0Gp1NTOHlx5jnoJYorLHL0OcJan4ca4YAgZCOj1SEZAczi3Na91OEmKNQOdWKX8HIDNQXZByRlLJ9wVQBAfpa68DIHZBG84gR60skXw0bJClCJ3meOUmJxghRKYlaV9XJJ47cvtSX5viAZDZD";
+            _accessToken = "EAAUFWHIkrd8BRJV8CQ3JooKMNHWlg5lOvjqMVYKxbLjrtdqI43qOkFqBuQsCGTKSZAV9UA0hpDxZCKytZB4nGTFU0pdeKCZBIZCAvnUy06MZAxfGPz8DNwzx68bDqt5bhUuSykRM8ZA2qQA5ZBneHAPSdRoYOhFieJCWiBm6zySXJ6Xjk9gXWPm4ULv7lLZCKwdIO7I0Bmbb7iMWlkBpHXTX1K8UFh6aP8hrwocZCa";
             _phoneNumberId = "277769305429634";
             _wabaId = "332467619947421";
             _httpClient = new HttpClient();
