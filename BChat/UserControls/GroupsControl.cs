@@ -36,7 +36,12 @@ namespace BChat.UserControls
         }
         private void LoadCustomerGroups()
         {
+
+            
+
             groupsWrapPanel.LoadGroups(AppCache.Groups, GeneralFunctions.Base64ToImage);
+
+
         }
 
         private void btnRefreshData_Click(object sender, EventArgs e)

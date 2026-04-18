@@ -73,14 +73,15 @@ namespace BChat.Data.DataStore
             return null;
         }
 
-        public static bool Add(Customer customer)
+        public static int Add(Customer customer)
         {
-            bool Status = false;
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
-                string query = "INSERT INTO Customers (Name, Phone) VALUES (@Name, @Phone)";
+                string query = "INSERT INTO Customers (Name, Phone) VALUES (@Name, @Phone);" +
+                    "SELECT SCOPE_IDENTITY()";
 
+                
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@Name", customer.Name);
@@ -88,16 +89,16 @@ namespace BChat.Data.DataStore
 
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        int newId = Convert.ToInt32(cmd.ExecuteScalar());
                         AppEvents.ChangeRefreshCustomesTable();
-                        return true;
+                        return newId;
 
                     }
                     catch (SqlException ex) when (ex.Number == 2627)
                     {
-                        return false;
-
+                        return -1;
                     }
+
                 }
             }
         }

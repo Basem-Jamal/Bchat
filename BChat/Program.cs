@@ -17,13 +17,27 @@ namespace BChat
 
 
             ApplicationConfiguration.Initialize();
-
             AppCache.Groups = GroupRepository.GetAll();
+
+            AppCache.GroupMembers = GroupMemberRepository.GetAll();
+
+            CalculateMembersCount();
+
 
             Application.Run(new Home());
 
         }
 
+        private static void CalculateMembersCount()
+        {
+            foreach (var group in AppCache.Groups)
+            {
+                int count = AppCache.GroupMembers.Count(m => m.GroupId == group.Id);
+                group.StatOneValue = count.ToString();
+                group.StatOneLabel = "عضو";
+            }
+        }
+        
         private static void UpdateAzureIP()
         {
             try

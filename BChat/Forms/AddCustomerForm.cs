@@ -1,5 +1,8 @@
 ﻿using BChat.Data.DataStore;
+using BChat.Events;
+using BChat.Global;
 using BChat.Models;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,6 +27,10 @@ namespace BChat.Forms
 
             _customer = customer;
             _status = status;
+
+
+            groupSelector.LoadGroups(AppCache.Groups, GeneralFunctions.Base64ToImage);  // ← أضف هذا
+
 
             if (status == CustomerStatus.Update)
             {
@@ -67,11 +74,44 @@ namespace BChat.Forms
                     Name = txbCustomerName.Text,
                     Phone = phone.ToString(),
                 };
-                bool added = CustomerRepository.Add(customer);
+                int added = CustomerRepository.Add(customer);
 
-                if (added)
+                if (added != -1)
                 {
+
+                    // ← هنا
+                    var selectedIds = groupSelector.GetSelectedGroupIds();
+                    if (selectedIds.Count > 0)
+                    {
+                        GroupMemberRepository.AddMany(added, selectedIds);
+
+                        foreach (var groupId in selectedIds)
+                        {
+                            AppCache.GroupMembers.Add(new GroupMember()
+                            {
+                                CustomerId = added,
+                                GroupId = groupId
+                            });
+
+                            var group = AppCache.Groups.FirstOrDefault(g => g.Id == groupId);
+
+                            if (group != null)
+                            {
+                                int count = AppCache.GroupMembers.Count(m => m.GroupId == groupId);
+                                group.StatOneValue = count.ToString();
+
+                                AppEvents.Groups.ChangeGroupUpdated(group);
+                            }
+
+
+                        }
+
+
+                    }
+
                     MessageBox.Show("تمت الإضافة بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+
 
                 }
                 else

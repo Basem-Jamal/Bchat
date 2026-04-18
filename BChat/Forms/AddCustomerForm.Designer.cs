@@ -38,6 +38,7 @@
             pictureBox1 = new PictureBox();
             btnAddCustomer = new BChat.Controls.ModernButton();
             guna2CustomGradientPanel1 = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
+            groupSelector = new BChat.Custom_Controal.Custom_Bchat.GroupSelectorPanel();
             txbCustomerPhone = new BChat.Controls.ModernTextBox();
             txbCustomerName = new BChat.Controls.ModernTextBox();
             ((System.ComponentModel.ISupportInitialize)picClose).BeginInit();
@@ -68,11 +69,11 @@
             // 
             lblCustomerName.AutoSize = true;
             lblCustomerName.BackColor = Color.Transparent;
-            lblCustomerName.Font = new Font("IBM Plex Sans Arabic", 20F);
+            lblCustomerName.Font = new Font("Microsoft Sans Serif", 20F);
             lblCustomerName.ForeColor = Color.FromArgb(80, 80, 80);
             lblCustomerName.Location = new Point(605, 158);
             lblCustomerName.Name = "lblCustomerName";
-            lblCustomerName.Size = new Size(136, 46);
+            lblCustomerName.Size = new Size(107, 31);
             lblCustomerName.TabIndex = 2;
             lblCustomerName.Text = "اسم العميل";
             // 
@@ -80,11 +81,11 @@
             // 
             lblCustomerPhone.AutoSize = true;
             lblCustomerPhone.BackColor = Color.Transparent;
-            lblCustomerPhone.Font = new Font("IBM Plex Sans Arabic", 20F);
+            lblCustomerPhone.Font = new Font("Microsoft Sans Serif", 20F);
             lblCustomerPhone.ForeColor = Color.FromArgb(80, 80, 80);
             lblCustomerPhone.Location = new Point(605, 358);
             lblCustomerPhone.Name = "lblCustomerPhone";
-            lblCustomerPhone.Size = new Size(129, 46);
+            lblCustomerPhone.Size = new Size(106, 31);
             lblCustomerPhone.TabIndex = 7;
             lblCustomerPhone.Text = "رقم العميل";
             // 
@@ -103,7 +104,7 @@
             // 
             btnAddCustomer.BackColor = Color.Transparent;
             btnAddCustomer.BorderRadius = 23;
-            btnAddCustomer.Font = new Font("IBM Plex Sans Arabic", 12F, FontStyle.Bold);
+            btnAddCustomer.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             btnAddCustomer.Icon = Properties.Resources.plus;
             btnAddCustomer.Location = new Point(26, 762);
             btnAddCustomer.Name = "btnAddCustomer";
@@ -115,6 +116,7 @@
             // 
             // guna2CustomGradientPanel1
             // 
+            guna2CustomGradientPanel1.Controls.Add(groupSelector);
             guna2CustomGradientPanel1.Controls.Add(lblCustomerPhone);
             guna2CustomGradientPanel1.Controls.Add(txbCustomerPhone);
             guna2CustomGradientPanel1.Controls.Add(txbCustomerName);
@@ -126,13 +128,23 @@
             guna2CustomGradientPanel1.Size = new Size(788, 569);
             guna2CustomGradientPanel1.TabIndex = 9;
             // 
+            // groupSelector
+            // 
+            groupSelector.AutoScroll = true;
+            groupSelector.BackColor = Color.White;
+            groupSelector.Location = new Point(59, 461);
+            groupSelector.Name = "groupSelector";
+            groupSelector.Padding = new Padding(8);
+            groupSelector.Size = new Size(703, 100);
+            groupSelector.TabIndex = 8;
+            // 
             // txbCustomerPhone
             // 
             txbCustomerPhone.BackColor = Color.Transparent;
             txbCustomerPhone.BackColorEx = Color.FromArgb(237, 235, 255);
             txbCustomerPhone.BorderRadius = 14;
             txbCustomerPhone.FocusBorderColor = Color.FromArgb(124, 111, 247);
-            txbCustomerPhone.Font = new Font("IBM Plex Sans Arabic", 12F);
+            txbCustomerPhone.Font = new Font("Microsoft Sans Serif", 12F);
             txbCustomerPhone.LabelText = "";
             txbCustomerPhone.Location = new Point(115, 358);
             txbCustomerPhone.MaxLength = 32767;
@@ -148,7 +160,7 @@
             txbCustomerName.BackColorEx = Color.FromArgb(237, 235, 255);
             txbCustomerName.BorderRadius = 14;
             txbCustomerName.FocusBorderColor = Color.FromArgb(124, 111, 247);
-            txbCustomerName.Font = new Font("IBM Plex Sans Arabic", 12F);
+            txbCustomerName.Font = new Font("Microsoft Sans Serif", 12F);
             txbCustomerName.LabelText = "";
             txbCustomerName.Location = new Point(115, 158);
             txbCustomerName.MaxLength = 32767;
@@ -193,5 +205,6 @@
         private Controls.ModernTextBox txbCustomerName;
         private Controls.ModernTextBox txbCustomerPhone;
         private Guna.UI2.WinForms.Guna2Button btnAddTemplate;
+        private Custom_Controal.Custom_Bchat.GroupSelectorPanel groupSelector;
     }
 }
