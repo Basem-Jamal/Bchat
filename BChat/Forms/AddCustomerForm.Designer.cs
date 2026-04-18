@@ -132,10 +132,10 @@
             // 
             groupSelector.AutoScroll = true;
             groupSelector.BackColor = Color.White;
-            groupSelector.Location = new Point(59, 461);
+            groupSelector.Location = new Point(14, 461);
             groupSelector.Name = "groupSelector";
             groupSelector.Padding = new Padding(8);
-            groupSelector.Size = new Size(703, 100);
+            groupSelector.Size = new Size(748, 100);
             groupSelector.TabIndex = 8;
             // 
             // txbCustomerPhone
