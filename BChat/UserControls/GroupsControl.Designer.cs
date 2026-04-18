@@ -1,6 +1,6 @@
 ﻿namespace BChat.UserControls
 {
-    partial class CustomerGroupsControl
+    partial class GroupsControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -34,12 +34,11 @@
             pictureBox1 = new PictureBox();
             pnlContent = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             pnlContainer = new Car_Rental_System.CustomControls.CustomPanel();
-            groupsWrapPanel1 = new BChat.Custom_Controal.GroupsWrapPanel();
-            crdAddNewGroup = new BChat.Custom_Controal.AddGroupCard();
+            groupsWrapPanel = new BChat.Custom_Controal.GroupsWrapPanel();
+            btnRefreshData = new BChat.Controls.ModernButton();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             pnlContent.SuspendLayout();
             pnlContainer.SuspendLayout();
-            groupsWrapPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // btnAddCustomer
@@ -87,7 +86,7 @@
             pnlContainer.BorderColor = Color.LightGray;
             pnlContainer.BorderRadius = 10;
             pnlContainer.BorderThickness = 1;
-            pnlContainer.Controls.Add(groupsWrapPanel1);
+            pnlContainer.Controls.Add(groupsWrapPanel);
             pnlContainer.Font = new Font("Segoe UI", 10F);
             pnlContainer.ForeColor = Color.Black;
             pnlContainer.Location = new Point(3, 3);
@@ -98,50 +97,57 @@
             pnlContainer.TabIndex = 4;
             pnlContainer.UseShadow = true;
             // 
-            // groupsWrapPanel1
+            // groupsWrapPanel
             // 
-            groupsWrapPanel1.AutoScroll = true;
-            groupsWrapPanel1.AutoScrollMinSize = new Size(0, 316);
-            groupsWrapPanel1.BackColor = Color.FromArgb(245, 247, 255);
-            groupsWrapPanel1.CardHeight = 260;
-            groupsWrapPanel1.CardWidth = 280;
-            groupsWrapPanel1.Controls.Add(crdAddNewGroup);
-            groupsWrapPanel1.Dock = DockStyle.Fill;
-            groupsWrapPanel1.HorizontalGap = 20;
-            groupsWrapPanel1.Location = new Point(0, 0);
-            groupsWrapPanel1.Name = "groupsWrapPanel1";
-            groupsWrapPanel1.PanelPaddingH = 20;
-            groupsWrapPanel1.PanelPaddingV = 40;
-            groupsWrapPanel1.RightToLeft = RightToLeft.Yes;
-            groupsWrapPanel1.ShowAddCard = true;
-            groupsWrapPanel1.Size = new Size(1306, 653);
-            groupsWrapPanel1.TabIndex = 1;
-            groupsWrapPanel1.VerticalGap = 16;
+            groupsWrapPanel.AutoScroll = true;
+            groupsWrapPanel.AutoScrollMinSize = new Size(0, 316);
+            groupsWrapPanel.BackColor = Color.White;
+            groupsWrapPanel.CardHeight = 260;
+            groupsWrapPanel.CardWidth = 280;
+            groupsWrapPanel.Dock = DockStyle.Fill;
+            groupsWrapPanel.HorizontalGap = 20;
+            groupsWrapPanel.Location = new Point(0, 0);
+            groupsWrapPanel.Name = "groupsWrapPanel";
+            groupsWrapPanel.PanelPaddingH = 20;
+            groupsWrapPanel.PanelPaddingV = 40;
+            groupsWrapPanel.RightToLeft = RightToLeft.Yes;
+            groupsWrapPanel.ShowAddCard = true;
+            groupsWrapPanel.Size = new Size(1306, 653);
+            groupsWrapPanel.TabIndex = 1;
+            groupsWrapPanel.VerticalGap = 16;
+            groupsWrapPanel.CardDeleteClicked += groupsWrapPanel_CardDeleteClicked;
+            groupsWrapPanel.CardEditClicked += groupsWrapPanel_CardEditClicked;
+            groupsWrapPanel.AddCardClicked += groupsWrapPanel_AddCardClicked;
             // 
-            // crdAddNewGroup
+            // btnRefreshData
             // 
-            crdAddNewGroup.BackColor = Color.Transparent;
-            crdAddNewGroup.Location = new Point(1006, 40);
-            crdAddNewGroup.Name = "crdAddNewGroup";
-            crdAddNewGroup.Size = new Size(280, 260);
-            crdAddNewGroup.TabIndex = 0;
-            crdAddNewGroup.Text = "addGroupCard2";
-            crdAddNewGroup.Click += crdAddNewGroup_Click;
+            btnRefreshData.BackColor = Color.Transparent;
+            btnRefreshData.BorderRadius = 20;
+            btnRefreshData.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
+            btnRefreshData.Icon = Properties.Resources.refersh;
+            btnRefreshData.Location = new Point(255, 50);
+            btnRefreshData.Name = "btnRefreshData";
+            btnRefreshData.RightToLeft = RightToLeft.Yes;
+            btnRefreshData.Size = new Size(110, 66);
+            btnRefreshData.TabIndex = 17;
+            btnRefreshData.Text = "تحديث";
+            btnRefreshData.Click += btnRefreshData_Click;
             // 
-            // CustomerGroupsControl
+            // GroupsControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(248, 247, 255);
+            Controls.Add(btnRefreshData);
             Controls.Add(btnAddCustomer);
             Controls.Add(pictureBox1);
             Controls.Add(pnlContent);
-            Name = "CustomerGroupsControl";
+            Name = "GroupsControl";
             Size = new Size(1312, 890);
+            Load += CustomerGroupsControl_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             pnlContent.ResumeLayout(false);
             pnlContainer.ResumeLayout(false);
-            groupsWrapPanel1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -152,7 +158,7 @@
         private Guna.UI2.WinForms.Guna2CustomGradientPanel pnlContent;
         private Custom_Controal.AddGroupCard addGroupCard1;
         private Car_Rental_System.CustomControls.CustomPanel pnlContainer;
-        private Custom_Controal.GroupsWrapPanel groupsWrapPanel1;
-        private Custom_Controal.AddGroupCard crdAddNewGroup;
+        private Custom_Controal.GroupsWrapPanel groupsWrapPanel;
+        private Controls.ModernButton btnRefreshData;
     }
 }

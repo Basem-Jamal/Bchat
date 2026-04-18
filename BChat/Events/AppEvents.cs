@@ -31,12 +31,19 @@ namespace BChat.Events
 
         public static class Groups
         {
-            public static event Action OnRefreshGroupsTable;
+            public static event Action<Models.Groups> OnGroupAdded;
+            public static event Action<Models.Groups> OnGroupUpdated;
 
-            public static void ChangeRefreshGroupsTable()
+            public static void ChangeGroupAdded(Models.Groups group)
             {
-                OnRefreshGroupsTable?.Invoke();
+                OnGroupAdded?.Invoke(group);
             }
+
+            public static void ChangeGroupUpdated(Models.Groups group)
+            {
+                OnGroupUpdated?.Invoke(group);
+            }
+
         }
     }
 }

@@ -1,9 +1,10 @@
+using BChat.Global;
+using BChat.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using BChat.Models;
 
 namespace BChat.Custom_Controal
 {
@@ -37,7 +38,7 @@ namespace BChat.Custom_Controal
         public event EventHandler<int> CardEditClicked;
 
         [Category("BChat - Events")]
-        public event EventHandler<int> CardMessageClicked;
+        public event EventHandler<int> CardViewClicked;
 
         [Category("BChat - Events")]
         public event EventHandler AddCardClicked;
@@ -122,7 +123,7 @@ namespace BChat.Custom_Controal
         // ══════════════════════════════════════════════════════
         //  LoadGroups
         // ══════════════════════════════════════════════════════
-        public void LoadGroups(List<CustomerGroups> groups, Func<string, Image> iconResolver = null)
+        public void LoadGroups(List<Groups> groups, Func<string, Image> iconResolver = null)
         {
             SuspendLayout();
             _suspendLayoutUpdate = true;
@@ -151,9 +152,31 @@ namespace BChat.Custom_Controal
         }
 
         // ══════════════════════════════════════════════════════
+        //  GetGroupFromCard
+        // ══════════════════════════════════════════════════════
+
+        public Groups GetGroupFromCard(int groupId)
+        {
+            foreach (Control c in Controls)
+            {
+                if (c is CustomerGroupCard card && card.GroupId == groupId)
+                {
+                    return new Groups
+                    {
+                        Id = card.GroupId,
+                        Name = card.Title,
+                        Description = card.Subtitle,
+                        IconBoxColor = GeneralFunctions.ColorToHex(card.IconBoxBackColor),
+                        Icon = GeneralFunctions.ImageToBase64(card.IconImage)
+                    };
+                }
+            }
+            return null;
+        }
+        // ══════════════════════════════════════════════════════
         //  AddGroup
         // ══════════════════════════════════════════════════════
-        public void AddGroup(CustomerGroups group, Func<string, Image> iconResolver = null)
+        public void AddGroup(Groups group, Func<string, Image> iconResolver = null)
         {
             AddGroupCard addCard = null;
 
@@ -196,7 +219,7 @@ namespace BChat.Custom_Controal
         // ══════════════════════════════════════════════════════
         //  UpdateGroup
         // ══════════════════════════════════════════════════════
-        public void UpdateGroup(CustomerGroups group)
+        public void UpdateGroup(Groups group)
         {
             foreach (Control c in Controls)
             {
@@ -209,6 +232,8 @@ namespace BChat.Custom_Controal
                     card.StatOneLabel = group.StatOneLabel ?? "";
                     card.StatTwoValue = group.StatTwoValue ?? "-";
                     card.StatTwoLabel = group.StatTwoLabel ?? "";
+                    card.IconImage    = GeneralFunctions.Base64ToImage(group.Icon);
+                    card.IconBoxBackColor = GeneralFunctions.HexToColor(group.IconBoxColor);
                     break;
                 }
             }
@@ -217,7 +242,10 @@ namespace BChat.Custom_Controal
         // ══════════════════════════════════════════════════════
         //  BuildCard
         // ══════════════════════════════════════════════════════
-        private CustomerGroupCard BuildCard(CustomerGroups group, Func<string, Image> iconResolver)
+
+        //يحتاج تعديل في statOneLabel و statTowLabel 
+        // يحتاج اضضيفهم في الداتا بيز لكي يتم حسب الاحصائيات بشكل صحيح
+        private CustomerGroupCard BuildCard(Groups group, Func<string, Image> iconResolver)
         {
             var card = new CustomerGroupCard
             {
@@ -228,9 +256,9 @@ namespace BChat.Custom_Controal
                 Subtitle = group.Description ?? "",
                 IsActive = group.Status == statusGroups.Active,
                 StatOneValue = group.StatOneValue ?? "0",
-                StatOneLabel = group.StatOneLabel ?? "",
-                StatTwoValue = group.StatTwoValue ?? "-",
-                StatTwoLabel = group.StatTwoLabel ?? "",
+                StatOneLabel = group.StatOneLabel ?? "عضو",
+                StatTwoValue = group.StatTwoValue ?? "",
+                StatTwoLabel = group.StatTwoLabel ?? "آخر نشاط",
             };
 
             if (!string.IsNullOrWhiteSpace(group.IconBoxColor))
@@ -247,7 +275,7 @@ namespace BChat.Custom_Controal
 
             card.DeleteClicked += (s, id) => CardDeleteClicked?.Invoke(s, id);
             card.EditClicked += (s, id) => CardEditClicked?.Invoke(s, id);
-            card.MessageClicked += (s, id) => CardMessageClicked?.Invoke(s, id);
+            card.ViewClicked += (s, id) => CardViewClicked?.Invoke(s, id);
 
             return card;
         }

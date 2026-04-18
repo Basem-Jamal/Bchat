@@ -14,12 +14,12 @@ namespace BChat.Custom_Controal
         // ══════════════════════════════════════════════════════
         //  Enums & State
         // ══════════════════════════════════════════════════════
-        private enum HoverZone { None, Card, DeleteBtn, EditBtn, MessageBtn }
+        private enum HoverZone { None, Card, DeleteBtn, EditBtn, ViewBtn }
         private HoverZone _hoverZone = HoverZone.None;
 
         private Rectangle _deleteBtnRect;
         private Rectangle _editBtnRect;
-        private Rectangle _messageBtnRect;
+        private Rectangle _viewBtnRect;
 
         // ══════════════════════════════════════════════════════
         //  Fields
@@ -83,13 +83,13 @@ namespace BChat.Custom_Controal
         private int   _editBtnBorderRadius   = 10;
         private int   _editBtnSize           = 36;
 
-        private string _messageBtnText           = "مراسلة";
-        private Color  _messageBtnBackColor      = Color.FromArgb(124, 111, 247);
-        private Color  _messageBtnHoverBackColor = Color.FromArgb(99, 86, 224);
-        private Color  _messageBtnTextColor      = Color.White;
-        private int    _messageBtnBorderRadius   = 10;
-        private int    _messageBtnHeight         = 36;
-        private Font   _messageBtnFont           = new Font("IBM Plex Sans Arabic", 9f, FontStyle.Bold);
+        private string _viewBtnText           = "عرض المجموعة";
+        private Color  _viewBtnBackColor      = Color.FromArgb(124, 111, 247);
+        private Color  _viewBtnHoverBackColor = Color.FromArgb(99, 86, 224);
+        private Color  _viewBtnTextColor      = Color.White;
+        private int    _viewBtnBorderRadius   = 10;
+        private int    _viewBtnHeight         = 36;
+        private Font   _viewBtnFont           = new Font("IBM Plex Sans Arabic", 9f, FontStyle.Bold);
 
         private int _groupId = 0;
 
@@ -101,7 +101,7 @@ namespace BChat.Custom_Controal
         [Category("BChat - Events")]
         public event EventHandler<int> EditClicked;
         [Category("BChat - Events")]
-        public event EventHandler<int> MessageClicked;
+        public event EventHandler<int> ViewClicked;
 
         // ══════════════════════════════════════════════════════
         //  Constructor
@@ -325,27 +325,25 @@ namespace BChat.Custom_Controal
         [Category("BChat - Edit Btn")] [Description("حجم زر التعديل")] [DefaultValue(36)]
         public int EditBtnSize { get => _editBtnSize; set { _editBtnSize = value; Invalidate(); } }
 
-        [Category("BChat - Message Btn")] [Description("نص زر المراسلة")] [DefaultValue("مراسلة")]
-        public string MessageBtnText { get => _messageBtnText; set { _messageBtnText = value; Invalidate(); } }
+        [Category("BChat - View Btn")] [Description("نص زر عرض المجموعة")] [DefaultValue("عرض المجموعة")]
+        public string ViewBtnText { get => _viewBtnText; set { _viewBtnText = value; Invalidate(); } }
 
-        [Category("BChat - Message Btn")] [Description("لون خلفية زر المراسلة")]
-        public Color MessageBtnBackColor { get => _messageBtnBackColor; set { _messageBtnBackColor = value; Invalidate(); } }
+        [Category("BChat - Message Btn")] [Description("لون خلفية زر عرض المجموعة")]
+        public Color ViewBtnBackColor { get => _viewBtnBackColor; set { _viewBtnBackColor = value; Invalidate(); } }
 
-        [Category("BChat - Message Btn")] [Description("لون خلفية زر المراسلة عند الهوفر")]
-        public Color MessageBtnHoverBackColor { get => _messageBtnHoverBackColor; set { _messageBtnHoverBackColor = value; Invalidate(); } }
+        [Category("BChat - View Btn")] [Description("لون خلفية زر عرض المجموعة عند الهوفر")]
+        public Color ViewBtnHoverBackColor { get => _viewBtnHoverBackColor; set { _viewBtnHoverBackColor = value; Invalidate(); } }
 
-        [Category("BChat - Message Btn")] [Description("لون نص زر المراسلة")]
-        public Color MessageBtnTextColor { get => _messageBtnTextColor; set { _messageBtnTextColor = value; Invalidate(); } }
+        [Category("BChat - View Btn")] [Description("لون نص زر عرض المجموعة")]
+        public Color ViewBtnTextColor { get => _viewBtnTextColor; set { _viewBtnTextColor = value; Invalidate(); } }
+        [Category("BChat - View Btn")] [Description("نصف قطر زوايا زر عرض المجموعة")] [DefaultValue(10)]
+        public int ViewBtnBorderRadius { get => _viewBtnBorderRadius; set { _viewBtnBorderRadius = value; Invalidate(); } }
 
-        [Category("BChat - Message Btn")] [Description("نصف قطر زوايا زر المراسلة")] [DefaultValue(10)]
-        public int MessageBtnBorderRadius { get => _messageBtnBorderRadius; set { _messageBtnBorderRadius = value; Invalidate(); } }
+        [Category("BChat - View Btn")] [Description("ارتفاع زر عرض المجموعة")] [DefaultValue(36)]
+        public int ViewBtnHeight { get => _viewBtnHeight; set { _viewBtnHeight = value; Invalidate(); } }
 
-        [Category("BChat - Message Btn")] [Description("ارتفاع زر المراسلة")] [DefaultValue(36)]
-        public int MessageBtnHeight { get => _messageBtnHeight; set { _messageBtnHeight = value; Invalidate(); } }
-
-        [Category("BChat - Message Btn")] [Description("خط زر المراسلة")]
-        public Font MessageBtnFont { get => _messageBtnFont; set { _messageBtnFont = value; Invalidate(); } }
-
+        [Category("BChat - View Btn")] [Description("خط زر عرض المجموعة")]
+        public Font ViewBtnFont { get => _viewBtnFont; set { _viewBtnFont = value; Invalidate(); } }
         // ══════════════════════════════════════════════════════
         //  OnPaint
         // ══════════════════════════════════════════════════════
@@ -446,10 +444,10 @@ namespace BChat.Custom_Controal
                 _editBtnBorderRadius, IconType.Pencil, _editBtnIconColor);
 
             int msgX = p + _deleteBtnSize + btnGap + _editBtnSize + btnGap;
-            _messageBtnRect = new Rectangle(msgX, row5Y, (int)(cardRect.Width - p - msgX), _messageBtnHeight);
-            DrawMessageButton(g, _messageBtnRect,
-                _hoverZone == HoverZone.MessageBtn ? _messageBtnHoverBackColor : _messageBtnBackColor,
-                _messageBtnBorderRadius);
+            _viewBtnRect = new Rectangle(msgX, row5Y, (int)(cardRect.Width - p - msgX), _viewBtnHeight);
+            DrawMessageButton(g, _viewBtnRect,
+                _hoverZone == HoverZone.ViewBtn ? _viewBtnHoverBackColor : _viewBtnBackColor,
+                _viewBtnBorderRadius);
         }
 
         // ══════════════════════════════════════════════════════
@@ -557,16 +555,16 @@ namespace BChat.Custom_Controal
             using (var brush = new SolidBrush(backColor)) g.FillPath(brush, path);
 
             int ax = rect.X + 14, ay = rect.Y + rect.Height / 2;
-            using (var pen = new Pen(_messageBtnTextColor, 2f) { StartCap = LineCap.Round, EndCap = LineCap.Round })
+            using (var pen = new Pen(_viewBtnTextColor, 2f) { StartCap = LineCap.Round, EndCap = LineCap.Round })
             {
                 g.DrawLine(pen, ax + 7, ay, ax,     ay);
                 g.DrawLine(pen, ax,     ay, ax + 4, ay - 4);
                 g.DrawLine(pen, ax,     ay, ax + 4, ay + 4);
             }
-            using (var brush = new SolidBrush(_messageBtnTextColor))
+            using (var brush = new SolidBrush(_viewBtnTextColor))
             {
                 var sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
-                g.DrawString(_messageBtnText, _messageBtnFont, brush, new RectangleF(rect.X + 22, rect.Y, rect.Width - 22, rect.Height), sf);
+                g.DrawString(_viewBtnText, _viewBtnFont, brush, new RectangleF(rect.X + 22, rect.Y, rect.Width - 22, rect.Height), sf);
             }
         }
 
@@ -592,7 +590,7 @@ namespace BChat.Custom_Controal
 
             if (_deleteBtnRect.Contains(e.Location)) zone = HoverZone.DeleteBtn;
             else if (_editBtnRect.Contains(e.Location)) zone = HoverZone.EditBtn;
-            else if (_messageBtnRect.Contains(e.Location)) zone = HoverZone.MessageBtn;
+            else if (_viewBtnRect.Contains(e.Location)) zone = HoverZone.ViewBtn;
 
             if (zone == _hoverZone) return; // 🔥 أهم سطر
 
@@ -608,7 +606,7 @@ namespace BChat.Custom_Controal
             if (e.Button != MouseButtons.Left) return;
             if      (_deleteBtnRect.Contains(e.Location))  DeleteClicked?.Invoke(this, _groupId);
             else if (_editBtnRect.Contains(e.Location))    EditClicked?.Invoke(this, _groupId);
-            else if (_messageBtnRect.Contains(e.Location)) MessageClicked?.Invoke(this, _groupId);
+            else if (_viewBtnRect.Contains(e.Location)) ViewClicked?.Invoke(this, _groupId);
         }
 
         // ══════════════════════════════════════════════════════
@@ -643,7 +641,7 @@ namespace BChat.Custom_Controal
             {
                 _titleFont?.Dispose(); _subtitleFont?.Dispose();
                 _statValueFont?.Dispose(); _statLabelFont?.Dispose();
-                _messageBtnFont?.Dispose(); _iconImage?.Dispose();
+                _viewBtnFont?.Dispose(); _iconImage?.Dispose();
             }
             base.Dispose(disposing);
         }

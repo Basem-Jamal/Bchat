@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace BChat.Data.DataStore
 {
-    public static class CustomerGroupRepository
+    public static class GroupRepository
     {
         private static string _connectionString = DatabaseConfig.ConnectionString;
 
-        public static List<Models.CustomerGroups> GetAll()
+        public static List<Models.Groups> GetAll()
         {
-            List<Models.CustomerGroups> groups = new List<Models.CustomerGroups>();
+            List<Models.Groups> groups = new List<Models.Groups>();
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -26,16 +26,16 @@ namespace BChat.Data.DataStore
                 {
                     while (reader.Read())
                     {
-                        groups.Add(new Models.CustomerGroups
+                        groups.Add(new Models.Groups
                         {
                             Id = Convert.ToInt32(reader["Id"]),
-                            Name = reader["Name"] != DBNull.Value ? reader["Name"].ToString() : "NULL",
+                            Name = reader["Name"] != DBNull.Value ? reader["Name"].ToString() : null,
 
-                            Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : "NULL",
+                            Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : null,
 
-                            Icon = reader["IconBase64"] != DBNull.Value ? reader["IconBase64"].ToString() :  "NULL",
+                            Icon = reader["IconBase64"] != DBNull.Value ? reader["IconBase64"].ToString() : null,
 
-                            IconBoxColor = reader["IconColor"] != DBNull.Value ? reader["IconColor"].ToString() : "NULL",
+                            IconBoxColor = reader["IconColor"] != DBNull.Value ? reader["IconColor"].ToString() : null,
 
                             Status = (Models.statusGroups)Convert.ToInt32(reader["IsActive"])
                         });
@@ -46,7 +46,7 @@ namespace BChat.Data.DataStore
             return groups;
         }
 
-        public static bool Add(Models.CustomerGroups group)
+        public static bool Add(Models.Groups group)
         {
             bool result = false;
 
@@ -67,7 +67,7 @@ namespace BChat.Data.DataStore
             return result;
         }
 
-        public static bool Update(Models.CustomerGroups group)
+        public static bool Update(Models.Groups group)
         {
             bool result = false;
 

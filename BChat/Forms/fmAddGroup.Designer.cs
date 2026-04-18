@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(components);
             guna2CustomGradientPanel1 = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
-            bigLabel2 = new ReaLTaiizor.Controls.BigLabel();
             adColorPicker = new AdvancedColorPicker();
+            bigLabel2 = new ReaLTaiizor.Controls.BigLabel();
             bigLabel1 = new ReaLTaiizor.Controls.BigLabel();
             btnUplaodFileIcon = new BChat.Controls.ModernNavButton();
             lblSelectedBG = new Label();
@@ -45,7 +45,7 @@
             lblCustomerName = new ReaLTaiizor.Controls.BigLabel();
             pictureBox1 = new PictureBox();
             picClose = new PictureBox();
-            btnAddCustomerGroups = new BChat.Controls.ModernButton();
+            btnAddOrEditCustomerGroups = new BChat.Controls.ModernButton();
             guna2CustomGradientPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)picClose).BeginInit();
@@ -60,8 +60,8 @@
             // 
             // guna2CustomGradientPanel1
             // 
-            guna2CustomGradientPanel1.Controls.Add(bigLabel2);
             guna2CustomGradientPanel1.Controls.Add(adColorPicker);
+            guna2CustomGradientPanel1.Controls.Add(bigLabel2);
             guna2CustomGradientPanel1.Controls.Add(bigLabel1);
             guna2CustomGradientPanel1.Controls.Add(btnUplaodFileIcon);
             guna2CustomGradientPanel1.Controls.Add(lblSelectedBG);
@@ -70,12 +70,24 @@
             guna2CustomGradientPanel1.Controls.Add(txbGroupDescription);
             guna2CustomGradientPanel1.Controls.Add(txbGroupName);
             guna2CustomGradientPanel1.Controls.Add(lblCustomerName);
-            guna2CustomGradientPanel1.CustomizableEdges = customizableEdges3;
+            guna2CustomGradientPanel1.CustomizableEdges = customizableEdges1;
             guna2CustomGradientPanel1.Location = new Point(12, 169);
             guna2CustomGradientPanel1.Name = "guna2CustomGradientPanel1";
-            guna2CustomGradientPanel1.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            guna2CustomGradientPanel1.ShadowDecoration.CustomizableEdges = customizableEdges2;
             guna2CustomGradientPanel1.Size = new Size(788, 683);
             guna2CustomGradientPanel1.TabIndex = 10;
+            // 
+            // adColorPicker
+            // 
+            adColorPicker.Hex = "4285F4";
+            adColorPicker.Location = new Point(238, 401);
+            adColorPicker.Name = "adColorPicker";
+            adColorPicker.SelectedColor = Color.FromArgb(66, 133, 244);
+            adColorPicker.ShowAlpha = false;
+            adColorPicker.ShowHex = true;
+            adColorPicker.ShowRgb = true;
+            adColorPicker.Size = new Size(325, 285);
+            adColorPicker.TabIndex = 24;
             // 
             // bigLabel2
             // 
@@ -88,16 +100,6 @@
             bigLabel2.Size = new Size(149, 38);
             bigLabel2.TabIndex = 23;
             bigLabel2.Text = "اختر لون الخلفية";
-            // 
-            // adColorPicker
-            // 
-            adColorPicker.BackColor = Color.Transparent;
-            adColorPicker.Font = new Font("Segoe UI", 9F);
-            adColorPicker.Location = new Point(336, 452);
-            adColorPicker.Name = "adColorPicker";
-            adColorPicker.SelectedColor = Color.FromArgb(66, 133, 244);
-            adColorPicker.Size = new Size(239, 213);
-            adColorPicker.TabIndex = 24;
             // 
             // bigLabel1
             // 
@@ -242,19 +244,19 @@
             picClose.TabStop = false;
             picClose.Click += picClose_Click;
             // 
-            // btnAddCustomerGroups
+            // btnAddOrEditCustomerGroups
             // 
-            btnAddCustomerGroups.BackColor = Color.Transparent;
-            btnAddCustomerGroups.BorderRadius = 23;
-            btnAddCustomerGroups.Font = new Font("IBM Plex Sans Arabic", 12F, FontStyle.Bold);
-            btnAddCustomerGroups.Icon = Properties.Resources.plus;
-            btnAddCustomerGroups.Location = new Point(12, 871);
-            btnAddCustomerGroups.Name = "btnAddCustomerGroups";
-            btnAddCustomerGroups.RightToLeft = RightToLeft.Yes;
-            btnAddCustomerGroups.Size = new Size(162, 62);
-            btnAddCustomerGroups.TabIndex = 13;
-            btnAddCustomerGroups.Text = "اضافة ";
-            btnAddCustomerGroups.Click += btnAddCustomerGroups_Click;
+            btnAddOrEditCustomerGroups.BackColor = Color.Transparent;
+            btnAddOrEditCustomerGroups.BorderRadius = 23;
+            btnAddOrEditCustomerGroups.Font = new Font("IBM Plex Sans Arabic", 12F, FontStyle.Bold);
+            btnAddOrEditCustomerGroups.Icon = Properties.Resources.plus;
+            btnAddOrEditCustomerGroups.Location = new Point(12, 871);
+            btnAddOrEditCustomerGroups.Name = "btnAddOrEditCustomerGroups";
+            btnAddOrEditCustomerGroups.RightToLeft = RightToLeft.Yes;
+            btnAddOrEditCustomerGroups.Size = new Size(162, 62);
+            btnAddOrEditCustomerGroups.TabIndex = 13;
+            btnAddOrEditCustomerGroups.Text = "اضافة ";
+            btnAddOrEditCustomerGroups.Click += btnAddOrEditCustomerGroups_Click;
             // 
             // fmAddGroup
             // 
@@ -262,7 +264,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLightLight;
             ClientSize = new Size(818, 955);
-            Controls.Add(btnAddCustomerGroups);
+            Controls.Add(btnAddOrEditCustomerGroups);
             Controls.Add(pictureBox1);
             Controls.Add(picClose);
             Controls.Add(guna2CustomGradientPanel1);
@@ -288,12 +290,12 @@
         private ReaLTaiizor.Controls.BigLabel lblCustomerName;
         private PictureBox pictureBox1;
         private PictureBox picClose;
-        private Controls.ModernButton btnAddCustomerGroups;
+        private Controls.ModernButton btnAddOrEditCustomerGroups;
         private Controls.ModernNavButton btnUplaodFileIcon;
         private Label lblFileTextIcon;
         private ReaLTaiizor.Controls.BigLabel bigLabel2;
-        private AdvancedColorPicker adColorPicker;
         private ReaLTaiizor.Controls.BigLabel bigLabel1;
         private Label lblSelectedBG;
+        private AdvancedColorPicker adColorPicker;
     }
 }

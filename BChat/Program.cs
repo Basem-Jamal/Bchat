@@ -1,3 +1,5 @@
+using BChat.Data.DataStore;
+using BChat.Global;
 using System.Diagnostics;
 
 namespace BChat
@@ -16,9 +18,34 @@ namespace BChat
 
             ApplicationConfiguration.Initialize();
 
+            AppCache.Groups = GroupRepository.GetAll();
 
             Application.Run(new Home());
+
         }
+
+        private static void UpdateAzureIP()
+        {
+            try
+            {
+                var psi = new ProcessStartInfo
+                {
+                    FileName = "powershell.exe",
+                    Arguments = "-ExecutionPolicy Bypass -WindowStyle Hidden -File \"C:\\Scripts\\update-azure-firewall.ps1\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                };
+
+                using (var process = Process.Start(psi))
+                {
+                    process.WaitForExit(30000);
+                }
+
+            }
+            catch { /* تجاهل لو فشل */ }
+
+        }
+
 
     }
 }

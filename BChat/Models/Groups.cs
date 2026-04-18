@@ -12,7 +12,13 @@ namespace BChat.Models
         Active = 1,
         Inactive = 0
     }
-    public class CustomerGroups
+    public enum CustomerGroupStatus
+    {
+        Add = 1,
+        Edit = 0
+    }
+
+    public class Groups
     {
         public int Id { get; set; }
         public string Name { get; set; }
