@@ -26,7 +26,7 @@ namespace BChat
             }
 
         }
-         
+
         public Home()
         {
             InitializeComponent();
@@ -183,5 +183,20 @@ namespace BChat
 
         }
 
+        private void btnNavMarketingAPI_Click(object sender, EventArgs e)
+        {
+            ResetButtons();
+            btnNavMarketingAPI.IsActive = true;
+
+            if (!pnlContent.Controls.ContainsKey("MarketingAPI_View"))
+            {
+                GroupsControl customerGroupsPage = new GroupsControl();
+                customerGroupsPage.Name = "MarketingAPI_View";
+                customerGroupsPage.Dock = DockStyle.Fill;
+                pnlContent.Controls.Add(customerGroupsPage);
+            }
+
+            pnlContent.Controls["MarketingAPI_View"].BringToFront();
+        }
     }
 }
