@@ -85,6 +85,10 @@ namespace BChat.UserControls
 
         private void Table_EditClicked(object sender, int rowIndex)
         {
+            var mainForm = this.FindForm();
+
+            var overlay = OverlayPanel.Show(mainForm);
+
             var row = _table.GetSelectedRow();
             if (row == null) return;
 
@@ -97,6 +101,9 @@ namespace BChat.UserControls
             };
             AddCustomerForm updateCustomer = new AddCustomerForm(customer, CustomerStatus.Update);
             updateCustomer.ShowDialog();
+
+            overlay.Close(mainForm);
+
         }
         private void Table_DeleteClicked(object sender, int rowIndex)
         {

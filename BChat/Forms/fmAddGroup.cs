@@ -168,7 +168,7 @@ namespace BChat.Forms
             if (result)
             {
                 MessageBox.Show("تم اضافة المجموعة بنجاح", "Done!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //AppCache.Groups.Add(newGroup);              // ← أضف هذا
+                AppCache.Groups.Add(newGroup);              // ← أضف هذا
                 AppEvents.Groups.ChangeGroupAdded(newGroup);
             }
             else

@@ -29,6 +29,9 @@ namespace BChat.Forms
             _status = status;
 
 
+            AppEvents.Groups.OnGroupAdded += (group) => groupSelector.LoadGroups(AppCache.Groups, GeneralFunctions.Base64ToImage);
+
+
             groupSelector.LoadGroups(AppCache.Groups, GeneralFunctions.Base64ToImage);  // ← أضف هذا
 
 
@@ -36,6 +39,10 @@ namespace BChat.Forms
             {
                 txbCustomerName.Text = customer.Name;
                 txbCustomerPhone.Text = customer.Phone;
+
+                var groupIds = AppCache.GetGroupIdsByCustomer(_customer.Id);
+                groupSelector.SetSelectedGroupIds(groupIds);
+
             }
         }
 
@@ -128,7 +135,15 @@ namespace BChat.Forms
                 _customer.Name = txbCustomerName.Text;
                 _customer.Phone = txbCustomerPhone.Text;
 
+
                 CustomerRepository.Update(_customer);
+
+                GroupMemberRepository.DeleteAllByCustomerId(_customer.Id);
+
+                var selectedIds = groupSelector.GetSelectedGroupIds();
+
+    
+
 
                 MessageBox.Show("تم اضافة العميل بنجاح!", "النظام", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 

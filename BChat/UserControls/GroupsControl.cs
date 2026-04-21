@@ -87,6 +87,7 @@ namespace BChat.UserControls
 
             var group = groupsWrapPanel.GetGroupFromCard(e);
             
+            MessageBox.Show(this, $"تعديل المجموعة: {group.Name}", "تعديل", MessageBoxButtons.OK, MessageBoxIcon.Information);
             fmAddGroup fmAddGroup = new fmAddGroup(CustomerGroupStatus.Edit, group);
             fmAddGroup.ShowDialog();
 

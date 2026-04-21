@@ -75,5 +75,22 @@ namespace BChat.Data.DataStore
             }
 
         }
+
+        public static void DeleteAllByCustomerId(int customerId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                string query = "DELETE FROM CustomerGroupMembers WHERE CustomerId = @CustomerId";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@CustomerId", customerId);
+                    cmd.ExecuteNonQuery();
+                }    
+                
+            }
+        }
     }
 }

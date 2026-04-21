@@ -41,11 +41,8 @@
             // 
             // pnlContent
             // 
+            pnlContent.BackColor = Color.White;
             pnlContent.CustomizableEdges = customizableEdges1;
-            pnlContent.FillColor = Color.FromArgb(248, 247, 255);
-            pnlContent.FillColor2 = Color.FromArgb(248, 247, 255);
-            pnlContent.FillColor3 = Color.FromArgb(248, 247, 255);
-            pnlContent.FillColor4 = Color.FromArgb(248, 247, 255);
             pnlContent.Location = new Point(0, 229);
             pnlContent.Name = "pnlContent";
             pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges2;
