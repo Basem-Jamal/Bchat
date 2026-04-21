@@ -1,3 +1,5 @@
+using BChat.Controls;
+using BChat.Menu___Nav.Nav___Marketing;
 using BChat.Salla;
 using BChat.UserControls;
 using FontAwesome.Sharp;
@@ -188,15 +190,27 @@ namespace BChat
             ResetButtons();
             btnNavMarketingAPI.IsActive = true;
 
-            if (!pnlContent.Controls.ContainsKey("MarketingAPI_View"))
-            {
-                GroupsControl customerGroupsPage = new GroupsControl();
-                customerGroupsPage.Name = "MarketingAPI_View";
-                customerGroupsPage.Dock = DockStyle.Fill;
-                pnlContent.Controls.Add(customerGroupsPage);
-            }
+            var mainForm = this.FindForm();
 
-            pnlContent.Controls["MarketingAPI_View"].BringToFront();
+            var overlay = OverlayPanel.Show(mainForm);
+
+            Marketing marketing = new Marketing();
+
+            marketing.ShowDialog();
+
+            overlay.Close(marketing);
+
+
+
+            //if (!pnlContent.Controls.ContainsKey("MarketingAPI_View"))
+            //{
+            //    GroupsControl customerGroupsPage = new GroupsControl();
+            //    customerGroupsPage.Name = "MarketingAPI_View";
+            //    customerGroupsPage.Dock = DockStyle.Fill;
+            //    pnlContent.Controls.Add(customerGroupsPage);
+            //}
+
+            //pnlContent.Controls["MarketingAPI_View"].BringToFront();
         }
     }
 }
