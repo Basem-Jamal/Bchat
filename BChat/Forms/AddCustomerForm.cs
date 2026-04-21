@@ -135,13 +135,37 @@ namespace BChat.Forms
                 _customer.Name = txbCustomerName.Text;
                 _customer.Phone = txbCustomerPhone.Text;
 
+                GroupMemberRepository.DeleteAllByCustomerId(_customer.Id);
 
                 CustomerRepository.Update(_customer);
 
-                GroupMemberRepository.DeleteAllByCustomerId(_customer.Id);
+                AppCache.GroupMembers.RemoveAll(m => m.CustomerId == _customer.Id);
+
 
                 var selectedIds = groupSelector.GetSelectedGroupIds();
 
+                if (selectedIds.Count > 0)
+                {
+                    foreach (var groupId in selectedIds)
+                    {
+                        AppCache.GroupMembers.Add(new GroupMember()
+                        {
+                            CustomerId = _customer.Id,
+                            GroupId    = groupId
+                        });
+
+                        var group = AppCache.Groups.FirstOrDefault(g => g.Id == groupId);
+
+                        if (group != null)
+                        {
+                            int count = AppCache.GroupMembers.Count(m => m.GroupId == groupId);
+
+                            group.StatOneValue = count.ToString();
+
+                            AppEvents.Groups.ChangeGroupUpdated(group);
+                        }
+                    }
+                }
     
 
 
