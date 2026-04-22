@@ -29,13 +29,14 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pnlMenuSidebar = new GradientPanel();
+            btnNavMarketingAPI = new BChat.Controls.ModernNavButton();
             btnNavMessages = new BChat.Controls.ModernNavButton();
             modernPictureBox1 = new BChat.Controls.ModernPictureBox();
             btnNavHome = new BChat.Controls.ModernNavButton();
@@ -55,7 +56,6 @@
             gradientPanel1 = new GradientPanel();
             iconButton1 = new FontAwesome.Sharp.IconButton();
             pnlBottom = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
-            btnNavMarketingAPI = new BChat.Controls.ModernNavButton();
             pnlMenuSidebar.SuspendLayout();
             customPanel1.SuspendLayout();
             pnlHeader.SuspendLayout();
@@ -88,6 +88,37 @@
             pnlMenuSidebar.ShadowRadius = 0;
             pnlMenuSidebar.Size = new Size(242, 1065);
             pnlMenuSidebar.TabIndex = 2;
+            // 
+            // btnNavMarketingAPI
+            // 
+            btnNavMarketingAPI.ActiveBackground = Color.White;
+            btnNavMarketingAPI.ActiveBarColor = Color.FromArgb(124, 111, 247);
+            btnNavMarketingAPI.ActiveBarFullHeight = false;
+            btnNavMarketingAPI.ActiveBarPadding = 2;
+            btnNavMarketingAPI.ActiveBarWidth = 5;
+            btnNavMarketingAPI.ActiveTextColor = Color.FromArgb(124, 111, 247);
+            btnNavMarketingAPI.BackColor = Color.Transparent;
+            btnNavMarketingAPI.BaseBackground = Color.FromArgb(37, 43, 74);
+            btnNavMarketingAPI.BorderRadius = 8;
+            btnNavMarketingAPI.CardPadding = 0;
+            btnNavMarketingAPI.ContentPadding = 12;
+            btnNavMarketingAPI.Font = new Font("Microsoft Sans Serif", 13.5F, FontStyle.Bold);
+            btnNavMarketingAPI.ForeColor = Color.Transparent;
+            btnNavMarketingAPI.HoverBackground = Color.Transparent;
+            btnNavMarketingAPI.HoverTextColor = Color.Gray;
+            btnNavMarketingAPI.Icon = Properties.Resources.sent1;
+            btnNavMarketingAPI.IconSize = 30;
+            btnNavMarketingAPI.IsActive = false;
+            btnNavMarketingAPI.Location = new Point(34, 886);
+            btnNavMarketingAPI.Name = "btnNavMarketingAPI";
+            btnNavMarketingAPI.NormalTextColor = Color.Gray;
+            btnNavMarketingAPI.RightToLeft = RightToLeft.Yes;
+            btnNavMarketingAPI.Size = new Size(200, 65);
+            btnNavMarketingAPI.TabIndex = 9;
+            btnNavMarketingAPI.Text = "التسويق";
+            btnNavMarketingAPI.UseActiveEffect = true;
+            btnNavMarketingAPI.UseHoverEffect = true;
+            btnNavMarketingAPI.Click += btnNavMarketingAPI_Click;
             // 
             // btnNavMessages
             // 
@@ -334,6 +365,7 @@
             // 
             // guna2BorderlessForm1
             // 
+            guna2BorderlessForm1.AnimateWindow = true;
             guna2BorderlessForm1.BorderRadius = 45;
             guna2BorderlessForm1.ContainerControl = this;
             guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6D;
@@ -397,10 +429,10 @@
             pnlTop.BackColor = Color.White;
             pnlTop.BorderThickness = 4;
             pnlTop.Controls.Add(pnlHeader);
-            pnlTop.CustomizableEdges = customizableEdges7;
+            pnlTop.CustomizableEdges = customizableEdges1;
             pnlTop.Location = new Point(3, 3);
             pnlTop.Name = "pnlTop";
-            pnlTop.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            pnlTop.ShadowDecoration.CustomizableEdges = customizableEdges2;
             pnlTop.Size = new Size(1312, 69);
             pnlTop.TabIndex = 8;
             // 
@@ -408,14 +440,14 @@
             // 
             pnlContent.BackColor = Color.Transparent;
             pnlContent.Controls.Add(gradientPanel1);
-            pnlContent.CustomizableEdges = customizableEdges9;
+            pnlContent.CustomizableEdges = customizableEdges3;
             pnlContent.FillColor = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor2 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor3 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor4 = Color.FromArgb(248, 247, 255);
             pnlContent.Location = new Point(3, 78);
             pnlContent.Name = "pnlContent";
-            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges10;
+            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges4;
             pnlContent.Size = new Size(1312, 890);
             pnlContent.TabIndex = 0;
             // 
@@ -462,44 +494,13 @@
             // 
             // pnlBottom
             // 
-            pnlBottom.CustomizableEdges = customizableEdges11;
+            pnlBottom.CustomizableEdges = customizableEdges5;
             pnlBottom.Dock = DockStyle.Bottom;
             pnlBottom.Location = new Point(0, 983);
             pnlBottom.Name = "pnlBottom";
-            pnlBottom.ShadowDecoration.CustomizableEdges = customizableEdges12;
+            pnlBottom.ShadowDecoration.CustomizableEdges = customizableEdges6;
             pnlBottom.Size = new Size(1321, 60);
             pnlBottom.TabIndex = 9;
-            // 
-            // btnNavMarketingAPI
-            // 
-            btnNavMarketingAPI.ActiveBackground = Color.White;
-            btnNavMarketingAPI.ActiveBarColor = Color.FromArgb(124, 111, 247);
-            btnNavMarketingAPI.ActiveBarFullHeight = false;
-            btnNavMarketingAPI.ActiveBarPadding = 2;
-            btnNavMarketingAPI.ActiveBarWidth = 5;
-            btnNavMarketingAPI.ActiveTextColor = Color.FromArgb(124, 111, 247);
-            btnNavMarketingAPI.BackColor = Color.Transparent;
-            btnNavMarketingAPI.BaseBackground = Color.FromArgb(37, 43, 74);
-            btnNavMarketingAPI.BorderRadius = 8;
-            btnNavMarketingAPI.CardPadding = 0;
-            btnNavMarketingAPI.ContentPadding = 12;
-            btnNavMarketingAPI.Font = new Font("Microsoft Sans Serif", 13.5F, FontStyle.Bold);
-            btnNavMarketingAPI.ForeColor = Color.Transparent;
-            btnNavMarketingAPI.HoverBackground = Color.Transparent;
-            btnNavMarketingAPI.HoverTextColor = Color.Gray;
-            btnNavMarketingAPI.Icon = Properties.Resources.sent1;
-            btnNavMarketingAPI.IconSize = 30;
-            btnNavMarketingAPI.IsActive = false;
-            btnNavMarketingAPI.Location = new Point(34, 886);
-            btnNavMarketingAPI.Name = "btnNavMarketingAPI";
-            btnNavMarketingAPI.NormalTextColor = Color.Gray;
-            btnNavMarketingAPI.RightToLeft = RightToLeft.Yes;
-            btnNavMarketingAPI.Size = new Size(200, 65);
-            btnNavMarketingAPI.TabIndex = 9;
-            btnNavMarketingAPI.Text = "التسويق";
-            btnNavMarketingAPI.UseActiveEffect = true;
-            btnNavMarketingAPI.UseHoverEffect = true;
-            btnNavMarketingAPI.Click += btnNavMarketingAPI_Click;
             // 
             // Home
             // 

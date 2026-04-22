@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pnlContent = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
@@ -36,6 +37,7 @@
             stcdTemplates = new BChat.Controls.StatCard();
             picTemplates = new PictureBox();
             btnSyncTemplates = new BChat.Controls.ModernButton();
+            guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(components);
             pnlContent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)picTemplates).BeginInit();
             SuspendLayout();
@@ -49,10 +51,10 @@
             pnlContent.FillColor2 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor3 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor4 = Color.FromArgb(248, 247, 255);
-            pnlContent.Location = new Point(0, 229);
+            pnlContent.Location = new Point(20, 168);
             pnlContent.Name = "pnlContent";
             pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            pnlContent.Size = new Size(1306, 461);
+            pnlContent.Size = new Size(1472, 455);
             pnlContent.TabIndex = 13;
             // 
             // cmbTemplate
@@ -69,7 +71,7 @@
             btnAddTemplate.BorderRadius = 20;
             btnAddTemplate.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
             btnAddTemplate.Icon = Properties.Resources.plus;
-            btnAddTemplate.Location = new Point(1064, 50);
+            btnAddTemplate.Location = new Point(1283, 37);
             btnAddTemplate.Name = "btnAddTemplate";
             btnAddTemplate.RightToLeft = RightToLeft.Yes;
             btnAddTemplate.Size = new Size(209, 70);
@@ -84,7 +86,7 @@
             stcdTemplates.CardColor = Color.White;
             stcdTemplates.IconBgColor = Color.FromArgb(220, 245, 235);
             stcdTemplates.IconColor = Color.FromArgb(32, 201, 151);
-            stcdTemplates.Location = new Point(814, 708);
+            stcdTemplates.Location = new Point(1041, 650);
             stcdTemplates.Name = "stcdTemplates";
             stcdTemplates.ShadowColor = Color.FromArgb(30, 0, 0, 0);
             stcdTemplates.Size = new Size(425, 135);
@@ -99,7 +101,7 @@
             // 
             picTemplates.Cursor = Cursors.Hand;
             picTemplates.Image = Properties.Resources.templates;
-            picTemplates.Location = new Point(84, 22);
+            picTemplates.Location = new Point(20, 22);
             picTemplates.Name = "picTemplates";
             picTemplates.Size = new Size(135, 98);
             picTemplates.SizeMode = PictureBoxSizeMode.Zoom;
@@ -112,7 +114,7 @@
             btnSyncTemplates.BorderRadius = 20;
             btnSyncTemplates.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
             btnSyncTemplates.Icon = Properties.Resources.refersh;
-            btnSyncTemplates.Location = new Point(341, 50);
+            btnSyncTemplates.Location = new Point(202, 37);
             btnSyncTemplates.Name = "btnSyncTemplates";
             btnSyncTemplates.RightToLeft = RightToLeft.Yes;
             btnSyncTemplates.Size = new Size(157, 70);
@@ -120,18 +122,26 @@
             btnSyncTemplates.Text = "مزامنة";
             btnSyncTemplates.Click += btnSyncTemplates_Click;
             // 
+            // guna2BorderlessForm1
+            // 
+            guna2BorderlessForm1.AnimateWindow = true;
+            guna2BorderlessForm1.BorderRadius = 45;
+            guna2BorderlessForm1.ContainerControl = this;
+            guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6D;
+            guna2BorderlessForm1.TransparentWhileDrag = true;
+            // 
             // TemplatesControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.FromArgb(248, 247, 255);
+            BackColor = Color.White;
             Controls.Add(btnSyncTemplates);
             Controls.Add(picTemplates);
             Controls.Add(stcdTemplates);
             Controls.Add(btnAddTemplate);
             Controls.Add(pnlContent);
             Name = "TemplatesControl";
-            Size = new Size(1306, 890);
+            Size = new Size(1510, 785);
             Load += TemplatesControl_Load;
             pnlContent.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)picTemplates).EndInit();
@@ -145,5 +155,6 @@
         private PictureBox picTemplates;
         private ComboBox cmbTemplate;
         private Controls.ModernButton btnSyncTemplates;
+        private Guna.UI2.WinForms.Guna2BorderlessForm guna2BorderlessForm1;
     }
 }

@@ -32,20 +32,22 @@
             guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(components);
             pnlHeader = new Car_Rental_System.CustomControls.CustomPanel();
             picClose = new PictureBox();
-            pnlMenuSidebar = new GradientPanel();
-            btnNavMarketingAPI = new BChat.Controls.ModernNavButton();
             btnSettings = new FontAwesome.Sharp.IconButton();
-            btnNavCustomers = new BChat.Controls.ModernNavButton();
-            btnNavCustomerGroups = new BChat.Controls.ModernNavButton();
-            btnNavMessages = new BChat.Controls.ModernNavButton();
+            btnNavCreateCampaign = new BChat.Controls.ModernNavButton();
             btnNavHome = new BChat.Controls.ModernNavButton();
+            pnlMenuSidebar = new Car_Rental_System.CustomControls.CustomPanel();
+            btnNavTemplates = new BChat.Controls.ModernNavButton();
+            pnlBigContent = new Car_Rental_System.CustomControls.CustomPanel();
+            pnlSubContent = new Car_Rental_System.CustomControls.CustomPanel();
             pnlHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)picClose).BeginInit();
             pnlMenuSidebar.SuspendLayout();
+            pnlBigContent.SuspendLayout();
             SuspendLayout();
             // 
             // guna2BorderlessForm1
             // 
+            guna2BorderlessForm1.AnimateWindow = true;
             guna2BorderlessForm1.BorderRadius = 45;
             guna2BorderlessForm1.ContainerControl = this;
             guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6D;
@@ -81,58 +83,6 @@
             picClose.TabStop = false;
             picClose.Click += picClose_Click;
             // 
-            // pnlMenuSidebar
-            // 
-            pnlMenuSidebar.BackColor = Color.FromArgb(26, 31, 60);
-            pnlMenuSidebar.Controls.Add(btnNavMarketingAPI);
-            pnlMenuSidebar.Controls.Add(btnSettings);
-            pnlMenuSidebar.Controls.Add(btnNavCustomers);
-            pnlMenuSidebar.Controls.Add(btnNavCustomerGroups);
-            pnlMenuSidebar.Controls.Add(btnNavMessages);
-            pnlMenuSidebar.Controls.Add(btnNavHome);
-            pnlMenuSidebar.CornerRadius = 30;
-            pnlMenuSidebar.GradientEndColor = Color.FromArgb(26, 31, 60);
-            pnlMenuSidebar.GradientMidColor = Color.FromArgb(26, 31, 60);
-            pnlMenuSidebar.GradientStartColor = Color.FromArgb(26, 31, 60);
-            pnlMenuSidebar.HoverGlow = false;
-            pnlMenuSidebar.HoverGlowColor = Color.Transparent;
-            pnlMenuSidebar.Location = new Point(1659, 63);
-            pnlMenuSidebar.Name = "pnlMenuSidebar";
-            pnlMenuSidebar.ShadowColor = Color.Transparent;
-            pnlMenuSidebar.ShadowRadius = 0;
-            pnlMenuSidebar.Size = new Size(234, 890);
-            pnlMenuSidebar.TabIndex = 5;
-            // 
-            // btnNavMarketingAPI
-            // 
-            btnNavMarketingAPI.ActiveBackground = Color.White;
-            btnNavMarketingAPI.ActiveBarColor = Color.FromArgb(124, 111, 247);
-            btnNavMarketingAPI.ActiveBarFullHeight = false;
-            btnNavMarketingAPI.ActiveBarPadding = 2;
-            btnNavMarketingAPI.ActiveBarWidth = 5;
-            btnNavMarketingAPI.ActiveTextColor = Color.FromArgb(124, 111, 247);
-            btnNavMarketingAPI.BackColor = Color.Transparent;
-            btnNavMarketingAPI.BaseBackground = Color.FromArgb(37, 43, 74);
-            btnNavMarketingAPI.BorderRadius = 8;
-            btnNavMarketingAPI.CardPadding = 0;
-            btnNavMarketingAPI.ContentPadding = 12;
-            btnNavMarketingAPI.Font = new Font("Microsoft Sans Serif", 13.5F, FontStyle.Bold);
-            btnNavMarketingAPI.ForeColor = Color.Transparent;
-            btnNavMarketingAPI.HoverBackground = Color.Transparent;
-            btnNavMarketingAPI.HoverTextColor = Color.Gray;
-            btnNavMarketingAPI.Icon = Properties.Resources.sent1;
-            btnNavMarketingAPI.IconSize = 30;
-            btnNavMarketingAPI.IsActive = false;
-            btnNavMarketingAPI.Location = new Point(21, 568);
-            btnNavMarketingAPI.Name = "btnNavMarketingAPI";
-            btnNavMarketingAPI.NormalTextColor = Color.Gray;
-            btnNavMarketingAPI.RightToLeft = RightToLeft.Yes;
-            btnNavMarketingAPI.Size = new Size(200, 65);
-            btnNavMarketingAPI.TabIndex = 9;
-            btnNavMarketingAPI.Text = "التسويق";
-            btnNavMarketingAPI.UseActiveEffect = true;
-            btnNavMarketingAPI.UseHoverEffect = true;
-            // 
             // btnSettings
             // 
             btnSettings.BackColor = Color.Transparent;
@@ -144,104 +94,45 @@
             btnSettings.FlatStyle = FlatStyle.Flat;
             btnSettings.ForeColor = SystemColors.ControlText;
             btnSettings.IconChar = FontAwesome.Sharp.IconChar.Cog;
-            btnSettings.IconColor = Color.FromArgb(150, 255, 255, 255);
+            btnSettings.IconColor = Color.FromArgb(64, 64, 64);
             btnSettings.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnSettings.IconSize = 45;
-            btnSettings.Location = new Point(77, 710);
+            btnSettings.Location = new Point(81, 703);
             btnSettings.Name = "btnSettings";
             btnSettings.Size = new Size(86, 90);
             btnSettings.TabIndex = 5;
             btnSettings.UseVisualStyleBackColor = false;
             // 
-            // btnNavCustomers
+            // btnNavCreateCampaign
             // 
-            btnNavCustomers.ActiveBackground = Color.White;
-            btnNavCustomers.ActiveBarColor = Color.FromArgb(124, 111, 247);
-            btnNavCustomers.ActiveBarFullHeight = false;
-            btnNavCustomers.ActiveBarPadding = 2;
-            btnNavCustomers.ActiveBarWidth = 5;
-            btnNavCustomers.ActiveTextColor = Color.FromArgb(124, 111, 247);
-            btnNavCustomers.BackColor = Color.Transparent;
-            btnNavCustomers.BaseBackground = Color.FromArgb(37, 43, 74);
-            btnNavCustomers.BorderRadius = 8;
-            btnNavCustomers.CardPadding = 0;
-            btnNavCustomers.ContentPadding = 12;
-            btnNavCustomers.Font = new Font("Microsoft Sans Serif", 13.5F, FontStyle.Bold);
-            btnNavCustomers.ForeColor = Color.Transparent;
-            btnNavCustomers.HoverBackground = Color.Transparent;
-            btnNavCustomers.HoverTextColor = Color.Gray;
-            btnNavCustomers.Icon = Properties.Resources.users_static;
-            btnNavCustomers.IconSize = 25;
-            btnNavCustomers.IsActive = false;
-            btnNavCustomers.Location = new Point(15, 313);
-            btnNavCustomers.Name = "btnNavCustomers";
-            btnNavCustomers.NormalTextColor = Color.Gray;
-            btnNavCustomers.RightToLeft = RightToLeft.Yes;
-            btnNavCustomers.Size = new Size(200, 65);
-            btnNavCustomers.TabIndex = 6;
-            btnNavCustomers.Text = "العملاء";
-            btnNavCustomers.UseActiveEffect = true;
-            btnNavCustomers.UseHoverEffect = true;
-            // 
-            // btnNavCustomerGroups
-            // 
-            btnNavCustomerGroups.ActiveBackground = Color.White;
-            btnNavCustomerGroups.ActiveBarColor = Color.FromArgb(124, 111, 247);
-            btnNavCustomerGroups.ActiveBarFullHeight = false;
-            btnNavCustomerGroups.ActiveBarPadding = 2;
-            btnNavCustomerGroups.ActiveBarWidth = 5;
-            btnNavCustomerGroups.ActiveTextColor = Color.FromArgb(124, 111, 247);
-            btnNavCustomerGroups.BackColor = Color.Transparent;
-            btnNavCustomerGroups.BaseBackground = Color.FromArgb(37, 43, 74);
-            btnNavCustomerGroups.BorderRadius = 8;
-            btnNavCustomerGroups.CardPadding = 0;
-            btnNavCustomerGroups.ContentPadding = 12;
-            btnNavCustomerGroups.Font = new Font("Microsoft Sans Serif", 13.5F, FontStyle.Bold);
-            btnNavCustomerGroups.ForeColor = Color.Transparent;
-            btnNavCustomerGroups.HoverBackground = Color.Transparent;
-            btnNavCustomerGroups.HoverTextColor = Color.Gray;
-            btnNavCustomerGroups.Icon = Properties.Resources.groups;
-            btnNavCustomerGroups.IconSize = 30;
-            btnNavCustomerGroups.IsActive = false;
-            btnNavCustomerGroups.Location = new Point(21, 443);
-            btnNavCustomerGroups.Name = "btnNavCustomerGroups";
-            btnNavCustomerGroups.NormalTextColor = Color.Gray;
-            btnNavCustomerGroups.RightToLeft = RightToLeft.Yes;
-            btnNavCustomerGroups.Size = new Size(200, 65);
-            btnNavCustomerGroups.TabIndex = 2;
-            btnNavCustomerGroups.Text = "مجموعات العملاء";
-            btnNavCustomerGroups.UseActiveEffect = true;
-            btnNavCustomerGroups.UseHoverEffect = true;
-            // 
-            // btnNavMessages
-            // 
-            btnNavMessages.ActiveBackground = Color.White;
-            btnNavMessages.ActiveBarColor = Color.FromArgb(124, 111, 247);
-            btnNavMessages.ActiveBarFullHeight = false;
-            btnNavMessages.ActiveBarPadding = 2;
-            btnNavMessages.ActiveBarWidth = 5;
-            btnNavMessages.ActiveTextColor = Color.FromArgb(124, 111, 247);
-            btnNavMessages.BackColor = Color.Transparent;
-            btnNavMessages.BaseBackground = Color.FromArgb(37, 43, 74);
-            btnNavMessages.BorderRadius = 8;
-            btnNavMessages.CardPadding = 0;
-            btnNavMessages.ContentPadding = 12;
-            btnNavMessages.Font = new Font("Microsoft Sans Serif", 13.5F, FontStyle.Bold);
-            btnNavMessages.ForeColor = Color.Transparent;
-            btnNavMessages.HoverBackground = Color.Transparent;
-            btnNavMessages.HoverTextColor = Color.Gray;
-            btnNavMessages.Icon = Properties.Resources.message;
-            btnNavMessages.IconSize = 25;
-            btnNavMessages.IsActive = false;
-            btnNavMessages.Location = new Point(15, 178);
-            btnNavMessages.Name = "btnNavMessages";
-            btnNavMessages.NormalTextColor = Color.Gray;
-            btnNavMessages.RightToLeft = RightToLeft.Yes;
-            btnNavMessages.Size = new Size(200, 65);
-            btnNavMessages.TabIndex = 8;
-            btnNavMessages.Text = "الرسائل";
-            btnNavMessages.UseActiveEffect = true;
-            btnNavMessages.UseHoverEffect = true;
+            btnNavCreateCampaign.ActiveBackground = Color.White;
+            btnNavCreateCampaign.ActiveBarColor = Color.FromArgb(124, 111, 247);
+            btnNavCreateCampaign.ActiveBarFullHeight = false;
+            btnNavCreateCampaign.ActiveBarPadding = 2;
+            btnNavCreateCampaign.ActiveBarWidth = 5;
+            btnNavCreateCampaign.ActiveTextColor = Color.FromArgb(124, 111, 247);
+            btnNavCreateCampaign.BackColor = Color.Transparent;
+            btnNavCreateCampaign.BaseBackground = SystemColors.ButtonFace;
+            btnNavCreateCampaign.BorderRadius = 8;
+            btnNavCreateCampaign.CardPadding = 0;
+            btnNavCreateCampaign.ContentPadding = 12;
+            btnNavCreateCampaign.Font = new Font("Microsoft Sans Serif", 13.5F, FontStyle.Bold);
+            btnNavCreateCampaign.ForeColor = Color.Transparent;
+            btnNavCreateCampaign.HoverBackground = Color.Transparent;
+            btnNavCreateCampaign.HoverTextColor = Color.Gray;
+            btnNavCreateCampaign.Icon = Properties.Resources.message;
+            btnNavCreateCampaign.IconSize = 25;
+            btnNavCreateCampaign.IsActive = false;
+            btnNavCreateCampaign.Location = new Point(12, 219);
+            btnNavCreateCampaign.Name = "btnNavCreateCampaign";
+            btnNavCreateCampaign.NormalTextColor = Color.Gray;
+            btnNavCreateCampaign.RightToLeft = RightToLeft.Yes;
+            btnNavCreateCampaign.Size = new Size(200, 65);
+            btnNavCreateCampaign.TabIndex = 8;
+            btnNavCreateCampaign.Text = "انشاء حملة";
+            btnNavCreateCampaign.UseActiveEffect = true;
+            btnNavCreateCampaign.UseHoverEffect = true;
+            btnNavCreateCampaign.Click += btnNavCreateCampaign_Click;
             // 
             // btnNavHome
             // 
@@ -263,7 +154,7 @@
             btnNavHome.Icon = Properties.Resources.home;
             btnNavHome.IconSize = 30;
             btnNavHome.IsActive = true;
-            btnNavHome.Location = new Point(15, 41);
+            btnNavHome.Location = new Point(12, 22);
             btnNavHome.Name = "btnNavHome";
             btnNavHome.NormalTextColor = Color.FromArgb(148, 163, 184);
             btnNavHome.RightToLeft = RightToLeft.Yes;
@@ -273,11 +164,96 @@
             btnNavHome.UseActiveEffect = true;
             btnNavHome.UseHoverEffect = true;
             // 
+            // pnlMenuSidebar
+            // 
+            pnlMenuSidebar.BackColorEx = Color.White;
+            pnlMenuSidebar.BorderColor = Color.LightGray;
+            pnlMenuSidebar.BorderRadius = 15;
+            pnlMenuSidebar.BorderThickness = 1;
+            pnlMenuSidebar.Controls.Add(btnNavTemplates);
+            pnlMenuSidebar.Controls.Add(btnSettings);
+            pnlMenuSidebar.Controls.Add(btnNavHome);
+            pnlMenuSidebar.Controls.Add(btnNavCreateCampaign);
+            pnlMenuSidebar.Font = new Font("Segoe UI", 10F);
+            pnlMenuSidebar.ForeColor = Color.Black;
+            pnlMenuSidebar.Location = new Point(1653, 61);
+            pnlMenuSidebar.Name = "pnlMenuSidebar";
+            pnlMenuSidebar.ShadowColor = Color.FromArgb(80, 0, 0, 0);
+            pnlMenuSidebar.ShadowSize = 6;
+            pnlMenuSidebar.Size = new Size(240, 905);
+            pnlMenuSidebar.TabIndex = 6;
+            pnlMenuSidebar.UseShadow = true;
+            // 
+            // btnNavTemplates
+            // 
+            btnNavTemplates.ActiveBackground = Color.White;
+            btnNavTemplates.ActiveBarColor = Color.FromArgb(124, 111, 247);
+            btnNavTemplates.ActiveBarFullHeight = false;
+            btnNavTemplates.ActiveBarPadding = 2;
+            btnNavTemplates.ActiveBarWidth = 5;
+            btnNavTemplates.ActiveTextColor = Color.FromArgb(124, 111, 247);
+            btnNavTemplates.BackColor = Color.Transparent;
+            btnNavTemplates.BaseBackground = SystemColors.ButtonFace;
+            btnNavTemplates.BorderRadius = 8;
+            btnNavTemplates.CardPadding = 0;
+            btnNavTemplates.ContentPadding = 12;
+            btnNavTemplates.Font = new Font("Microsoft Sans Serif", 13.5F, FontStyle.Bold);
+            btnNavTemplates.ForeColor = Color.Transparent;
+            btnNavTemplates.HoverBackground = Color.Transparent;
+            btnNavTemplates.HoverTextColor = Color.Gray;
+            btnNavTemplates.Icon = Properties.Resources.message;
+            btnNavTemplates.IconSize = 25;
+            btnNavTemplates.IsActive = false;
+            btnNavTemplates.Location = new Point(12, 413);
+            btnNavTemplates.Name = "btnNavTemplates";
+            btnNavTemplates.NormalTextColor = Color.Gray;
+            btnNavTemplates.RightToLeft = RightToLeft.Yes;
+            btnNavTemplates.Size = new Size(200, 65);
+            btnNavTemplates.TabIndex = 9;
+            btnNavTemplates.Text = "القوالب";
+            btnNavTemplates.UseActiveEffect = true;
+            btnNavTemplates.UseHoverEffect = true;
+            btnNavTemplates.Click += btnNavTemplates_Click;
+            // 
+            // pnlBigContent
+            // 
+            pnlBigContent.BackColorEx = Color.White;
+            pnlBigContent.BorderColor = Color.LightGray;
+            pnlBigContent.BorderRadius = 15;
+            pnlBigContent.BorderThickness = 1;
+            pnlBigContent.Controls.Add(pnlSubContent);
+            pnlBigContent.Font = new Font("Segoe UI", 10F);
+            pnlBigContent.ForeColor = Color.Black;
+            pnlBigContent.Location = new Point(47, 117);
+            pnlBigContent.Name = "pnlBigContent";
+            pnlBigContent.ShadowColor = Color.FromArgb(80, 0, 0, 0);
+            pnlBigContent.ShadowSize = 6;
+            pnlBigContent.Size = new Size(1550, 820);
+            pnlBigContent.TabIndex = 7;
+            pnlBigContent.UseShadow = true;
+            // 
+            // pnlSubContent
+            // 
+            pnlSubContent.BackColorEx = Color.White;
+            pnlSubContent.BorderColor = Color.LightGray;
+            pnlSubContent.BorderRadius = 1;
+            pnlSubContent.BorderThickness = 1;
+            pnlSubContent.Font = new Font("Segoe UI", 10F);
+            pnlSubContent.ForeColor = Color.Black;
+            pnlSubContent.Location = new Point(15, 17);
+            pnlSubContent.Name = "pnlSubContent";
+            pnlSubContent.ShadowColor = Color.Transparent;
+            pnlSubContent.ShadowSize = 0;
+            pnlSubContent.Size = new Size(1510, 785);
+            pnlSubContent.TabIndex = 8;
+            pnlSubContent.UseShadow = true;
+            // 
             // Marketing
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1905, 998);
+            Controls.Add(pnlBigContent);
             Controls.Add(pnlMenuSidebar);
             Controls.Add(pnlHeader);
             FormBorderStyle = FormBorderStyle.None;
@@ -287,6 +263,7 @@
             pnlHeader.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)picClose).EndInit();
             pnlMenuSidebar.ResumeLayout(false);
+            pnlBigContent.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -297,10 +274,13 @@
         private PictureBox picClose;
         private Controls.ModernNavButton btnNavMarketingAPI;
         private FontAwesome.Sharp.IconButton btnSettings;
-        private GradientPanel pnlMenuSidebar;
-        private Controls.ModernNavButton btnNavMessages;
+        private Controls.ModernNavButton btnNavCreateCampaign;
         private Controls.ModernNavButton btnNavHome;
         private Controls.ModernNavButton btnNavCustomerGroups;
         private Controls.ModernNavButton btnNavCustomers;
+        private Car_Rental_System.CustomControls.CustomPanel pnlMenuSidebar;
+        private Controls.ModernNavButton btnNavTemplates;
+        private Car_Rental_System.CustomControls.CustomPanel pnlBigContent;
+        private Car_Rental_System.CustomControls.CustomPanel pnlSubContent;
     }
 }
