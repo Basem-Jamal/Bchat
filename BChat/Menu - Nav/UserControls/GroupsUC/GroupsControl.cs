@@ -4,6 +4,7 @@ using BChat.Data.DataStore;
 using BChat.Events;
 using BChat.Forms;
 using BChat.Global;
+using BChat.Menu___Nav.UserControls.Show_Group_Members_Control;
 using BChat.Models;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace BChat.UserControls
             AppEvents.Groups.OnGroupAdded += group => groupsWrapPanel.AddGroup(group, GeneralFunctions.Base64ToImage);
             AppEvents.Groups.OnGroupUpdated += group => groupsWrapPanel.UpdateGroup(group);
 
-   
+
         }
         private void CustomerGroupsControl_Load(object sender, EventArgs e)
         {
@@ -37,7 +38,7 @@ namespace BChat.UserControls
         private void LoadCustomerGroups()
         {
 
-            
+
 
             groupsWrapPanel.LoadGroups(AppCache.Groups, GeneralFunctions.Base64ToImage);
 
@@ -86,12 +87,41 @@ namespace BChat.UserControls
             var overlay = OverlayPanel.Show(mainForm);
 
             var group = groupsWrapPanel.GetGroupFromCard(e);
-            
+
             MessageBox.Show(this, $"تعديل المجموعة: {group.Name}", "تعديل", MessageBoxButtons.OK, MessageBoxIcon.Information);
             fmAddGroup fmAddGroup = new fmAddGroup(CustomerGroupStatus.Edit, group);
             fmAddGroup.ShowDialog();
 
             overlay.Close(mainForm);
+
+
+        }
+
+        private void groupsWrapPanel_CardViewClicked(object sender, int groupId)
+        {
+            var parent = this.Parent;  // pnlContent
+
+            parent.Controls.Clear();
+
+            var membersControl = new GroupMembersControl(groupId);
+            membersControl.Dock = DockStyle.Fill;
+            parent.Controls.Add(membersControl);
+
+
+            //GroupMembersControl groupMembersControl;
+
+            //if (!pnlContent)
+
+            //if (!pnlContent.Controls.ContainsKey("Customers_View"))
+            //{
+            //    CustomersControl customersPage = new CustomersControl();
+            //    customersPage.Name = "Customers_View";
+            //    customersPage.Dock = DockStyle.Fill;
+            //    pnlContent.Controls.Add(customersPage);
+            //}
+
+            //pnlContent.Controls["Customers_View"].BringToFront();
+
 
 
         }

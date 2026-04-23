@@ -2,6 +2,7 @@
 using BChat.Data.DataStore;
 using BChat.Events;
 using BChat.Forms;
+using BChat.Global;
 using BChat.Models;
 
 namespace BChat.UserControls
@@ -50,7 +51,7 @@ namespace BChat.UserControls
         }
         private void LoadCustomers()
         {
-            var customers = CustomerRepository.GetAll();
+            var customers = AppCache.Customers;
 
             stcdCoustomers.Value = customers.Count.ToString();
 
@@ -92,13 +93,19 @@ namespace BChat.UserControls
             var row = _table.GetSelectedRow();
             if (row == null) return;
 
-            Customer customer = new Customer()
-            {
-                Id = Convert.ToInt32(row["Id"]),
-                Name = row["Name"].ToString(),
-                Phone = row["Phone"].ToString(),
-                CreatedAt = Convert.ToDateTime(row["CreatedAt"])
-            };
+            //Customer customer = new Customer()
+            //{
+            //    Id = Convert.ToInt32(row["Id"]),
+            //    Name = row["Name"].ToString(),
+            //    Phone = row["Phone"].ToString(),
+            //    CreatedAt = Convert.ToDateTime(row["CreatedAt"])
+            //};
+
+            int id = Convert.ToInt32(row["Id"]);
+            var customer = AppCache.Customers.FirstOrDefault(c => c.Id == id);
+            if (customer == null) return;
+
+
             AddCustomerForm updateCustomer = new AddCustomerForm(customer, CustomerStatus.Update);
             updateCustomer.ShowDialog();
 
@@ -124,6 +131,25 @@ namespace BChat.UserControls
 
                 if (deleted)
                 {
+                    var oldGroupIds = AppCache.GetGroupIdsByCustomer(id);
+
+                    AppCache.GroupMembers.RemoveAll (m => m.CustomerId == id);
+                    AppCache.Customers.RemoveAll (c => c.Id == id);
+
+                    foreach (var groupId in oldGroupIds)
+                    {
+                        var group = AppCache.Groups.FirstOrDefault(g => g.Id == groupId);
+
+                        if (group != null)
+                        {
+                            int count = AppCache.GroupMembers.Count(m => m.GroupId  == groupId);
+                            group.StatOneValue = count.ToString();
+
+                            AppEvents.Groups.ChangeGroupUpdated(group);
+
+                        }
+                    }
+
                     MessageBox.Show("تم الحذف بنجاح ✅", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LoadCustomers();
                 }

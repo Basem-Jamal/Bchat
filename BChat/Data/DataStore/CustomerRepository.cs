@@ -103,25 +103,56 @@ namespace BChat.Data.DataStore
             }
         }
 
-        public static bool Delete(int id)
+        public static bool Delete(int Id)
         {
-            bool result = false;
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
+
+                
                 conn.Open();
-                string query = "DELETE FROM Customers WHERE Id = @Id";
 
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+
+                using (SqlTransaction trans = conn.BeginTransaction())
                 {
-                    cmd.Parameters.AddWithValue("@Id", id);
-                   result = cmd.ExecuteNonQuery() > 0;
+                    try
+                    {
 
+                        string queryDeleteMember = "DELETE FROM CustomerGroupMembers WHERE CustomerId = @Id";
+
+                        using (SqlCommand cmd = new SqlCommand(queryDeleteMember, conn, trans))
+                        {
+                            cmd.Parameters.AddWithValue("@Id", Id);
+                            cmd.ExecuteNonQuery();
+                        }
+
+
+
+                        string queryDeleteCustomer = "DELETE FROM Customers WHERE Id = @Id";
+
+
+                        using (SqlCommand cmd = new SqlCommand(queryDeleteCustomer, conn , trans))
+                        {
+                            cmd.Parameters.AddWithValue("@Id", Id);
+                            bool result = cmd.ExecuteNonQuery() > 0;
+
+                            trans.Commit();
+                            AppEvents.ChangeRefreshCustomesTable();
+                            return result;
+
+
+                        }
+
+                    }
+                    catch
+                    {
+                        trans.Rollback();
+                        throw;
+                    }
                 }
+
             }
 
-            AppEvents.ChangeRefreshCustomesTable();
             
-            return result;
         }
 
         public static void Update(Customer customer)

@@ -85,6 +85,9 @@ namespace BChat.Forms
 
                 if (added != -1)
                 {
+                    customer.Id = added;
+                    AppCache.Customers.Add(customer);
+
 
                     // ← هنا
                     var selectedIds = groupSelector.GetSelectedGroupIds();
@@ -137,6 +140,7 @@ namespace BChat.Forms
 
 
                 CustomerRepository.Update(_customer);
+                AppEvents.ChangeRefreshCustomesTable();  // ← يوجد بالفعل
 
 
                 var oldGroupIds = AppCache.GetGroupIdsByCustomer(_customer.Id);

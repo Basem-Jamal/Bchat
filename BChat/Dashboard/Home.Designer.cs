@@ -42,7 +42,6 @@
             btnNavHome = new BChat.Controls.ModernNavButton();
             btnNavCustomers = new BChat.Controls.ModernNavButton();
             btnNavCustomerGroups = new BChat.Controls.ModernNavButton();
-            btnSettings = new FontAwesome.Sharp.IconButton();
             btnTemplates = new FontAwesome.Sharp.IconButton();
             btnScheduledMessages = new FontAwesome.Sharp.IconButton();
             btnOrders = new FontAwesome.Sharp.IconButton();
@@ -75,7 +74,6 @@
             pnlMenuSidebar.Controls.Add(btnNavHome);
             pnlMenuSidebar.Controls.Add(btnNavCustomers);
             pnlMenuSidebar.Controls.Add(btnNavCustomerGroups);
-            pnlMenuSidebar.Controls.Add(btnSettings);
             pnlMenuSidebar.CornerRadius = 0;
             pnlMenuSidebar.GradientEndColor = Color.FromArgb(26, 31, 60);
             pnlMenuSidebar.GradientMidColor = Color.FromArgb(26, 31, 60);
@@ -260,27 +258,6 @@
             btnNavCustomerGroups.UseHoverEffect = true;
             btnNavCustomerGroups.Click += btnNavCustomerGroups_Click;
             // 
-            // btnSettings
-            // 
-            btnSettings.BackColor = Color.Transparent;
-            btnSettings.BackgroundImageLayout = ImageLayout.Zoom;
-            btnSettings.Cursor = Cursors.Hand;
-            btnSettings.FlatAppearance.BorderSize = 0;
-            btnSettings.FlatAppearance.MouseDownBackColor = Color.Transparent;
-            btnSettings.FlatAppearance.MouseOverBackColor = Color.Transparent;
-            btnSettings.FlatStyle = FlatStyle.Flat;
-            btnSettings.ForeColor = SystemColors.ControlText;
-            btnSettings.IconChar = FontAwesome.Sharp.IconChar.Cog;
-            btnSettings.IconColor = Color.FromArgb(150, 255, 255, 255);
-            btnSettings.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnSettings.IconSize = 45;
-            btnSettings.Location = new Point(79, 975);
-            btnSettings.Name = "btnSettings";
-            btnSettings.Size = new Size(86, 90);
-            btnSettings.TabIndex = 5;
-            btnSettings.UseVisualStyleBackColor = false;
-            btnSettings.Click += btnSettings_Click;
-            // 
             // btnTemplates
             // 
             btnTemplates.BackColor = Color.Transparent;
@@ -359,7 +336,7 @@
             customPanel1.Name = "customPanel1";
             customPanel1.ShadowColor = Color.FromArgb(80, 0, 0, 0);
             customPanel1.ShadowSize = 0;
-            customPanel1.Size = new Size(240, 1043);
+            customPanel1.Size = new Size(240, 998);
             customPanel1.TabIndex = 4;
             customPanel1.UseShadow = true;
             // 
@@ -420,7 +397,7 @@
             pnlMain.Name = "pnlMain";
             pnlMain.ShadowColor = Color.FromArgb(80, 0, 0, 0);
             pnlMain.ShadowSize = 6;
-            pnlMain.Size = new Size(1561, 1043);
+            pnlMain.Size = new Size(1561, 998);
             pnlMain.TabIndex = 3;
             pnlMain.UseShadow = true;
             // 
@@ -496,7 +473,7 @@
             // 
             pnlBottom.CustomizableEdges = customizableEdges5;
             pnlBottom.Dock = DockStyle.Bottom;
-            pnlBottom.Location = new Point(0, 983);
+            pnlBottom.Location = new Point(0, 938);
             pnlBottom.Name = "pnlBottom";
             pnlBottom.ShadowDecoration.CustomizableEdges = customizableEdges6;
             pnlBottom.Size = new Size(1321, 60);
@@ -507,7 +484,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
-            ClientSize = new Size(1561, 1043);
+            ClientSize = new Size(1561, 998);
             Controls.Add(pnlMain);
             FormBorderStyle = FormBorderStyle.None;
             Name = "Home";
@@ -538,7 +515,6 @@
         private FontAwesome.Sharp.IconButton btnScheduledMessages;
         private Car_Rental_System.CustomControls.CustomPanel customPanel1;
         private PictureBox picClose;
-        private FontAwesome.Sharp.IconButton btnSettings;
         private Controls.ModernPictureBox modernPictureBox1;
         private Controls.ModernNavButton btnNavCustomerGroups;
         private Controls.ModernNavButton btnNavCustomers;

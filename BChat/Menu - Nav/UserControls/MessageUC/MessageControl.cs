@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace BChat.UserControls
 {
-    public partial class DashboardControl : UserControl
+    public partial class MessageControl : UserControl
     {
-        public DashboardControl()
+        public MessageControl()
         {
             InitializeComponent();
         }

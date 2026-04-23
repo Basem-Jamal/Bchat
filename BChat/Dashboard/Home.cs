@@ -77,7 +77,7 @@ namespace BChat
 
             if (!pnlContent.Controls.ContainsKey("Messages_View"))
             {
-                CampaignsControl messagesPage = new CampaignsControl();
+                MessageControl messagesPage = new MessageControl();
                 messagesPage.Name = "Messages_View";
                 messagesPage.Dock = DockStyle.Fill;
                 pnlContent.Controls.Add(messagesPage);

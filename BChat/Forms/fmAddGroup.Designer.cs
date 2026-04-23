@@ -60,6 +60,7 @@
             // 
             // guna2CustomGradientPanel1
             // 
+            guna2CustomGradientPanel1.Controls.Add(btnAddOrEditCustomerGroups);
             guna2CustomGradientPanel1.Controls.Add(adColorPicker);
             guna2CustomGradientPanel1.Controls.Add(bigLabel2);
             guna2CustomGradientPanel1.Controls.Add(bigLabel1);
@@ -71,16 +72,16 @@
             guna2CustomGradientPanel1.Controls.Add(txbGroupName);
             guna2CustomGradientPanel1.Controls.Add(lblCustomerName);
             guna2CustomGradientPanel1.CustomizableEdges = customizableEdges1;
-            guna2CustomGradientPanel1.Location = new Point(12, 169);
+            guna2CustomGradientPanel1.Location = new Point(12, 135);
             guna2CustomGradientPanel1.Name = "guna2CustomGradientPanel1";
             guna2CustomGradientPanel1.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            guna2CustomGradientPanel1.Size = new Size(788, 683);
+            guna2CustomGradientPanel1.Size = new Size(918, 760);
             guna2CustomGradientPanel1.TabIndex = 10;
             // 
             // adColorPicker
             // 
             adColorPicker.Hex = "4285F4";
-            adColorPicker.Location = new Point(238, 401);
+            adColorPicker.Location = new Point(380, 472);
             adColorPicker.Name = "adColorPicker";
             adColorPicker.SelectedColor = Color.FromArgb(66, 133, 244);
             adColorPicker.ShowAlpha = false;
@@ -95,7 +96,7 @@
             bigLabel2.BackColor = Color.Transparent;
             bigLabel2.Font = new Font("IBM Plex Sans Arabic", 16F);
             bigLabel2.ForeColor = Color.FromArgb(80, 80, 80);
-            bigLabel2.Location = new Point(616, 480);
+            bigLabel2.Location = new Point(746, 472);
             bigLabel2.Name = "bigLabel2";
             bigLabel2.Size = new Size(149, 38);
             bigLabel2.TabIndex = 23;
@@ -107,7 +108,7 @@
             bigLabel1.BackColor = Color.Transparent;
             bigLabel1.Font = new Font("IBM Plex Sans Arabic", 16F);
             bigLabel1.ForeColor = Color.FromArgb(80, 80, 80);
-            bigLabel1.Location = new Point(616, 349);
+            bigLabel1.Location = new Point(794, 349);
             bigLabel1.Name = "bigLabel1";
             bigLabel1.Size = new Size(101, 38);
             bigLabel1.TabIndex = 22;
@@ -132,7 +133,7 @@
             btnUplaodFileIcon.Icon = null;
             btnUplaodFileIcon.IconSize = 20;
             btnUplaodFileIcon.IsActive = false;
-            btnUplaodFileIcon.Location = new Point(355, 349);
+            btnUplaodFileIcon.Location = new Point(444, 349);
             btnUplaodFileIcon.Name = "btnUplaodFileIcon";
             btnUplaodFileIcon.NormalTextColor = Color.White;
             btnUplaodFileIcon.RightToLeft = RightToLeft.Yes;
@@ -169,7 +170,7 @@
             lblCustomerPhone.BackColor = Color.Transparent;
             lblCustomerPhone.Font = new Font("IBM Plex Sans Arabic", 16F);
             lblCustomerPhone.ForeColor = Color.FromArgb(80, 80, 80);
-            lblCustomerPhone.Location = new Point(616, 224);
+            lblCustomerPhone.Location = new Point(742, 214);
             lblCustomerPhone.Name = "lblCustomerPhone";
             lblCustomerPhone.Size = new Size(153, 38);
             lblCustomerPhone.TabIndex = 7;
@@ -184,7 +185,7 @@
             txbGroupDescription.FocusBorderColor = Color.FromArgb(124, 111, 247);
             txbGroupDescription.Font = new Font("IBM Plex Sans Arabic", 12F);
             txbGroupDescription.LabelText = "";
-            txbGroupDescription.Location = new Point(115, 214);
+            txbGroupDescription.Location = new Point(245, 214);
             txbGroupDescription.MaxLength = 32767;
             txbGroupDescription.Name = "txbGroupDescription";
             txbGroupDescription.PlaceholderText = "";
@@ -201,7 +202,7 @@
             txbGroupName.FocusBorderColor = Color.FromArgb(124, 111, 247);
             txbGroupName.Font = new Font("IBM Plex Sans Arabic", 12F);
             txbGroupName.LabelText = "";
-            txbGroupName.Location = new Point(115, 93);
+            txbGroupName.Location = new Point(245, 93);
             txbGroupName.MaxLength = 32767;
             txbGroupName.Name = "txbGroupName";
             txbGroupName.PlaceholderText = "";
@@ -215,7 +216,7 @@
             lblCustomerName.BackColor = Color.Transparent;
             lblCustomerName.Font = new Font("IBM Plex Sans Arabic", 16F);
             lblCustomerName.ForeColor = Color.FromArgb(80, 80, 80);
-            lblCustomerName.Location = new Point(616, 102);
+            lblCustomerName.Location = new Point(757, 93);
             lblCustomerName.Name = "lblCustomerName";
             lblCustomerName.Size = new Size(138, 38);
             lblCustomerName.TabIndex = 2;
@@ -225,7 +226,7 @@
             // 
             pictureBox1.Cursor = Cursors.Hand;
             pictureBox1.Image = Properties.Resources.add_group;
-            pictureBox1.Location = new Point(338, 43);
+            pictureBox1.Location = new Point(398, 21);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(135, 98);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
@@ -236,7 +237,7 @@
             // 
             picClose.Cursor = Cursors.Hand;
             picClose.Image = Properties.Resources.close;
-            picClose.Location = new Point(741, 12);
+            picClose.Location = new Point(874, 12);
             picClose.Name = "picClose";
             picClose.Size = new Size(56, 49);
             picClose.SizeMode = PictureBoxSizeMode.Zoom;
@@ -250,7 +251,7 @@
             btnAddOrEditCustomerGroups.BorderRadius = 23;
             btnAddOrEditCustomerGroups.Font = new Font("IBM Plex Sans Arabic", 12F, FontStyle.Bold);
             btnAddOrEditCustomerGroups.Icon = Properties.Resources.plus;
-            btnAddOrEditCustomerGroups.Location = new Point(12, 871);
+            btnAddOrEditCustomerGroups.Location = new Point(23, 684);
             btnAddOrEditCustomerGroups.Name = "btnAddOrEditCustomerGroups";
             btnAddOrEditCustomerGroups.RightToLeft = RightToLeft.Yes;
             btnAddOrEditCustomerGroups.Size = new Size(162, 62);
@@ -263,8 +264,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlLightLight;
-            ClientSize = new Size(818, 955);
-            Controls.Add(btnAddOrEditCustomerGroups);
+            ClientSize = new Size(942, 907);
             Controls.Add(pictureBox1);
             Controls.Add(picClose);
             Controls.Add(guna2CustomGradientPanel1);

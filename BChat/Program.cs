@@ -12,11 +12,16 @@ namespace BChat
         [STAThread]
         static void Main()
         {
+
+            Application.EnableVisualStyles();
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
 
 
             ApplicationConfiguration.Initialize();
+            Application.SetCompatibleTextRenderingDefault(false);
+            AppCache.Customers = CustomerRepository.GetAll();
+
             AppCache.Groups = GroupRepository.GetAll();
 
             AppCache.GroupMembers = GroupMemberRepository.GetAll();
@@ -25,7 +30,6 @@ namespace BChat
 
 
             Application.Run(new Home());
-
         }
 
         private static void CalculateMembersCount()

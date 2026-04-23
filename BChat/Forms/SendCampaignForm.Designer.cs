@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             picClose = new PictureBox();
             guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(components);
             btnSendCampaign = new BChat.Controls.ModernButton();
@@ -87,10 +87,10 @@
             guna2CustomGradientPanel1.Controls.Add(lblCustomerName);
             guna2CustomGradientPanel1.Controls.Add(bigLabel2);
             guna2CustomGradientPanel1.Controls.Add(bigLabel1);
-            guna2CustomGradientPanel1.CustomizableEdges = customizableEdges3;
+            guna2CustomGradientPanel1.CustomizableEdges = customizableEdges1;
             guna2CustomGradientPanel1.Location = new Point(66, 83);
             guna2CustomGradientPanel1.Name = "guna2CustomGradientPanel1";
-            guna2CustomGradientPanel1.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            guna2CustomGradientPanel1.ShadowDecoration.CustomizableEdges = customizableEdges2;
             guna2CustomGradientPanel1.Size = new Size(812, 712);
             guna2CustomGradientPanel1.TabIndex = 5;
             // 
@@ -119,17 +119,25 @@
             // 
             // cmbTemplate
             // 
+            cmbTemplate.ArrowColor = Color.FromArgb(124, 111, 247);
             cmbTemplate.BackColor = Color.Transparent;
+            cmbTemplate.BorderColor = Color.FromArgb(220, 215, 250);
+            cmbTemplate.DropdownBackColor = Color.White;
+            cmbTemplate.FocusBorderColor = Color.FromArgb(124, 111, 247);
             cmbTemplate.Font = new Font("IBM Plex Sans Arabic", 12F);
+            cmbTemplate.ItemHoverColor = Color.FromArgb(237, 235, 255);
             cmbTemplate.LabelText = "";
             cmbTemplate.Location = new Point(92, 303);
             cmbTemplate.Name = "cmbTemplate";
             cmbTemplate.PlaceholderText = "";
             cmbTemplate.RightToLeft = RightToLeft.Yes;
             cmbTemplate.SelectedIndex = -1;
+            cmbTemplate.SelectedItem = null;
             cmbTemplate.Size = new Size(664, 57);
             cmbTemplate.TabIndex = 3;
             cmbTemplate.Text = "modernComboBox1";
+            cmbTemplate.TextColor = Color.FromArgb(40, 40, 70);
+            cmbTemplate.UsePlaceholder = true;
             // 
             // txbTemplateName
             // 
@@ -203,7 +211,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(917, 888);
+            ClientSize = new Size(942, 907);
             Controls.Add(modernButton3);
             Controls.Add(btnSendCampaign);
             Controls.Add(guna2CustomGradientPanel1);

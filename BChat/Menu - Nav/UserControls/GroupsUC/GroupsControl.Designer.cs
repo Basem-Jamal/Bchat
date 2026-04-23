@@ -117,6 +117,7 @@
             groupsWrapPanel.VerticalGap = 16;
             groupsWrapPanel.CardDeleteClicked += groupsWrapPanel_CardDeleteClicked;
             groupsWrapPanel.CardEditClicked += groupsWrapPanel_CardEditClicked;
+            groupsWrapPanel.CardViewClicked += groupsWrapPanel_CardViewClicked;
             groupsWrapPanel.AddCardClicked += groupsWrapPanel_AddCardClicked;
             // 
             // btnRefreshData

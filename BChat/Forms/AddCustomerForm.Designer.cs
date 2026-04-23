@@ -41,6 +41,7 @@
             groupSelector = new BChat.Custom_Controal.Custom_Bchat.GroupSelectorPanel();
             txbCustomerPhone = new BChat.Controls.ModernTextBox();
             txbCustomerName = new BChat.Controls.ModernTextBox();
+            bigLabel1 = new ReaLTaiizor.Controls.BigLabel();
             ((System.ComponentModel.ISupportInitialize)picClose).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             guna2CustomGradientPanel1.SuspendLayout();
@@ -57,7 +58,7 @@
             // 
             picClose.Cursor = Cursors.Hand;
             picClose.Image = Properties.Resources.close;
-            picClose.Location = new Point(718, 6);
+            picClose.Location = new Point(853, 12);
             picClose.Name = "picClose";
             picClose.Size = new Size(56, 49);
             picClose.SizeMode = PictureBoxSizeMode.Zoom;
@@ -71,7 +72,7 @@
             lblCustomerName.BackColor = Color.Transparent;
             lblCustomerName.Font = new Font("Microsoft Sans Serif", 20F);
             lblCustomerName.ForeColor = Color.FromArgb(80, 80, 80);
-            lblCustomerName.Location = new Point(605, 158);
+            lblCustomerName.Location = new Point(790, 110);
             lblCustomerName.Name = "lblCustomerName";
             lblCustomerName.Size = new Size(107, 31);
             lblCustomerName.TabIndex = 2;
@@ -83,7 +84,7 @@
             lblCustomerPhone.BackColor = Color.Transparent;
             lblCustomerPhone.Font = new Font("Microsoft Sans Serif", 20F);
             lblCustomerPhone.ForeColor = Color.FromArgb(80, 80, 80);
-            lblCustomerPhone.Location = new Point(605, 358);
+            lblCustomerPhone.Location = new Point(791, 271);
             lblCustomerPhone.Name = "lblCustomerPhone";
             lblCustomerPhone.Size = new Size(106, 31);
             lblCustomerPhone.TabIndex = 7;
@@ -93,7 +94,7 @@
             // 
             pictureBox1.Cursor = Cursors.Hand;
             pictureBox1.Image = Properties.Resources.add_f;
-            pictureBox1.Location = new Point(338, 43);
+            pictureBox1.Location = new Point(422, 30);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(135, 98);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
@@ -106,7 +107,7 @@
             btnAddCustomer.BorderRadius = 23;
             btnAddCustomer.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             btnAddCustomer.Icon = Properties.Resources.plus;
-            btnAddCustomer.Location = new Point(26, 762);
+            btnAddCustomer.Location = new Point(26, 630);
             btnAddCustomer.Name = "btnAddCustomer";
             btnAddCustomer.RightToLeft = RightToLeft.Yes;
             btnAddCustomer.Size = new Size(162, 62);
@@ -116,8 +117,10 @@
             // 
             // guna2CustomGradientPanel1
             // 
+            guna2CustomGradientPanel1.Controls.Add(bigLabel1);
             guna2CustomGradientPanel1.Controls.Add(groupSelector);
             guna2CustomGradientPanel1.Controls.Add(lblCustomerPhone);
+            guna2CustomGradientPanel1.Controls.Add(btnAddCustomer);
             guna2CustomGradientPanel1.Controls.Add(txbCustomerPhone);
             guna2CustomGradientPanel1.Controls.Add(txbCustomerName);
             guna2CustomGradientPanel1.Controls.Add(lblCustomerName);
@@ -125,17 +128,17 @@
             guna2CustomGradientPanel1.Location = new Point(12, 169);
             guna2CustomGradientPanel1.Name = "guna2CustomGradientPanel1";
             guna2CustomGradientPanel1.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            guna2CustomGradientPanel1.Size = new Size(788, 569);
+            guna2CustomGradientPanel1.Size = new Size(918, 718);
             guna2CustomGradientPanel1.TabIndex = 9;
             // 
             // groupSelector
             // 
             groupSelector.AutoScroll = true;
             groupSelector.BackColor = Color.White;
-            groupSelector.Location = new Point(14, 461);
+            groupSelector.Location = new Point(247, 421);
             groupSelector.Name = "groupSelector";
             groupSelector.Padding = new Padding(8);
-            groupSelector.Size = new Size(748, 100);
+            groupSelector.Size = new Size(462, 231);
             groupSelector.TabIndex = 8;
             // 
             // txbCustomerPhone
@@ -146,7 +149,7 @@
             txbCustomerPhone.FocusBorderColor = Color.FromArgb(124, 111, 247);
             txbCustomerPhone.Font = new Font("Microsoft Sans Serif", 12F);
             txbCustomerPhone.LabelText = "";
-            txbCustomerPhone.Location = new Point(115, 358);
+            txbCustomerPhone.Location = new Point(249, 271);
             txbCustomerPhone.MaxLength = 32767;
             txbCustomerPhone.Name = "txbCustomerPhone";
             txbCustomerPhone.PlaceholderText = "";
@@ -162,7 +165,7 @@
             txbCustomerName.FocusBorderColor = Color.FromArgb(124, 111, 247);
             txbCustomerName.Font = new Font("Microsoft Sans Serif", 12F);
             txbCustomerName.LabelText = "";
-            txbCustomerName.Location = new Point(115, 158);
+            txbCustomerName.Location = new Point(247, 110);
             txbCustomerName.MaxLength = 32767;
             txbCustomerName.Name = "txbCustomerName";
             txbCustomerName.PlaceholderText = "";
@@ -170,15 +173,26 @@
             txbCustomerName.Size = new Size(460, 70);
             txbCustomerName.TabIndex = 1;
             // 
+            // bigLabel1
+            // 
+            bigLabel1.AutoSize = true;
+            bigLabel1.BackColor = Color.Transparent;
+            bigLabel1.Font = new Font("Microsoft Sans Serif", 20F);
+            bigLabel1.ForeColor = Color.FromArgb(80, 80, 80);
+            bigLabel1.Location = new Point(715, 421);
+            bigLabel1.Name = "bigLabel1";
+            bigLabel1.Size = new Size(182, 31);
+            bigLabel1.TabIndex = 11;
+            bigLabel1.Text = "اضافة الى مجموعة";
+            // 
             // AddCustomerForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(812, 851);
+            ClientSize = new Size(942, 907);
             Controls.Add(pictureBox1);
             Controls.Add(picClose);
-            Controls.Add(btnAddCustomer);
             Controls.Add(guna2CustomGradientPanel1);
             FormBorderStyle = FormBorderStyle.None;
             Name = "AddCustomerForm";
@@ -206,5 +220,6 @@
         private Controls.ModernTextBox txbCustomerPhone;
         private Guna.UI2.WinForms.Guna2Button btnAddTemplate;
         private Custom_Controal.Custom_Bchat.GroupSelectorPanel groupSelector;
+        private ReaLTaiizor.Controls.BigLabel bigLabel1;
     }
 }
