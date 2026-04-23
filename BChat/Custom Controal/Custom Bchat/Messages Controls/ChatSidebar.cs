@@ -30,6 +30,9 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
         public bool IsOnline { get; set; }
         public int UnreadCount { get; set; }
         public bool IsGroup { get; set; }
+
+        public bool IsLastMessageSent { get; set; } // ✅ أضف هذا
+
     }
 
     // ─────────────────────────────────────────────────────────
@@ -174,6 +177,17 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             foreach (Control c in _flpList.Controls)
                 if (c is ChatItemControl ci)
                     ci.IsSelected = (ci.Data.ContactId == contactId);
+        }
+
+        public void RefreshItem(int contactId)
+        {
+            if (_flpList == null) return;
+            foreach (Control c in _flpList.Controls)
+                if (c is ChatItemControl ci && ci.Data.ContactId == contactId)
+                {
+                    ci.Invalidate(); // ✅ يعيد رسم العنصر فقط بدون إعادة بناء القائمة
+                    break;
+                }
         }
 
         // ─────────────────────────────────────────────────────
@@ -456,11 +470,16 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
         private void OnChatItemClicked(object? sender, int id)
         {
             _selectedId = id;
+
+            // ✅ تعليم كمقروءة
+            var chat = _allChats.FirstOrDefault(c => c.ContactId == id);
+            if (chat != null) chat.UnreadCount = 0;
+
             foreach (Control c in _flpList.Controls)
                 if (c is ChatItemControl ci) ci.IsSelected = ci.Data.ContactId == id;
+
             ChatSelected?.Invoke(this, id);
         }
-
         private void OnPillClicked(object? sender, string filter)
         {
             _filter = filter;
@@ -723,9 +742,10 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                     g.FillEllipse(gb, dx, dy, ONLINE_SZ, ONLINE_SZ);
                 }
 
-                int leftPad = 56;
-                int textRight = avatarRc.Left - 10;
-                int textWidth = textRight - leftPad;
+                // ✅ منطقتان منفصلتان
+                const int LEFT_W = 52;
+                int textRight = avatarRc.Left - 8;
+                int textWidth = textRight - LEFT_W;
 
                 if (textWidth > 10)
                 {
@@ -738,7 +758,7 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                     };
                     using (var nb = new SolidBrush(C_NAME))
                         g.DrawString(Data.ContactName, _fontName, nb,
-                            new Rectangle(leftPad, avatarTop + 4, textWidth, 22), nameSf);
+                            new Rectangle(LEFT_W, avatarTop + 4, textWidth, 22), nameSf);
 
                     using var msgSf = new StringFormat
                     {
@@ -748,19 +768,25 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                         FormatFlags = StringFormatFlags.NoWrap,
                     };
                     using (var mb = new SolidBrush(C_MSG))
-                        g.DrawString(Data.LastMessage, _fontMsg, mb,
-                            new Rectangle(leftPad, avatarTop + 28, textWidth, 18), msgSf);
+                    {
+                        string displayMsg = Data.IsLastMessageSent
+                            ? "أنت: " + Data.LastMessage
+                            : Data.LastMessage;
+
+                        g.DrawString(displayMsg, _fontMsg, mb,
+                            new Rectangle(LEFT_W, avatarTop + 28, textWidth, 18), msgSf);
+                    }
                 }
 
                 using var timeSf = new StringFormat
                 {
-                    Alignment = StringAlignment.Near,
+                    Alignment = StringAlignment.Center,
                     LineAlignment = StringAlignment.Center,
                     FormatFlags = StringFormatFlags.NoWrap,
                 };
                 using (var tb = new SolidBrush(C_TIME))
                     g.DrawString(Data.Timestamp, _fontTime, tb,
-                        new Rectangle(4, avatarTop + 4, leftPad - 8, 16), timeSf);
+                        new Rectangle(2, avatarTop + 4, LEFT_W - 4, 16), timeSf);
 
                 if (Data.UnreadCount > 0)
                 {
@@ -768,7 +794,7 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                     SizeF txtsz = g.MeasureString(txt, _fontTime);
                     int bw = (int)Math.Max(txtsz.Width + 10, 20);
                     int bh = 20;
-                    int bx = leftPad / 2 - bw / 2;
+                    int bx = (LEFT_W - bw) / 2; // ✅ لا يصبح سالباً
                     int by = avatarTop + AVATAR_SZ - bh;
 
                     using var glowRc = RoundRect(new Rectangle(bx - 3, by - 3, bw + 6, bh + 6), 12);
@@ -790,7 +816,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                             new Rectangle(bx, by, bw, bh), numSf);
                 }
             }
-
             private static void DrawAvatar(Graphics g, Rectangle r, Image? avatar, string name)
             {
                 if (r.Width < 2 || r.Height < 2) return;

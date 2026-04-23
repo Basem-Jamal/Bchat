@@ -16,14 +16,16 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
         public int MessageId;
         public string Text;
         public string Timestamp;       // e.g. "10:30 ص"
-        public DateTime SentAt;          // for date-group separators
+        public DateTime SentAt;        // for date-group separators
         public bool IsSent;
-        public Image SenderAvatar;    // received messages only
+        public Image SenderAvatar;     // received messages only
         public bool HasAttachment;
         public string AttachmentName;
         public string AttachmentSize;
         public string AttachmentType;  // "pdf","image","video","audio",…
+
     }
+
 
     // ═══════════════════════════════════════════════════════════════════════════
     //  ChatConversation — main UserControl
@@ -40,9 +42,7 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             System.Diagnostics.Process.GetCurrentProcess().ProcessName
                 .IndexOf("DesignToolsServer", StringComparison.OrdinalIgnoreCase) >= 0;
 
-        // ══════════════════════════════════════════════════════════════════════
-        //  Backing fields for designer properties
-        // ══════════════════════════════════════════════════════════════════════
+        #region Backing fields for designer properties
         private Color _pageBgColor = ColorTranslator.FromHtml("#F8F7FF");
         private Color _headerBgColor = Color.White;
         private Color _composerBgColor = Color.White;
@@ -63,11 +63,9 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
         private string _placeholder = "اكتب رسالتك هنا...";
         private int _headerHeight = 64;
         private int _composerHeight = 72;
+        #endregion
 
-        // ══════════════════════════════════════════════════════════════════════
-        //  Designer-exposed properties
-        // ══════════════════════════════════════════════════════════════════════
-
+        #region Designer-exposed properties
         [Category("BChat - Appearance"), Description("Messages area background colour.")]
         public Color PageBackColor
         {
@@ -213,22 +211,23 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
         public new Color BackColor { get => base.BackColor; set => base.BackColor = value; }
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
         public new Font Font { get => base.Font; set => base.Font = value; }
+        #endregion
 
-        // ══════════════════════════════════════════════════════════════════════
-        //  Child controls & state
-        // ══════════════════════════════════════════════════════════════════════
+        #region Child controls & state
         private HeaderPanel _header;
-        private Panel _msgScroll;
+        private VScrollOnlyPanel _msgScroll;      // تم تغيير النوع إلى VScrollOnlyPanel
+        private Panel _spacer;                    // فاصل لدفع الرسائل للأسفل
         private FlowLayoutPanel _flpMessages;
         private ComposerPanel _composer;
         private readonly List<ChatMessageData> _messages = new();
+        #endregion
+        // ✅ أضفه مع باقي الحقول في أعلى الكلاس
+        private int _loadVersion = 0;
 
         // Shared fonts (internal so inner classes can read them)
         internal Font F_Name, F_Status, F_Bubble, F_Timestamp, F_DatePill, F_AttachName, F_AttachSize;
 
-        // ══════════════════════════════════════════════════════════════════════
-        //  Events
-        // ══════════════════════════════════════════════════════════════════════
+        #region Events
         public event EventHandler<string> MessageSent;
         public event EventHandler AttachmentClicked;
         public event EventHandler EmojiClicked;
@@ -236,10 +235,9 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
         public event EventHandler CallClicked;
         public event EventHandler SearchClicked;
         public event EventHandler<int> MessageAttachmentClicked;
+        #endregion
 
-        // ══════════════════════════════════════════════════════════════════════
-        //  Constructor
-        // ══════════════════════════════════════════════════════════════════════
+        #region Constructor & initialization
         public ChatConversation()
         {
             SetStyle(ControlStyles.OptimizedDoubleBuffer |
@@ -258,9 +256,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             BuildLayout();
         }
 
-        // ══════════════════════════════════════════════════════════════════════
-        //  Fonts
-        // ══════════════════════════════════════════════════════════════════════
         private void BuildFonts()
         {
             DispFonts();
@@ -285,43 +280,60 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             try { return new Font(fam, sz, style, GraphicsUnit.Point); }
             catch { return new Font("Segoe UI", sz, style, GraphicsUnit.Point); }
         }
+        #endregion
 
-        // ══════════════════════════════════════════════════════════════════════
-        //  Layout
-        // ══════════════════════════════════════════════════════════════════════
+        #region Layout (معدلة)
         private void BuildLayout()
         {
             base.BackColor = _pageBgColor;
             MinimumSize = new Size(300, 400);
 
+            // Header
             _header = new HeaderPanel(this) { Dock = DockStyle.Top, Height = _headerHeight };
             _header.MenuClicked += (s, e) => MenuClicked?.Invoke(this, e);
             _header.CallClicked += (s, e) => CallClicked?.Invoke(this, e);
             _header.SearchClicked += (s, e) => SearchClicked?.Invoke(this, e);
 
+            // Composer
             _composer = new ComposerPanel(this) { Dock = DockStyle.Bottom, Height = _composerHeight };
             _composer.SendMessage += (s, t) => MessageSent?.Invoke(this, t);
             _composer.AttachmentClicked += (s, e) => AttachmentClicked?.Invoke(this, e);
             _composer.EmojiClicked += (s, e) => EmojiClicked?.Invoke(this, e);
 
-            _msgScroll = new Panel { Dock = DockStyle.Fill, BackColor = _pageBgColor };
+            // Scroll container (يدعم التمرير العمودي فقط)
+            _msgScroll = new VScrollOnlyPanel
+            {
+                Dock = DockStyle.Fill,
+                BackColor = _pageBgColor,
+                AutoScroll = true
+            };
 
-            // BUG #2: do NOT set AutoScroll in ctor
+            // Spacer يدفع المحتوى للأسفل عند قلة الرسائل
+            _spacer = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 0,
+                BackColor = Color.Transparent
+            };
+
+            // حامل الرسائل
             _flpMessages = new FlowLayoutPanel
             {
                 Dock = DockStyle.Top,
                 FlowDirection = FlowDirection.TopDown,
                 WrapContents = false,
                 BackColor = _pageBgColor,
-                Padding = new Padding(0, 8, 0, 8),
+                Padding = new Padding(0, 8, 0, 16),
                 RightToLeft = RightToLeft.Yes,
-            };
-            _flpMessages.HandleCreated += (s, e) =>
-            {
-                if (s is FlowLayoutPanel f) f.AutoScroll = true;
+                AutoSize = true,                        // يتكيف تلقائياً مع ارتفاع المحتوى
+                AutoSizeMode = AutoSizeMode.GrowAndShrink
             };
 
+            // ترتيب الإضافة: الفاصل أولاً ثم حامل الرسائل
+            _msgScroll.Controls.Add(_spacer);
             _msgScroll.Controls.Add(_flpMessages);
+
+            // إضافة اللوحات الرئيسية
             Controls.Add(_msgScroll);
             Controls.Add(_composer);
             Controls.Add(_header);
@@ -332,12 +344,12 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             base.BackColor = _pageBgColor;
             if (_msgScroll != null) _msgScroll.BackColor = _pageBgColor;
             if (_flpMessages != null) _flpMessages.BackColor = _pageBgColor;
+            if (_spacer != null) _spacer.BackColor = Color.Transparent;
             Invalidate(true);
         }
+        #endregion
 
-        // ══════════════════════════════════════════════════════════════════════
-        //  Public API
-        // ══════════════════════════════════════════════════════════════════════
+        #region Public API
         public void SetContact(string name, string status, bool isOnline, Image avatar)
         {
             if (_isAnyDesignMode || _header == null) return;
@@ -350,15 +362,36 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
         public void LoadMessages(List<ChatMessageData> messages)
         {
             if (_isAnyDesignMode || _flpMessages == null) return;
+
+            _loadVersion++; // ✅ هذا السطر ناقص — أضفه هنا
+
             _messages.Clear();
+            _msgScroll.SuspendLayout();
             _flpMessages.SuspendLayout();
             _flpMessages.Controls.Clear();
+            if (_spacer != null) _spacer.Height = 0;
+
             foreach (var m in messages) _messages.Add(m);
             RebuildAllBubbles();
-            _flpMessages.ResumeLayout(true);
+
+            _flpMessages.ResumeLayout(false);
+            _msgScroll.ResumeLayout(false);
+
+            int sbw = SystemInformation.VerticalScrollBarWidth;
+            int avail = _msgScroll.ClientSize.Width;
+            if (avail > 0)
+            {
+                _flpMessages.Width = avail;
+                foreach (Control c in _flpMessages.Controls)
+                {
+                    c.Width = avail;
+                    if (c is BubbleCtrl bc)
+                        bc.MaxBubbleWidth = (int)((avail - sbw) * 65 / 100.0);
+                }
+            }
+
             DeferredScroll();
         }
-
         public void AppendMessage(ChatMessageData message)
         {
             if (_isAnyDesignMode || _flpMessages == null) return;
@@ -372,13 +405,18 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
         public void ClearMessages()
         {
             if (_isAnyDesignMode || _flpMessages == null) return;
+
+            _loadVersion++; // ✅ مهم
+
             _messages.Clear();
             _flpMessages.Controls.Clear();
+            if (_spacer != null) _spacer.Height = 0;
+            DeferredScroll();
         }
 
-        // ══════════════════════════════════════════════════════════════════════
-        //  Message rendering
-        // ══════════════════════════════════════════════════════════════════════
+        #endregion
+
+        #region Message rendering
         private void RebuildAllBubbles()
         {
             _flpMessages.Controls.Clear();
@@ -426,26 +464,50 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             return dt.ToString("d MMMM", new System.Globalization.CultureInfo("ar-SA"));
         }
 
+        // المعدلة الرئيسية لدعم دفع الرسائل للأسفل والتمرير الصحيح
         private void DeferredScroll()
         {
             if (!IsHandleCreated) return;
+            int version = _loadVersion;
+
             BeginInvoke((Action)(() =>
             {
+                if (version != _loadVersion) return;
                 if (_flpMessages == null || !_flpMessages.IsHandleCreated) return;
+
                 int sbw = SystemInformation.VerticalScrollBarWidth;
                 int avail = _msgScroll.ClientSize.Width;
+                if (avail <= 0) return;
+
                 _flpMessages.Width = avail;
+
                 foreach (Control c in _flpMessages.Controls)
                 {
                     c.Width = avail;
                     if (c is BubbleCtrl bc)
                         bc.MaxBubbleWidth = (int)((avail - sbw) * 65 / 100.0);
                 }
-                if (_flpMessages.Controls.Count > 0)
-                    _flpMessages.ScrollControlIntoView(
-                        _flpMessages.Controls[_flpMessages.Controls.Count - 1]);
+
+                // ✅ أجبر الـ Layout يكتمل قبل قراءة الارتفاع
+                _flpMessages.PerformLayout();
+
+                // ✅ استخدم Height المباشر بدل PreferredSize (أدق بعد PerformLayout)
+                int totalContentHeight = _flpMessages.Height;
+                int containerHeight = _msgScroll.ClientSize.Height;
+                int spacerHeight = Math.Max(0, containerHeight - totalContentHeight);
+
+                if (_spacer != null) _spacer.Height = spacerHeight;
+
+                if (totalContentHeight > containerHeight && _flpMessages.Controls.Count > 0)
+                    _msgScroll.ScrollControlIntoView(_flpMessages.Controls[_flpMessages.Controls.Count - 1]);
+                else
+                    _msgScroll.AutoScrollPosition = Point.Empty;
+
+                _flpMessages.Invalidate(true);
+                _flpMessages.Update();
             }));
         }
+
 
         protected override void OnResize(EventArgs e)
         {
@@ -460,7 +522,9 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             if (disposing) DispFonts();
             base.Dispose(disposing);
         }
+        #endregion
 
+        #region Inner controls (Header, DateSep, Bubble, Composer) – لم تتغير
         // ══════════════════════════════════════════════════════════════════════
         //  INNER ── HeaderPanel
         // ══════════════════════════════════════════════════════════════════════
@@ -484,7 +548,7 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                          ControlStyles.AllPaintingInWmPaint |
                          ControlStyles.UserPaint, true);
                 BackColor = Color.White;
-                RightToLeft = RightToLeft.No; // We paint everything manually, no RTL flip needed
+                RightToLeft = RightToLeft.No;
             }
 
             public void SetContact(string name, string status, bool online, Image avatar)
@@ -493,7 +557,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 Invalidate();
             }
 
-            // Icons on the physical LEFT (x=16). Avatar on the physical RIGHT.
             private Rectangle[] IconRects()
             {
                 int cy = Height / 2, x = 16, step = 40;
@@ -548,13 +611,11 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
                 g.Clear(_o._headerBgColor);
 
-                // Bottom border
                 using (var bp = new Pen(_o._borderColor, 1f))
                     g.DrawLine(bp, 0, Height - 1, Width, Height - 1);
 
                 int cy = Height / 2;
 
-                // ── LEFT: 3 action icons ───────────────────────────────────────
                 var iconRects = IconRects();
                 for (int i = 0; i < iconRects.Length; i++)
                 {
@@ -567,7 +628,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                     PaintIcon(g, i, iconRects[i]);
                 }
 
-                // ── RIGHT: circular avatar ─────────────────────────────────────
                 const int AV = 40;
                 int avX = Width - 16 - AV;
                 int avY = cy - AV / 2;
@@ -595,7 +655,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 }
                 using (var rp = new Pen(Color.White, 2f)) g.DrawEllipse(rp, avRect);
 
-                // Online dot on avatar (bottom-left of avatar circle)
                 if (_online)
                 {
                     var dr = new Rectangle(avRect.Left + 1, avRect.Bottom - 11, 10, 10);
@@ -604,9 +663,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                     g.FillEllipse(db, dr); g.DrawEllipse(drp, dr);
                 }
 
-                // ── TEXT BLOCK: between last icon and avatar ────────────────────
-                // Left edge  = right edge of 3rd icon + 8px gap
-                // Right edge = left edge of avatar   - 8px gap
                 int textLeft = iconRects[2].Right + 8;
                 int textRight = avX - 8;
                 int textW = textRight - textLeft;
@@ -617,7 +673,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 int nameY = cy - blockH / 2;
                 int statY = nameY + nameH + gap;
 
-                // Name — right-aligned (Arabic reads right-to-left, so Far = correct)
                 var nameRect = new RectangleF(textLeft, nameY, textW, nameH);
                 using var nameBr = new SolidBrush(_o._recvTextColor);
                 var sf = new StringFormat(StringFormatFlags.NoWrap)
@@ -628,18 +683,14 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 if (_o.F_Name != null)
                     g.DrawString(_name, _o.F_Name, nameBr, nameRect, sf);
 
-                // Status — also right-aligned, but leave 14px on the right for the online dot
-                // The dot will be drawn just to the right of the text
                 var statRect = new RectangleF(textLeft, statY, textW - 14, statH);
                 using var statBr = new SolidBrush(_o._mutedColor);
                 if (_o.F_Status != null)
                     g.DrawString(_status, _o.F_Status, statBr, statRect, sf);
 
-                // Online dot next to status (to the right of text = near the avatar)
                 if (_online && _o.F_Status != null)
                 {
                     float dotCy = statY + statH / 2f;
-                    // Measure text so the dot sits just after the status string ends (right side)
                     float dotX = textRight - 10;
                     using var ob = new SolidBrush(_o._onlineColor);
                     g.FillEllipse(ob, dotX, dotCy - 4f, 8, 8);
@@ -654,7 +705,7 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
 
                 switch (idx)
                 {
-                    case 0: // Three vertical dots
+                    case 0: // Three dots
                         using (var br = new SolidBrush(_o._mutedColor))
                         {
                             g.FillEllipse(br, cx - 2, cy - 9, 4, 4);
@@ -692,10 +743,12 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 SetStyle(ControlStyles.OptimizedDoubleBuffer |
                          ControlStyles.AllPaintingInWmPaint |
                          ControlStyles.UserPaint, true);
-                BackColor = Color.Transparent;
+                SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+                BackColor = Color.White;
                 Height = 36;
             }
 
+        
             protected override void OnPaint(PaintEventArgs e)
             {
                 if (_o.F_DatePill == null) return;
@@ -721,6 +774,12 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
                 g.DrawString(_label, _o.F_DatePill, tb, pr, sf);
             }
+
+            protected override void OnPaintBackground(PaintEventArgs e)
+            {
+                using var br = new SolidBrush(_o._pageBgColor);
+                e.Graphics.FillRectangle(br, ClientRectangle);
+            }
         }
 
         // ══════════════════════════════════════════════════════════════════════
@@ -744,17 +803,30 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
 
             public event EventHandler AttachmentClicked;
 
+
             public BubbleCtrl(ChatConversation owner, ChatMessageData data,
-                               bool lastInGroup, int topMargin)
+                   bool lastInGroup, int topMargin)
             {
                 _o = owner; _d = data; _lastInGroup = lastInGroup; _topMargin = topMargin;
                 SetStyle(ControlStyles.OptimizedDoubleBuffer |
                          ControlStyles.AllPaintingInWmPaint |
                          ControlStyles.UserPaint |
                          ControlStyles.ResizeRedraw, true);
-                BackColor = Color.Transparent;
-                RightToLeft = RightToLeft.No; // We paint manually
+
+                // 👇 السطران الجديدان
+                SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+                BackColor = Color.White;
+
+                RightToLeft = RightToLeft.No;
             }
+            // 👇 تجاوز دالة رسم الخلفية (أضفها داخل الكلاس)
+
+            protected override void OnPaintBackground(PaintEventArgs e)
+            {
+                using var br = new SolidBrush(_o._pageBgColor);
+                e.Graphics.FillRectangle(br, ClientRectangle);
+            }
+
 
             private Rectangle AttachTile() =>
                 new Rectangle(_bubble.X + 6, _bubble.Y + 8, _bubble.Width - 12, 50);
@@ -763,7 +835,7 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             {
                 if (_o.F_Bubble == null) return;
                 const int padH = 12, padV = 10, tsH = 16;
-                const int avSlot = 36; // space reserved for received avatar
+                const int avSlot = 36;
 
                 using var g = Graphics.FromHwnd(IntPtr.Zero);
                 g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
@@ -778,19 +850,14 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 int bh = padV * 2 + (int)Math.Ceiling(textSz.Height) + tsH;
                 if (_d.HasAttachment) bh += 56;
 
-                Height = _topMargin + bh;
+                Height = _topMargin + bh + 6; // +6 مساحة للظل والفقاعة
+
                 int rowW = Math.Max(10, Width);
 
                 if (_d.IsSent)
-                {
-                    // right-aligned, 16px from right edge
                     _bubble = new Rectangle(rowW - bw - 16, _topMargin, bw, bh);
-                }
                 else
-                {
-                    // left-aligned with avatar slot
                     _bubble = new Rectangle(16 + avSlot, _topMargin, bw, bh);
-                }
             }
 
             protected override void OnResize(EventArgs e)
@@ -842,15 +909,13 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                     g.FillPath(sp, sh);
                 }
 
-                // Bubble fill + border
                 using var path = BubblePath(br, 16, 4, sent);
                 using (var bgb = new SolidBrush(sent ? _o._sentBubbleColor : _o._recvBubbleColor))
                     g.FillPath(bgb, path);
-                if (!sent)
-                    using (var bp = new Pen(_o._borderColor, 1f))
-                        g.DrawPath(bp, path);
+                //if (!sent)
+                //    using (var bp = new Pen(_o._borderColor, 1f))
+                //        g.DrawPath(bp, path);
 
-                // Avatar for received (last in group)
                 if (!sent && _lastInGroup)
                 {
                     const int avSz = 26;
@@ -871,14 +936,12 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 const int padH = 12, padV = 10, tsH = 16;
                 int curY = br.Y + padV;
 
-                // Attachment tile
                 if (_d.HasAttachment)
                 {
                     PaintAttach(g, AttachTile(), sent);
                     curY = AttachTile().Bottom + 6;
                 }
 
-                // Message text (right-aligned, RTL)
                 using var tb = new SolidBrush(sent ? _o._sentTextColor : _o._recvTextColor);
                 var txtR = new RectangleF(br.X + padH, curY,
                                           br.Width - padH * 2, br.Bottom - curY - tsH - 2);
@@ -889,7 +952,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 };
                 g.DrawString(_d.Text ?? "", _o.F_Bubble, tb, txtR, tsf);
 
-                // Timestamp
                 var tsRect = new RectangleF(br.X + padH, br.Bottom - tsH - 2,
                                              br.Width - padH * 2, tsH);
                 using var tsb = new SolidBrush(sent
@@ -899,7 +961,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 if (_o.F_Timestamp != null)
                     g.DrawString(_d.Timestamp ?? "", _o.F_Timestamp, tsb, tsRect, tssf);
 
-                // Double checkmarks (sent)
                 if (sent)
                 {
                     float cx = br.Right - padH - 22;
@@ -919,7 +980,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 if (_attachHover)
                     using (var b = new SolidBrush(Color.FromArgb(20, Color.White))) g.FillRoundedRect(b, r, 10);
 
-                // File icon
                 const int isz = 30;
                 var ir = new Rectangle(r.X + 10, r.Y + (r.Height - isz) / 2, isz, isz);
                 PaintFileIcon(g, ir, _d.AttachmentType ?? "file");
@@ -937,7 +997,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                         g.DrawString(_d.AttachmentSize ?? "", _o.F_AttachSize, sb,
                                      new RectangleF(tx, r.Y + 26, tw, 14), esf);
 
-                // Download arrow
                 float ax = r.Right - 18, ay = r.Y + r.Height / 2f;
                 Color ac = sent ? Color.FromArgb(200, Color.White) : _o._accentColor;
                 using var ap = new Pen(ac, 1.8f) { StartCap = LineCap.Round, EndCap = LineCap.Round };
@@ -985,13 +1044,13 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 p.AddArc(r.Right - d, r.Y, d, d, 270, 90);
                 if (sent)
                 {
-                    p.AddArc(r.Right - td, r.Bottom - td, td, td, 0, 90); // BR tail
+                    p.AddArc(r.Right - td, r.Bottom - td, td, td, 0, 90);
                     p.AddArc(r.X, r.Bottom - d, d, d, 90, 90);
                 }
                 else
                 {
                     p.AddArc(r.Right - d, r.Bottom - d, d, d, 0, 90);
-                    p.AddArc(r.X, r.Bottom - td, td, td, 90, 90); // BL tail
+                    p.AddArc(r.X, r.Bottom - td, td, td, 90, 90);
                 }
                 p.CloseFigure();
                 return p;
@@ -1018,7 +1077,7 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                          ControlStyles.AllPaintingInWmPaint |
                          ControlStyles.UserPaint, true);
                 BackColor = Color.White;
-                RightToLeft = RightToLeft.No; // manual painting
+                RightToLeft = RightToLeft.No;
             }
 
             protected override void OnHandleCreated(EventArgs e)
@@ -1052,12 +1111,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 SendMessage?.Invoke(this, t);
             }
 
-            // ── Geometry ───────────────────────────────────────────────────────
-            // Layout (physical left → right):
-            //   [12px] [SendBtn 48×48] [8px] [InputBox fills rest] [12px]
-            // Inside InputBox (physical left → right):
-            //   [12px] [TextBox (fills)] [AttachIcon 28px] [4px] [EmojiIcon 28px] [8px]
-
             private Rectangle SendR()
             {
                 int s = 48, y = (Height - s) / 2;
@@ -1070,7 +1123,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 return new Rectangle(sr.Right + 8, sr.Y, Width - sr.Right - 8 - 12, sr.Height);
             }
 
-            // Emoji icon: rightmost icon in the input box
             private Rectangle EmojiR()
             {
                 var ir = InputR();
@@ -1079,14 +1131,12 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 return new Rectangle(ir.Right - isz - 8, iy, isz, isz);
             }
 
-            // Attach icon: just to the left of emoji
             private Rectangle AttachR()
             {
                 var er = EmojiR();
                 return new Rectangle(er.X - er.Width - 4, er.Y, er.Width, er.Height);
             }
 
-            // BUG #3: guard _tb
             protected override void OnLayout(LayoutEventArgs e)
             {
                 base.OnLayout(e);
@@ -1095,7 +1145,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 var ir = InputR();
                 var attR = AttachR();
 
-                // TextBox occupies left part of InputBox, up to (but not including) the icons
                 int tbX = ir.X + 12;
                 int tbW = Math.Max(10, attR.X - tbX - 4);
                 int tbH = _tb.PreferredHeight;
@@ -1143,7 +1192,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
 
                 bool hasText = _tb != null && !string.IsNullOrEmpty(_tb.Text?.Trim());
 
-                // Send button
                 var sr = SendR();
                 Color sbg = hasText
                     ? (_sendHov ? Color.FromArgb(220, _o._accentColor) : _o._accentColor)
@@ -1151,14 +1199,12 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 using (var sb = new SolidBrush(sbg)) g.FillEllipse(sb, sr);
                 DrawArrow(g, sr);
 
-                // Input box
                 var ir = InputR();
                 using (var ib = new SolidBrush(ColorTranslator.FromHtml("#F8FAFC")))
                     g.FillRoundedRect(ib, ir, 24);
                 using (var ip = new Pen(_o._borderColor, 1f))
                     g.DrawRoundedRect(ip, ir, 24);
 
-                // Icons
                 var er = EmojiR();
                 var ar = AttachR();
                 if (_emojiHov)
@@ -1204,8 +1250,51 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 }, 0.3f);
             }
         }
+        #endregion
+    }
 
-    } // end ChatConversation
+    // ═══════════════════════════════════════════════════════════════════════════
+    //  لوحة تمرير مخصصة: عمودي فقط (تمنع الأفقي)
+    // ═══════════════════════════════════════════════════════════════════════════
+    public class VScrollOnlyPanel : Panel
+    {
+        public VScrollOnlyPanel()
+        {
+            AutoScroll = true;
+            HorizontalScroll.Enabled = false;
+            HorizontalScroll.Visible = false;
+            AutoScrollMargin = new Size(0, 0);
+            // ✅ الحل الجذري للفلكرة
+            SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                     ControlStyles.AllPaintingInWmPaint, true);
+        }
+
+        // ✅ يفعّل الرسم المركب على مستوى النافذة
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                var cp = base.CreateParams;
+                cp.ExStyle |= 0x02000000; // WS_EX_COMPOSITED
+                return cp;
+            }
+        }
+
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            if (HorizontalScroll.Visible)
+                HorizontalScroll.Visible = false;
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            if (HorizontalScroll.Visible)
+                HorizontalScroll.Visible = false;
+            base.OnPaint(e);
+        }
+    }
 
     // ═══════════════════════════════════════════════════════════════════════════
     //  GDI+ extension helpers
@@ -1233,5 +1322,4 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             return p;
         }
     }
-
-} // end namespace
+}

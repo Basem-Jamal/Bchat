@@ -31,6 +31,8 @@
             chatSidebar1 = new BChat.Custom_Controal.Custom_Bchat.Message_Controls.ChatSidebar();
             chatConversation2 = new BChat.Custom_Controal.Custom_Bchat.Message_Controls.ChatConversation();
             chatContactInfo1 = new BChat.Custom_Controal.Custom_Bchat.Message_Controls.ChatContactInfo();
+            customPanel1 = new Car_Rental_System.CustomControls.CustomPanel();
+            customPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // chatSidebar1
@@ -47,6 +49,7 @@
             // chatConversation2
             // 
             chatConversation2.AccentColor = Color.FromArgb(124, 111, 247);
+            chatConversation2.AutoScroll = true;
             chatConversation2.BackColor = Color.FromArgb(248, 247, 255);
             chatConversation2.BorderColor = Color.FromArgb(226, 232, 240);
             chatConversation2.ComposerBackColor = Color.White;
@@ -59,7 +62,8 @@
             chatConversation2.Dock = DockStyle.Right;
             chatConversation2.FontFamily = "Cairo";
             chatConversation2.HeaderBackColor = Color.White;
-            chatConversation2.Location = new Point(323, 0);
+            chatConversation2.HeaderHeight = 72;
+            chatConversation2.Location = new Point(326, 0);
             chatConversation2.MutedColor = Color.FromArgb(148, 163, 184);
             chatConversation2.Name = "chatConversation2";
             chatConversation2.OnlineColor = Color.FromArgb(16, 185, 129);
@@ -69,7 +73,7 @@
             chatConversation2.RightToLeft = RightToLeft.Yes;
             chatConversation2.SentBubbleColor = Color.FromArgb(124, 111, 247);
             chatConversation2.SentTextColor = Color.White;
-            chatConversation2.Size = new Size(599, 890);
+            chatConversation2.Size = new Size(596, 890);
             chatConversation2.TabIndex = 2;
             // 
             // chatContactInfo1
@@ -85,20 +89,39 @@
             chatContactInfo1.MinimumSize = new Size(260, 400);
             chatContactInfo1.Name = "chatContactInfo1";
             chatContactInfo1.RightToLeft = RightToLeft.Yes;
-            chatContactInfo1.Size = new Size(326, 890);
+            chatContactInfo1.Size = new Size(320, 890);
             chatContactInfo1.TabIndex = 3;
             chatContactInfo1.TotalMediaCount = 0;
+            // 
+            // customPanel1
+            // 
+            customPanel1.BackColorEx = Color.White;
+            customPanel1.BorderColor = Color.LightGray;
+            customPanel1.BorderRadius = 1;
+            customPanel1.BorderThickness = 1;
+            customPanel1.Controls.Add(chatContactInfo1);
+            customPanel1.Dock = DockStyle.Fill;
+            customPanel1.Font = new Font("Segoe UI", 10F);
+            customPanel1.ForeColor = Color.Black;
+            customPanel1.Location = new Point(0, 0);
+            customPanel1.Name = "customPanel1";
+            customPanel1.ShadowColor = Color.Transparent;
+            customPanel1.ShadowSize = 0;
+            customPanel1.Size = new Size(1306, 890);
+            customPanel1.TabIndex = 4;
+            customPanel1.UseShadow = true;
             // 
             // MessageControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.WhiteSmoke;
-            Controls.Add(chatContactInfo1);
+            BackColor = Color.White;
             Controls.Add(chatConversation2);
             Controls.Add(chatSidebar1);
+            Controls.Add(customPanel1);
             Name = "MessageControl";
             Size = new Size(1306, 890);
+            customPanel1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -107,5 +130,6 @@
         private Custom_Controal.Custom_Bchat.Message_Controls.ChatSidebar chatSidebar1;
         private Custom_Controal.Custom_Bchat.Message_Controls.ChatConversation chatConversation2;
         private Custom_Controal.Custom_Bchat.Message_Controls.ChatContactInfo chatContactInfo1;
+        private Car_Rental_System.CustomControls.CustomPanel customPanel1;
     }
 }
