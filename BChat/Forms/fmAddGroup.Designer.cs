@@ -33,6 +33,7 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(components);
             guna2CustomGradientPanel1 = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
+            btnAddOrEditCustomerGroups = new BChat.Controls.ModernButton();
             adColorPicker = new AdvancedColorPicker();
             bigLabel2 = new ReaLTaiizor.Controls.BigLabel();
             bigLabel1 = new ReaLTaiizor.Controls.BigLabel();
@@ -45,7 +46,6 @@
             lblCustomerName = new ReaLTaiizor.Controls.BigLabel();
             pictureBox1 = new PictureBox();
             picClose = new PictureBox();
-            btnAddOrEditCustomerGroups = new BChat.Controls.ModernButton();
             guna2CustomGradientPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)picClose).BeginInit();
@@ -77,6 +77,20 @@
             guna2CustomGradientPanel1.ShadowDecoration.CustomizableEdges = customizableEdges2;
             guna2CustomGradientPanel1.Size = new Size(918, 760);
             guna2CustomGradientPanel1.TabIndex = 10;
+            // 
+            // btnAddOrEditCustomerGroups
+            // 
+            btnAddOrEditCustomerGroups.BackColor = Color.Transparent;
+            btnAddOrEditCustomerGroups.BorderRadius = 23;
+            btnAddOrEditCustomerGroups.Font = new Font("IBM Plex Sans Arabic", 12F, FontStyle.Bold);
+            btnAddOrEditCustomerGroups.Icon = Properties.Resources.plus;
+            btnAddOrEditCustomerGroups.Location = new Point(23, 684);
+            btnAddOrEditCustomerGroups.Name = "btnAddOrEditCustomerGroups";
+            btnAddOrEditCustomerGroups.RightToLeft = RightToLeft.Yes;
+            btnAddOrEditCustomerGroups.Size = new Size(162, 62);
+            btnAddOrEditCustomerGroups.TabIndex = 13;
+            btnAddOrEditCustomerGroups.Text = "اضافة ";
+            btnAddOrEditCustomerGroups.Click += btnAddOrEditCustomerGroups_Click;
             // 
             // adColorPicker
             // 
@@ -245,20 +259,6 @@
             picClose.TabStop = false;
             picClose.Click += picClose_Click;
             // 
-            // btnAddOrEditCustomerGroups
-            // 
-            btnAddOrEditCustomerGroups.BackColor = Color.Transparent;
-            btnAddOrEditCustomerGroups.BorderRadius = 23;
-            btnAddOrEditCustomerGroups.Font = new Font("IBM Plex Sans Arabic", 12F, FontStyle.Bold);
-            btnAddOrEditCustomerGroups.Icon = Properties.Resources.plus;
-            btnAddOrEditCustomerGroups.Location = new Point(23, 684);
-            btnAddOrEditCustomerGroups.Name = "btnAddOrEditCustomerGroups";
-            btnAddOrEditCustomerGroups.RightToLeft = RightToLeft.Yes;
-            btnAddOrEditCustomerGroups.Size = new Size(162, 62);
-            btnAddOrEditCustomerGroups.TabIndex = 13;
-            btnAddOrEditCustomerGroups.Text = "اضافة ";
-            btnAddOrEditCustomerGroups.Click += btnAddOrEditCustomerGroups_Click;
-            // 
             // fmAddGroup
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -270,7 +270,7 @@
             Controls.Add(guna2CustomGradientPanel1);
             FormBorderStyle = FormBorderStyle.None;
             Name = "fmAddGroup";
-            StartPosition = FormStartPosition.CenterScreen;
+            StartPosition = FormStartPosition.CenterParent;
             Text = "AddGroup";
             Load += fmAddGroup_Load;
             guna2CustomGradientPanel1.ResumeLayout(false);

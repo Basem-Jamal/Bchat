@@ -20,13 +20,17 @@ namespace BChat
 
             ApplicationConfiguration.Initialize();
             Application.SetCompatibleTextRenderingDefault(false);
+
             AppCache.Customers = CustomerRepository.GetAll();
-
             AppCache.Groups = GroupRepository.GetAll();
-
             AppCache.GroupMembers = GroupMemberRepository.GetAll();
+            AppCache.ChatMessages = ChatMessageRepository.GetAll(); // ← هذا فقط
+
 
             CalculateMembersCount();
+
+            AppCache.WhatsAppListener = new BChat.WhatsApp.WhatsAppWebhookListener();
+            AppCache.WhatsAppListener.Start();
 
 
             Application.Run(new Home());

@@ -38,10 +38,11 @@
             pictureBox1 = new PictureBox();
             btnAddCustomer = new BChat.Controls.ModernButton();
             guna2CustomGradientPanel1 = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
+            lblNotGroupFound = new ReaLTaiizor.Controls.BigLabel();
+            bigLabel1 = new ReaLTaiizor.Controls.BigLabel();
             groupSelector = new BChat.Custom_Controal.Custom_Bchat.GroupSelectorPanel();
             txbCustomerPhone = new BChat.Controls.ModernTextBox();
             txbCustomerName = new BChat.Controls.ModernTextBox();
-            bigLabel1 = new ReaLTaiizor.Controls.BigLabel();
             ((System.ComponentModel.ISupportInitialize)picClose).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             guna2CustomGradientPanel1.SuspendLayout();
@@ -117,6 +118,7 @@
             // 
             // guna2CustomGradientPanel1
             // 
+            guna2CustomGradientPanel1.Controls.Add(lblNotGroupFound);
             guna2CustomGradientPanel1.Controls.Add(bigLabel1);
             guna2CustomGradientPanel1.Controls.Add(groupSelector);
             guna2CustomGradientPanel1.Controls.Add(lblCustomerPhone);
@@ -131,11 +133,36 @@
             guna2CustomGradientPanel1.Size = new Size(918, 718);
             guna2CustomGradientPanel1.TabIndex = 9;
             // 
+            // lblNotGroupFound
+            // 
+            lblNotGroupFound.AutoSize = true;
+            lblNotGroupFound.BackColor = Color.IndianRed;
+            lblNotGroupFound.Font = new Font("IBM Plex Sans Arabic", 14F);
+            lblNotGroupFound.ForeColor = Color.White;
+            lblNotGroupFound.Location = new Point(711, 470);
+            lblNotGroupFound.Name = "lblNotGroupFound";
+            lblNotGroupFound.Size = new Size(195, 32);
+            lblNotGroupFound.TabIndex = 12;
+            lblNotGroupFound.Text = "لم يتم العثور على مجموعة";
+            lblNotGroupFound.Visible = false;
+            // 
+            // bigLabel1
+            // 
+            bigLabel1.AutoSize = true;
+            bigLabel1.BackColor = Color.Transparent;
+            bigLabel1.Font = new Font("Microsoft Sans Serif", 20F);
+            bigLabel1.ForeColor = Color.FromArgb(80, 80, 80);
+            bigLabel1.Location = new Point(715, 421);
+            bigLabel1.Name = "bigLabel1";
+            bigLabel1.Size = new Size(182, 31);
+            bigLabel1.TabIndex = 11;
+            bigLabel1.Text = "اضافة الى مجموعة";
+            // 
             // groupSelector
             // 
             groupSelector.AutoScroll = true;
             groupSelector.BackColor = Color.White;
-            groupSelector.Location = new Point(247, 421);
+            groupSelector.Location = new Point(244, 421);
             groupSelector.Name = "groupSelector";
             groupSelector.Padding = new Padding(8);
             groupSelector.Size = new Size(462, 231);
@@ -173,18 +200,6 @@
             txbCustomerName.Size = new Size(460, 70);
             txbCustomerName.TabIndex = 1;
             // 
-            // bigLabel1
-            // 
-            bigLabel1.AutoSize = true;
-            bigLabel1.BackColor = Color.Transparent;
-            bigLabel1.Font = new Font("Microsoft Sans Serif", 20F);
-            bigLabel1.ForeColor = Color.FromArgb(80, 80, 80);
-            bigLabel1.Location = new Point(715, 421);
-            bigLabel1.Name = "bigLabel1";
-            bigLabel1.Size = new Size(182, 31);
-            bigLabel1.TabIndex = 11;
-            bigLabel1.Text = "اضافة الى مجموعة";
-            // 
             // AddCustomerForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -196,7 +211,7 @@
             Controls.Add(guna2CustomGradientPanel1);
             FormBorderStyle = FormBorderStyle.None;
             Name = "AddCustomerForm";
-            StartPosition = FormStartPosition.CenterScreen;
+            StartPosition = FormStartPosition.CenterParent;
             Text = "AddCustomerForm";
             ((System.ComponentModel.ISupportInitialize)picClose).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
@@ -221,5 +236,6 @@
         private Guna.UI2.WinForms.Guna2Button btnAddTemplate;
         private Custom_Controal.Custom_Bchat.GroupSelectorPanel groupSelector;
         private ReaLTaiizor.Controls.BigLabel bigLabel1;
+        private ReaLTaiizor.Controls.BigLabel lblNotGroupFound;
     }
 }

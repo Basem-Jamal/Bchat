@@ -18,6 +18,8 @@ namespace BChat.Models
         public string Phone { get; set; }
 
         public CustomerStatus status { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }
+// Recuiyrmcens
+// CreatedAt - دائما التحديث من المودل للتاريخ عند الاضافة

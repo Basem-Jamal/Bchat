@@ -218,7 +218,7 @@
             Controls.Add(picClose);
             FormBorderStyle = FormBorderStyle.None;
             Name = "SendCampaignForm";
-            StartPosition = FormStartPosition.CenterScreen;
+            StartPosition = FormStartPosition.CenterParent;
             Text = "SendCampaignForm";
             Load += SendCampaignForm_Load;
             ((System.ComponentModel.ISupportInitialize)picClose).EndInit();

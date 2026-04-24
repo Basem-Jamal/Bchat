@@ -60,7 +60,7 @@
             chatConversation2.DatePillBackColor = Color.FromArgb(226, 232, 240);
             chatConversation2.DatePillForeColor = Color.FromArgb(100, 116, 139);
             chatConversation2.Dock = DockStyle.Right;
-            chatConversation2.FontFamily = "Cairo";
+            chatConversation2.FontFamily = "IBM Plex Sans Arabic";
             chatConversation2.HeaderBackColor = Color.White;
             chatConversation2.HeaderHeight = 72;
             chatConversation2.Location = new Point(326, 0);

@@ -53,7 +53,9 @@ namespace BChat.Data.DataStore
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
-                string query = @"INSERT INTO CustomerGroups (Name, Description, IconBase64, IconColor ,IsActive) VALUES (@Name, @Description, @IconBase64, @IconColor, @IsActive)";
+                string query = @"INSERT INTO CustomerGroups (Name, Description, IconBase64, IconColor ,IsActive) VALUES (@Name, @Description, @IconBase64, @IconColor, @IsActive);
+                 SELECT SCOPE_IDENTITY();";
+
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@Name", group.Name ?? (object)DBNull.Value);
@@ -61,7 +63,13 @@ namespace BChat.Data.DataStore
                     cmd.Parameters.AddWithValue("@IsActive", (int)group.Status);
                     cmd.Parameters.AddWithValue("@IconBase64", group.Icon != null ? (group.Icon) : (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@IconColor", group.IconBoxColor != null ? group.IconBoxColor.ToString() : (object)DBNull.Value);
-                    result = cmd.ExecuteNonQuery() > 0;
+
+                    var newId = cmd.ExecuteScalar();
+                    if (newId != null)
+                    {
+                        group.Id = Convert.ToInt32(newId);
+                        result = true;
+                    }
                 }
             }
             return result;

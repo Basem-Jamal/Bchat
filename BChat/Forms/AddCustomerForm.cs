@@ -34,6 +34,8 @@ namespace BChat.Forms
 
             groupSelector.LoadGroups(AppCache.Groups, GeneralFunctions.Base64ToImage);  // ← أضف هذا
 
+            // Check Group
+            Check_GroupNotFound();
 
             if (status == CustomerStatus.Update)
             {
@@ -43,6 +45,8 @@ namespace BChat.Forms
                 var groupIds = AppCache.GetGroupIdsByCustomer(_customer.Id);
                 groupSelector.SetSelectedGroupIds(groupIds);
 
+                btnAddCustomer.Text = "حفظ التعديل";
+
             }
         }
 
@@ -50,7 +54,13 @@ namespace BChat.Forms
         {
             this.Close();
         }
+        private void Check_GroupNotFound()
+        {
 
+            if (AppCache.Groups.Count <= 0)
+                lblNotGroupFound.Visible = true;
+
+        }
         private void txbCustomerPhone_KeyPress(object sender, KeyPressEventArgs e)
         {
             // السماح فقط بالأرقام وزر الحذف (Backspace)
@@ -76,6 +86,8 @@ namespace BChat.Forms
             }
             if (_customer != null && _status == CustomerStatus.Add)
             {
+
+
                 Customer customer = new Customer()
                 {
                     Name = txbCustomerName.Text,
@@ -118,6 +130,7 @@ namespace BChat.Forms
 
 
                     }
+                    AppEvents.ChangeRefreshCustomesTable();  // ← تعديث الحفظ في جدول العملاء
 
                     MessageBox.Show("تمت الإضافة بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -135,13 +148,13 @@ namespace BChat.Forms
 
             else if (_customer != null && _status == CustomerStatus.Update)
             {
+
+
                 _customer.Name = txbCustomerName.Text;
                 _customer.Phone = txbCustomerPhone.Text;
 
 
                 CustomerRepository.Update(_customer);
-                AppEvents.ChangeRefreshCustomesTable();  // ← يوجد بالفعل
-
 
                 var oldGroupIds = AppCache.GetGroupIdsByCustomer(_customer.Id);
 
@@ -184,8 +197,9 @@ namespace BChat.Forms
 
 
                 }
+                AppEvents.ChangeRefreshCustomesTable();  // ← تعديث الحفظ في جدول العملاء
 
-                MessageBox.Show("تم اضافة العميل بنجاح!", "النظام", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("تم حفظ التعديل بنجاح!", "النظام", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 
             }
 

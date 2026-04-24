@@ -33,6 +33,8 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
 
         public bool IsLastMessageSent { get; set; } // ✅ أضف هذا
 
+        public DateTime LastMessageAt { get; set; } = DateTime.MinValue;
+
     }
 
     // ─────────────────────────────────────────────────────────
@@ -188,6 +190,21 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                     ci.Invalidate(); // ✅ يعيد رسم العنصر فقط بدون إعادة بناء القائمة
                     break;
                 }
+        }
+        public void MoveItemToTop(int contactId)
+        {
+            if (_flpList == null) return;
+
+            ChatItemControl? target = null;
+            foreach (Control c in _flpList.Controls)
+                if (c is ChatItemControl ci && ci.Data.ContactId == contactId)
+                { target = ci; break; }
+
+            if (target == null) return;
+
+            _flpList.SuspendLayout();
+            _flpList.Controls.SetChildIndex(target, 0);
+            _flpList.ResumeLayout(true);
         }
 
         // ─────────────────────────────────────────────────────
