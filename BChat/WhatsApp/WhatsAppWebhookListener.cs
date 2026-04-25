@@ -174,22 +174,19 @@ namespace BChat.WhatsApp
                     var change = entry.GetProperty("changes")[0];
                     var value = change.GetProperty("value");
 
-                    // تحقق إن فيه رسائل
                     if (!value.TryGetProperty("messages", out var messages)) return;
 
                     var message = messages[0];
-                    var msgType = message.GetProperty("type").GetString();
-                    if (msgType != "text") return;
+                    if (message.GetProperty("type").GetString() != "text") return;
 
                     var phone = message.GetProperty("from").GetString() ?? "";
                     var text = message.GetProperty("text").GetProperty("body").GetString() ?? "";
                     var msgId = message.GetProperty("id").GetString() ?? "";
                     var timestamp = long.Parse(message.GetProperty("timestamp").GetString() ?? "0");
                     var sentAt = DateTimeOffset.FromUnixTimeSeconds(timestamp).LocalDateTime;
-
-                    // اسم المرسل
-                    var contacts = value.GetProperty("contacts");
-                    var name = contacts[0].GetProperty("profile").GetProperty("name").GetString() ?? phone;
+                    var name = value.GetProperty("contacts")[0]
+                                         .GetProperty("profile")
+                                         .GetProperty("name").GetString() ?? phone;
 
                     var msg = new IncomingWhatsAppMessage
                     {

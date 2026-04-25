@@ -170,9 +170,10 @@
             // 
             // txbCustomerPhone
             // 
-            txbCustomerPhone.BackColor = Color.Transparent;
             txbCustomerPhone.BackColorEx = Color.FromArgb(237, 235, 255);
+            txbCustomerPhone.BorderColor = Color.FromArgb(220, 215, 250);
             txbCustomerPhone.BorderRadius = 14;
+            txbCustomerPhone.Direction = BChat.Controls.TextDirection.Auto;
             txbCustomerPhone.FocusBorderColor = Color.FromArgb(124, 111, 247);
             txbCustomerPhone.Font = new Font("Microsoft Sans Serif", 12F);
             txbCustomerPhone.LabelText = "";
@@ -183,12 +184,15 @@
             txbCustomerPhone.RightToLeft = RightToLeft.Yes;
             txbCustomerPhone.Size = new Size(460, 70);
             txbCustomerPhone.TabIndex = 2;
+            txbCustomerPhone.TextPadding = 14;
+            txbCustomerPhone.UsePasswordChar = false;
             // 
             // txbCustomerName
             // 
-            txbCustomerName.BackColor = Color.Transparent;
             txbCustomerName.BackColorEx = Color.FromArgb(237, 235, 255);
+            txbCustomerName.BorderColor = Color.FromArgb(220, 215, 250);
             txbCustomerName.BorderRadius = 14;
+            txbCustomerName.Direction = BChat.Controls.TextDirection.Auto;
             txbCustomerName.FocusBorderColor = Color.FromArgb(124, 111, 247);
             txbCustomerName.Font = new Font("Microsoft Sans Serif", 12F);
             txbCustomerName.LabelText = "";
@@ -199,6 +203,8 @@
             txbCustomerName.RightToLeft = RightToLeft.Yes;
             txbCustomerName.Size = new Size(460, 70);
             txbCustomerName.TabIndex = 1;
+            txbCustomerName.TextPadding = 14;
+            txbCustomerName.UsePasswordChar = false;
             // 
             // AddCustomerForm
             // 

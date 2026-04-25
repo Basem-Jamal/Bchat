@@ -39,11 +39,11 @@
             // 
             chatSidebar1.BackColor = Color.Black;
             chatSidebar1.Dock = DockStyle.Right;
-            chatSidebar1.Location = new Point(922, 0);
+            chatSidebar1.Location = new Point(934, 0);
             chatSidebar1.MinimumSize = new Size(260, 400);
             chatSidebar1.Name = "chatSidebar1";
             chatSidebar1.RightToLeft = RightToLeft.Yes;
-            chatSidebar1.Size = new Size(384, 890);
+            chatSidebar1.Size = new Size(384, 816);
             chatSidebar1.TabIndex = 0;
             // 
             // chatConversation2
@@ -63,7 +63,7 @@
             chatConversation2.FontFamily = "IBM Plex Sans Arabic";
             chatConversation2.HeaderBackColor = Color.White;
             chatConversation2.HeaderHeight = 72;
-            chatConversation2.Location = new Point(326, 0);
+            chatConversation2.Location = new Point(338, 0);
             chatConversation2.MutedColor = Color.FromArgb(148, 163, 184);
             chatConversation2.Name = "chatConversation2";
             chatConversation2.OnlineColor = Color.FromArgb(16, 185, 129);
@@ -73,7 +73,7 @@
             chatConversation2.RightToLeft = RightToLeft.Yes;
             chatConversation2.SentBubbleColor = Color.FromArgb(124, 111, 247);
             chatConversation2.SentTextColor = Color.White;
-            chatConversation2.Size = new Size(596, 890);
+            chatConversation2.Size = new Size(596, 816);
             chatConversation2.TabIndex = 2;
             // 
             // chatContactInfo1
@@ -89,7 +89,7 @@
             chatContactInfo1.MinimumSize = new Size(260, 400);
             chatContactInfo1.Name = "chatContactInfo1";
             chatContactInfo1.RightToLeft = RightToLeft.Yes;
-            chatContactInfo1.Size = new Size(320, 890);
+            chatContactInfo1.Size = new Size(320, 816);
             chatContactInfo1.TabIndex = 3;
             chatContactInfo1.TotalMediaCount = 0;
             // 
@@ -107,7 +107,7 @@
             customPanel1.Name = "customPanel1";
             customPanel1.ShadowColor = Color.Transparent;
             customPanel1.ShadowSize = 0;
-            customPanel1.Size = new Size(1306, 890);
+            customPanel1.Size = new Size(1318, 816);
             customPanel1.TabIndex = 4;
             customPanel1.UseShadow = true;
             // 
@@ -120,7 +120,7 @@
             Controls.Add(chatSidebar1);
             Controls.Add(customPanel1);
             Name = "MessageControl";
-            Size = new Size(1306, 890);
+            Size = new Size(1318, 816);
             customPanel1.ResumeLayout(false);
             ResumeLayout(false);
         }

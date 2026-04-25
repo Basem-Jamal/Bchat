@@ -10,7 +10,7 @@ namespace BChat.Data
     {
 
         public static string ConnectionString =
-    "Server=DESKTOP-7DPOSF5;Database=WaBusinessManagerDB;Trusted_Connection=True;TrustServerCertificate=True;";
+    "Server=DESKTOP-FA969I1;Database=WaBusinessManagerDB;Trusted_Connection=True;TrustServerCertificate=True;";
 
 
 
@@ -27,10 +27,17 @@ namespace BChat.Data
     //   "Server=DESKTOP-FA969I1;Database=WaBusinessManagerDB;Trusted_Connection=True;TrustServerCertificate=True;";
 }
 
+// In Work
+//public static string ConnectionString =
+//"Server=DESKTOP-7DPOSF5;Database=WaBusinessManagerDB;Trusted_Connection=True;TrustServerCertificate=True;";
+
+
 
 // Database In Azure 
 //public static string ConnectionString =
 //"Server=tcp:bchat-server.database.windows.net,1433;Initial Catalog=WaBusinessManagerDB;Persist Security Info=False;" +
 //    "User ID=bchat_admin;Password=Bb@!737526695;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;" +
 //    "Connection Timeout=30;";
+
+
 

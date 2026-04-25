@@ -35,11 +35,13 @@
             customPanel2 = new Car_Rental_System.CustomControls.CustomPanel();
             customPanel1 = new Car_Rental_System.CustomControls.CustomPanel();
             txtPassword = new BChat.Controls.ModernTextBox();
-            txtEmail = new BChat.Controls.ModernTextBox();
             lbl2 = new ReaLTaiizor.Controls.BigLabel();
             lbl1 = new ReaLTaiizor.Controls.BigLabel();
             btnLogin = new BChat.Controls.ModernButton();
+            customPanel3 = new Car_Rental_System.CustomControls.CustomPanel();
+            txtEmail = new BChat.Controls.ModernTextBox();
             ((System.ComponentModel.ISupportInitialize)picClose).BeginInit();
+            customPanel3.SuspendLayout();
             SuspendLayout();
             // 
             // guna2BorderlessForm1
@@ -59,6 +61,7 @@
             picClose.SizeMode = PictureBoxSizeMode.Zoom;
             picClose.TabIndex = 29;
             picClose.TabStop = false;
+            picClose.Click += picClose_Click;
             // 
             // customPanel2
             // 
@@ -96,35 +99,22 @@
             // 
             // txtPassword
             // 
-            txtPassword.BackColor = Color.Transparent;
             txtPassword.BackColorEx = Color.FromArgb(237, 235, 255);
+            txtPassword.BorderColor = Color.FromArgb(220, 215, 250);
             txtPassword.BorderRadius = 14;
+            txtPassword.Direction = BChat.Controls.TextDirection.LTR;
             txtPassword.FocusBorderColor = Color.FromArgb(124, 111, 247);
             txtPassword.Font = new Font("Microsoft Sans Serif", 12F);
             txtPassword.LabelText = "";
-            txtPassword.Location = new Point(267, 302);
+            txtPassword.Location = new Point(238, 227);
             txtPassword.MaxLength = 32767;
             txtPassword.Name = "txtPassword";
-            txtPassword.PlaceholderText = "";
+            txtPassword.PlaceholderText = "Password";
             txtPassword.RightToLeft = RightToLeft.No;
             txtPassword.Size = new Size(367, 51);
-            txtPassword.TabIndex = 26;
-            // 
-            // txtEmail
-            // 
-            txtEmail.BackColor = Color.Transparent;
-            txtEmail.BackColorEx = Color.FromArgb(237, 235, 255);
-            txtEmail.BorderRadius = 14;
-            txtEmail.FocusBorderColor = Color.FromArgb(124, 111, 247);
-            txtEmail.Font = new Font("Microsoft Sans Serif", 12F);
-            txtEmail.LabelText = "";
-            txtEmail.Location = new Point(267, 177);
-            txtEmail.MaxLength = 32767;
-            txtEmail.Name = "txtEmail";
-            txtEmail.PlaceholderText = "";
-            txtEmail.RightToLeft = RightToLeft.No;
-            txtEmail.Size = new Size(367, 51);
-            txtEmail.TabIndex = 25;
+            txtPassword.TabIndex = 2;
+            txtPassword.TextPadding = 14;
+            txtPassword.UsePasswordChar = true;
             // 
             // lbl2
             // 
@@ -132,7 +122,7 @@
             lbl2.BackColor = Color.Transparent;
             lbl2.Font = new Font("Microsoft Sans Serif", 16F);
             lbl2.ForeColor = Color.FromArgb(80, 80, 80);
-            lbl2.Location = new Point(66, 302);
+            lbl2.Location = new Point(37, 227);
             lbl2.Name = "lbl2";
             lbl2.Size = new Size(108, 26);
             lbl2.TabIndex = 31;
@@ -144,7 +134,7 @@
             lbl1.BackColor = Color.Transparent;
             lbl1.Font = new Font("Microsoft Sans Serif", 16F);
             lbl1.ForeColor = Color.FromArgb(80, 80, 80);
-            lbl1.Location = new Point(66, 177);
+            lbl1.Location = new Point(37, 102);
             lbl1.Name = "lbl1";
             lbl1.Size = new Size(68, 26);
             lbl1.TabIndex = 30;
@@ -156,13 +146,54 @@
             btnLogin.BorderRadius = 15;
             btnLogin.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             btnLogin.Icon = (Image)resources.GetObject("btnLogin.Icon");
-            btnLogin.Location = new Point(378, 445);
+            btnLogin.Location = new Point(349, 372);
             btnLogin.Name = "btnLogin";
             btnLogin.RightToLeft = RightToLeft.Yes;
             btnLogin.Size = new Size(145, 55);
-            btnLogin.TabIndex = 32;
+            btnLogin.TabIndex = 3;
             btnLogin.Text = "Loign";
             btnLogin.Click += btnLogin_Click;
+            // 
+            // customPanel3
+            // 
+            customPanel3.BackColor = Color.White;
+            customPanel3.BackColorEx = Color.White;
+            customPanel3.BorderColor = Color.Transparent;
+            customPanel3.BorderRadius = 15;
+            customPanel3.BorderThickness = 1;
+            customPanel3.Controls.Add(txtEmail);
+            customPanel3.Controls.Add(btnLogin);
+            customPanel3.Controls.Add(txtPassword);
+            customPanel3.Controls.Add(lbl2);
+            customPanel3.Controls.Add(lbl1);
+            customPanel3.Font = new Font("Microsoft Sans Serif", 12F);
+            customPanel3.ForeColor = Color.Black;
+            customPanel3.Location = new Point(29, 75);
+            customPanel3.Name = "customPanel3";
+            customPanel3.ShadowColor = Color.Transparent;
+            customPanel3.ShadowSize = 6;
+            customPanel3.Size = new Size(738, 467);
+            customPanel3.TabIndex = 29;
+            customPanel3.UseShadow = true;
+            // 
+            // txtEmail
+            // 
+            txtEmail.BackColorEx = Color.FromArgb(237, 235, 255);
+            txtEmail.BorderColor = Color.FromArgb(220, 215, 250);
+            txtEmail.BorderRadius = 14;
+            txtEmail.Direction = BChat.Controls.TextDirection.LTR;
+            txtEmail.FocusBorderColor = Color.FromArgb(124, 111, 247);
+            txtEmail.Font = new Font("Microsoft Sans Serif", 12F);
+            txtEmail.LabelText = "";
+            txtEmail.Location = new Point(238, 102);
+            txtEmail.MaxLength = 32767;
+            txtEmail.Name = "txtEmail";
+            txtEmail.PlaceholderText = "Email";
+            txtEmail.RightToLeft = RightToLeft.Yes;
+            txtEmail.Size = new Size(367, 51);
+            txtEmail.TabIndex = 1;
+            txtEmail.TextPadding = 14;
+            txtEmail.UsePasswordChar = false;
             // 
             // Login
             // 
@@ -170,21 +201,19 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(795, 611);
-            Controls.Add(btnLogin);
-            Controls.Add(lbl2);
-            Controls.Add(lbl1);
             Controls.Add(picClose);
             Controls.Add(customPanel2);
             Controls.Add(customPanel1);
-            Controls.Add(txtPassword);
-            Controls.Add(txtEmail);
+            Controls.Add(customPanel3);
+            Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             FormBorderStyle = FormBorderStyle.None;
             Name = "Login";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Login";
             ((System.ComponentModel.ISupportInitialize)picClose).EndInit();
+            customPanel3.ResumeLayout(false);
+            customPanel3.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -198,5 +227,6 @@
         private ReaLTaiizor.Controls.BigLabel lbl2;
         private ReaLTaiizor.Controls.BigLabel lbl1;
         private Controls.ModernButton btnLogin;
+        private Car_Rental_System.CustomControls.CustomPanel customPanel3;
     }
 }

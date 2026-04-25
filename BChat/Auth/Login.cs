@@ -15,12 +15,12 @@ namespace BChat.Auth
 {
     public partial class Login : Form
     {
-        
+
         public Login()
         {
             InitializeComponent();
 
-
+            
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -50,6 +50,11 @@ namespace BChat.Auth
             this.Close();
 
 
+        }
+
+        private void picClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

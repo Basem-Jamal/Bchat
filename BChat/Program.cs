@@ -15,13 +15,10 @@ namespace BChat
         static void Main()
         {
 
-            Application.EnableVisualStyles();
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
 
-
             ApplicationConfiguration.Initialize();
-            Application.SetCompatibleTextRenderingDefault(false);
 
             //---------
             //Users
@@ -37,6 +34,19 @@ namespace BChat
 
             AppCache.WhatsAppListener = new BChat.WhatsApp.WhatsAppWebhookListener();
             AppCache.WhatsAppListener.Start();
+
+            //try
+            //{
+            //    AppCache.WhatsAppListener = new BChat.WhatsApp.WhatsAppWebhookListener();
+            //    AppCache.WhatsAppListener.Start();
+            //}
+            //catch { /* تجاهل لو Port مشغول */ }
+            //try
+            //{
+            //    AppCache.WhatsAppListener = new BChat.WhatsApp.WhatsAppWebhookListener();
+            //    AppCache.WhatsAppListener.Start();
+            //}
+            //catch { /* تجاهل لو Port مشغول */ }
 
             var Login = new Login();
             if (Login.ShowDialog() == DialogResult.OK)

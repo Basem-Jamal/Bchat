@@ -1,5 +1,6 @@
 ﻿using BChat.Custom_Controal.Custom_Bchat.Message_Controls;
 using BChat.Data.DataStore;
+using BChat.Data.DataStore.Chat_Messages_DB;
 using BChat.Global;
 using BChat.Models;
 using BChat.WhatsApp;
@@ -26,10 +27,30 @@ namespace BChat.UserControls
         // ─── الخطوة 1: تحميل البيانات الحقيقية من AppCache ───────────────────
         private void LoadFromCache()
         {
+            var agentName = AppCache.Users
+                .Where(u => u.Id != AppCache.CurrentUser?.Id)
+                .Select(u => u.Name ?? u.Email ?? "موظف")
+                .ToList();
+
+
             // 1. بناء قائمة المحادثات من AppCache.Customers
             var chats = new List<ChatListItemData>();
 
-            foreach (var customer in AppCache.Customers)
+
+            IEnumerable<Customer> visibleCustomers = AppCache.Customers;
+
+
+            if (AppCache.CurrentUser?.Role == "Agent")
+            {
+                var assignedIds = ConversationAssignmentRepository
+                    .GetAssignedCustomerIds(AppCache.CurrentUser.Id);
+
+                visibleCustomers = AppCache.Customers
+                    .Where(c => assignedIds.Contains(c.Id));
+            }
+            
+
+            foreach (var customer in visibleCustomers)
             {
                 var messages = AppCache.GetMessagesByCustomer(customer.Id);
                 var lastMsg = messages.LastOrDefault();
@@ -68,10 +89,7 @@ namespace BChat.UserControls
 
             // ─── إضافة جديدة: Transfer Bar ───────────────────────────────
             // تمرير أسماء الموظفين من AppCache.Users
-            var agentNames = AppCache.Users
-                .Select(u => u.Name ?? u.Email ?? "موظف")
-                .ToList();
-            chatConversation2.SetTransferUsers(agentNames);
+            chatConversation2.SetTransferUsers(agentName);
 
             // ربط حدث التحويل
             chatConversation2.ConversationTransferred += OnConversationTransferred;
@@ -81,10 +99,6 @@ namespace BChat.UserControls
                 AppCache.WhatsAppListener.MessageReceived += OnWhatsAppMessageReceived;
 
 
-
-            // ربط استقبال رسائل واتساب الواردة
-            if (AppCache.WhatsAppListener != null)
-                AppCache.WhatsAppListener.MessageReceived += OnWhatsAppMessageReceived;
         }
 
         private void OnConversationTransferred(object sender, string agentName)
@@ -97,17 +111,29 @@ namespace BChat.UserControls
 
             if (targetAgent == null) return;
 
-            // ① أرسل رسالة نظام داخلية تُخبر بالتحويل (اختياري)
+
+            ConversationAssignmentRepository.Assign(
+                _activeContactId,
+                targetAgent.Id,
+                AppCache.CurrentUser!.Id
+
+
+                );
+
+
+
             var systemMsg = new ChatMessage
             {
                 CustomerId = _activeContactId,
-                Text = $"📌 تم تحويل المحادثة إلى: {agentName}",
+                Text = $"تم تحويل المحادثة إلى: {agentName}",
                 SentAt = DateTime.Now,
                 IsSent = true,
                 IsRead = false,
                 HasAttachment = false,
                 Status = "system",
             };
+
+
             systemMsg.Id = ChatMessageRepository.Add(systemMsg);
             AppCache.ChatMessages.Add(systemMsg);
             chatConversation2.AppendMessage(MapToUiMessage(systemMsg));
@@ -137,8 +163,37 @@ namespace BChat.UserControls
 
                 if (customer == null)
                 {
-                    System.Diagnostics.Debug.WriteLine($"⚠️ عميل غير موجود: {msg.Phone}");
-                    return;
+                    var newCustomer = new Customer()
+                    {
+                        Name = msg.SenderName,
+                        Phone= msg.Phone,
+                    };
+                    newCustomer.Id =CustomerRepository.Add(newCustomer);
+                    AppCache.Customers.Add(newCustomer);
+                    customer = newCustomer;
+
+                    this.Invoke((Action)(() =>
+                    {
+                        var newItem = new ChatListItemData
+                        {
+                            ContactId = customer.Id,
+                            ContactName = customer.Name,
+                            LastMessage = "",
+                            Timestamp = "",
+                            IsOnline = false,
+                            UnreadCount = 0,
+                            IsGroup = false,
+                            IsLastMessageSent = false,
+                            LastMessageAt = DateTime.MinValue
+                        };
+                        _contactsMap[customer.Id] = newItem;
+
+                        // أضفه لقائمة السايدبار
+                        var currentChats = _contactsMap.Values.OrderByDescending(c => c.LastMessageAt).ToList();
+
+                        chatSidebar1.LoadChats(currentChats);
+
+                    }));
                 }
 
                 System.Diagnostics.Debug.WriteLine($"✅ عميل موجود: {customer.Name}");

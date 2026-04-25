@@ -1,4 +1,5 @@
 using BChat.Controls;
+using BChat.Global;
 using BChat.Menu___Nav.Nav___Marketing;
 using BChat.Salla;
 using BChat.UserControls;
@@ -36,6 +37,8 @@ namespace BChat
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer |
                           ControlStyles.AllPaintingInWmPaint |
                           ControlStyles.UserPaint, true);
+
+            lblUserCurrentName.Text = AppCache.CurrentUser.Name.ToString();
         }
 
         private async void Home_Load(object sender, EventArgs e)

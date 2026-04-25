@@ -42,7 +42,9 @@
             txtWebhookVerifyToken = new BChat.Controls.ModernTextBox();
             bigLabel1 = new ReaLTaiizor.Controls.BigLabel();
             picClose = new PictureBox();
+            pnlContent = new Car_Rental_System.CustomControls.CustomPanel();
             ((System.ComponentModel.ISupportInitialize)picClose).BeginInit();
+            pnlContent.SuspendLayout();
             SuspendLayout();
             // 
             // guna2BorderlessForm1
@@ -58,7 +60,7 @@
             lbl2.BackColor = Color.Transparent;
             lbl2.Font = new Font("Microsoft Sans Serif", 16F);
             lbl2.ForeColor = Color.FromArgb(80, 80, 80);
-            lbl2.Location = new Point(30, 244);
+            lbl2.Location = new Point(20, 163);
             lbl2.Name = "lbl2";
             lbl2.Size = new Size(210, 26);
             lbl2.TabIndex = 14;
@@ -66,35 +68,41 @@
             // 
             // txtBusinessAccountId
             // 
-            txtBusinessAccountId.BackColor = Color.Transparent;
             txtBusinessAccountId.BackColorEx = Color.FromArgb(237, 235, 255);
+            txtBusinessAccountId.BorderColor = Color.FromArgb(220, 215, 250);
             txtBusinessAccountId.BorderRadius = 14;
+            txtBusinessAccountId.Direction = BChat.Controls.TextDirection.Auto;
             txtBusinessAccountId.FocusBorderColor = Color.FromArgb(124, 111, 247);
             txtBusinessAccountId.Font = new Font("Microsoft Sans Serif", 12F);
             txtBusinessAccountId.LabelText = "";
-            txtBusinessAccountId.Location = new Point(293, 244);
+            txtBusinessAccountId.Location = new Point(302, 160);
             txtBusinessAccountId.MaxLength = 32767;
             txtBusinessAccountId.Name = "txtBusinessAccountId";
             txtBusinessAccountId.PlaceholderText = "";
             txtBusinessAccountId.RightToLeft = RightToLeft.No;
             txtBusinessAccountId.Size = new Size(367, 51);
             txtBusinessAccountId.TabIndex = 12;
+            txtBusinessAccountId.TextPadding = 14;
+            txtBusinessAccountId.UsePasswordChar = false;
             // 
             // txtPhoneNumberId
             // 
-            txtPhoneNumberId.BackColor = Color.Transparent;
             txtPhoneNumberId.BackColorEx = Color.FromArgb(237, 235, 255);
+            txtPhoneNumberId.BorderColor = Color.FromArgb(220, 215, 250);
             txtPhoneNumberId.BorderRadius = 14;
+            txtPhoneNumberId.Direction = BChat.Controls.TextDirection.Auto;
             txtPhoneNumberId.FocusBorderColor = Color.FromArgb(124, 111, 247);
             txtPhoneNumberId.Font = new Font("Microsoft Sans Serif", 12F);
             txtPhoneNumberId.LabelText = "";
-            txtPhoneNumberId.Location = new Point(293, 150);
+            txtPhoneNumberId.Location = new Point(302, 53);
             txtPhoneNumberId.MaxLength = 32767;
             txtPhoneNumberId.Name = "txtPhoneNumberId";
             txtPhoneNumberId.PlaceholderText = "";
             txtPhoneNumberId.RightToLeft = RightToLeft.No;
             txtPhoneNumberId.Size = new Size(367, 51);
             txtPhoneNumberId.TabIndex = 11;
+            txtPhoneNumberId.TextPadding = 14;
+            txtPhoneNumberId.UsePasswordChar = false;
             // 
             // lbl1
             // 
@@ -102,7 +110,7 @@
             lbl1.BackColor = Color.Transparent;
             lbl1.Font = new Font("Microsoft Sans Serif", 16F);
             lbl1.ForeColor = Color.FromArgb(80, 80, 80);
-            lbl1.Location = new Point(30, 150);
+            lbl1.Location = new Point(20, 53);
             lbl1.Name = "lbl1";
             lbl1.Size = new Size(183, 26);
             lbl1.TabIndex = 13;
@@ -114,7 +122,7 @@
             btnSave.BorderRadius = 15;
             btnSave.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             btnSave.Icon = Properties.Resources.plus;
-            btnSave.Location = new Point(365, 544);
+            btnSave.Location = new Point(378, 471);
             btnSave.Name = "btnSave";
             btnSave.RightToLeft = RightToLeft.Yes;
             btnSave.Size = new Size(145, 55);
@@ -148,29 +156,32 @@
             customPanel2.BorderThickness = 1;
             customPanel2.Font = new Font("Segoe UI", 10F);
             customPanel2.ForeColor = Color.Black;
-            customPanel2.Location = new Point(634, 558);
+            customPanel2.Location = new Point(634, 591);
             customPanel2.Name = "customPanel2";
             customPanel2.ShadowColor = Color.Transparent;
             customPanel2.ShadowSize = 6;
-            customPanel2.Size = new Size(214, 100);
+            customPanel2.Size = new Size(223, 100);
             customPanel2.TabIndex = 19;
             customPanel2.UseShadow = true;
             // 
             // txtAccessToken
             // 
-            txtAccessToken.BackColor = Color.Transparent;
             txtAccessToken.BackColorEx = Color.FromArgb(237, 235, 255);
+            txtAccessToken.BorderColor = Color.FromArgb(220, 215, 250);
             txtAccessToken.BorderRadius = 14;
+            txtAccessToken.Direction = BChat.Controls.TextDirection.Auto;
             txtAccessToken.FocusBorderColor = Color.FromArgb(124, 111, 247);
             txtAccessToken.Font = new Font("Microsoft Sans Serif", 12F);
             txtAccessToken.LabelText = "";
-            txtAccessToken.Location = new Point(293, 338);
+            txtAccessToken.Location = new Point(302, 267);
             txtAccessToken.MaxLength = 32767;
             txtAccessToken.Name = "txtAccessToken";
             txtAccessToken.PlaceholderText = "";
             txtAccessToken.RightToLeft = RightToLeft.No;
             txtAccessToken.Size = new Size(367, 51);
             txtAccessToken.TabIndex = 20;
+            txtAccessToken.TextPadding = 14;
+            txtAccessToken.UsePasswordChar = false;
             // 
             // lbl3
             // 
@@ -178,7 +189,7 @@
             lbl3.BackColor = Color.Transparent;
             lbl3.Font = new Font("Microsoft Sans Serif", 16F);
             lbl3.ForeColor = Color.FromArgb(80, 80, 80);
-            lbl3.Location = new Point(30, 338);
+            lbl3.Location = new Point(20, 267);
             lbl3.Name = "lbl3";
             lbl3.Size = new Size(148, 26);
             lbl3.TabIndex = 21;
@@ -186,19 +197,22 @@
             // 
             // txtWebhookVerifyToken
             // 
-            txtWebhookVerifyToken.BackColor = Color.Transparent;
             txtWebhookVerifyToken.BackColorEx = Color.FromArgb(237, 235, 255);
+            txtWebhookVerifyToken.BorderColor = Color.FromArgb(220, 215, 250);
             txtWebhookVerifyToken.BorderRadius = 14;
+            txtWebhookVerifyToken.Direction = BChat.Controls.TextDirection.Auto;
             txtWebhookVerifyToken.FocusBorderColor = Color.FromArgb(124, 111, 247);
             txtWebhookVerifyToken.Font = new Font("Microsoft Sans Serif", 12F);
             txtWebhookVerifyToken.LabelText = "";
-            txtWebhookVerifyToken.Location = new Point(293, 432);
+            txtWebhookVerifyToken.Location = new Point(302, 374);
             txtWebhookVerifyToken.MaxLength = 32767;
             txtWebhookVerifyToken.Name = "txtWebhookVerifyToken";
             txtWebhookVerifyToken.PlaceholderText = "";
             txtWebhookVerifyToken.RightToLeft = RightToLeft.No;
             txtWebhookVerifyToken.Size = new Size(367, 51);
             txtWebhookVerifyToken.TabIndex = 22;
+            txtWebhookVerifyToken.TextPadding = 14;
+            txtWebhookVerifyToken.UsePasswordChar = false;
             // 
             // bigLabel1
             // 
@@ -206,7 +220,7 @@
             bigLabel1.BackColor = Color.Transparent;
             bigLabel1.Font = new Font("Microsoft Sans Serif", 16F);
             bigLabel1.ForeColor = Color.FromArgb(80, 80, 80);
-            bigLabel1.Location = new Point(30, 432);
+            bigLabel1.Location = new Point(20, 374);
             bigLabel1.Name = "bigLabel1";
             bigLabel1.Size = new Size(231, 26);
             bigLabel1.TabIndex = 23;
@@ -224,30 +238,49 @@
             picClose.TabStop = false;
             picClose.Click += picClose_Click;
             // 
+            // pnlContent
+            // 
+            pnlContent.BackColor = Color.White;
+            pnlContent.BackColorEx = Color.White;
+            pnlContent.BorderColor = Color.Transparent;
+            pnlContent.BorderRadius = 15;
+            pnlContent.BorderThickness = 1;
+            pnlContent.Controls.Add(btnSave);
+            pnlContent.Controls.Add(bigLabel1);
+            pnlContent.Controls.Add(txtPhoneNumberId);
+            pnlContent.Controls.Add(lbl3);
+            pnlContent.Controls.Add(txtBusinessAccountId);
+            pnlContent.Controls.Add(lbl2);
+            pnlContent.Controls.Add(txtAccessToken);
+            pnlContent.Controls.Add(lbl1);
+            pnlContent.Controls.Add(txtWebhookVerifyToken);
+            pnlContent.Font = new Font("Microsoft Sans Serif", 12F);
+            pnlContent.ForeColor = Color.Black;
+            pnlContent.Location = new Point(12, 72);
+            pnlContent.Name = "pnlContent";
+            pnlContent.ShadowColor = Color.Transparent;
+            pnlContent.ShadowSize = 6;
+            pnlContent.Size = new Size(822, 556);
+            pnlContent.TabIndex = 30;
+            pnlContent.UseShadow = true;
+            // 
             // ApiSettings
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(795, 611);
+            ClientSize = new Size(846, 640);
             Controls.Add(picClose);
-            Controls.Add(bigLabel1);
-            Controls.Add(lbl3);
-            Controls.Add(lbl2);
-            Controls.Add(lbl1);
-            Controls.Add(txtWebhookVerifyToken);
-            Controls.Add(txtAccessToken);
             Controls.Add(customPanel2);
             Controls.Add(customPanel1);
-            Controls.Add(btnSave);
-            Controls.Add(txtBusinessAccountId);
-            Controls.Add(txtPhoneNumberId);
+            Controls.Add(pnlContent);
             FormBorderStyle = FormBorderStyle.None;
             Name = "ApiSettings";
             Text = "ApiSettings";
             ((System.ComponentModel.ISupportInitialize)picClose).EndInit();
+            pnlContent.ResumeLayout(false);
+            pnlContent.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -265,5 +298,6 @@
         private Controls.ModernTextBox txtWebhookVerifyToken;
         private ReaLTaiizor.Controls.BigLabel bigLabel1;
         private PictureBox picClose;
+        private Car_Rental_System.CustomControls.CustomPanel pnlContent;
     }
 }

@@ -33,7 +33,6 @@
             pnlContent = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             pictureBox1 = new PictureBox();
             stcdCoustomers = new BChat.Controls.StatCard();
-            statCard1 = new BChat.Controls.StatCard();
             btnAddCustomer = new BChat.Controls.ModernButton();
             btnRefreshData = new BChat.Controls.ModernButton();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -43,7 +42,7 @@
             // 
             pnlContent.BackColor = Color.White;
             pnlContent.CustomizableEdges = customizableEdges1;
-            pnlContent.Location = new Point(0, 229);
+            pnlContent.Location = new Point(0, 190);
             pnlContent.Name = "pnlContent";
             pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges2;
             pnlContent.Size = new Size(1306, 461);
@@ -67,7 +66,7 @@
             stcdCoustomers.CardColor = Color.White;
             stcdCoustomers.IconBgColor = Color.FromArgb(220, 245, 235);
             stcdCoustomers.IconColor = Color.FromArgb(32, 201, 151);
-            stcdCoustomers.Location = new Point(814, 708);
+            stcdCoustomers.Location = new Point(868, 667);
             stcdCoustomers.Name = "stcdCoustomers";
             stcdCoustomers.ShadowColor = Color.FromArgb(30, 0, 0, 0);
             stcdCoustomers.Size = new Size(425, 135);
@@ -77,25 +76,6 @@
             stcdCoustomers.TitleColor = Color.FromArgb(150, 160, 175);
             stcdCoustomers.Value = "0";
             stcdCoustomers.ValueColor = Color.FromArgb(25, 35, 60);
-            // 
-            // statCard1
-            // 
-            statCard1.AccentColor = Color.FromArgb(32, 201, 151);
-            statCard1.BackColor = Color.Transparent;
-            statCard1.CardColor = Color.White;
-            statCard1.IconBgColor = Color.FromArgb(220, 245, 235);
-            statCard1.IconChar = FontAwesome.Sharp.IconChar.UserXmark;
-            statCard1.IconColor = Color.FromArgb(32, 201, 151);
-            statCard1.Location = new Point(323, 708);
-            statCard1.Name = "statCard1";
-            statCard1.ShadowColor = Color.FromArgb(30, 0, 0, 0);
-            statCard1.Size = new Size(425, 135);
-            statCard1.TabIndex = 10;
-            statCard1.Text = "statCard1";
-            statCard1.Title = "العملاء النشطون";
-            statCard1.TitleColor = Color.FromArgb(150, 160, 175);
-            statCard1.Value = "0";
-            statCard1.ValueColor = Color.FromArgb(25, 35, 60);
             // 
             // btnAddCustomer
             // 
@@ -132,12 +112,11 @@
             BackColor = Color.FromArgb(248, 247, 255);
             Controls.Add(btnRefreshData);
             Controls.Add(btnAddCustomer);
-            Controls.Add(statCard1);
             Controls.Add(stcdCoustomers);
             Controls.Add(pictureBox1);
             Controls.Add(pnlContent);
             Name = "CustomersControl";
-            Size = new Size(1306, 890);
+            Size = new Size(1318, 816);
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
@@ -147,7 +126,6 @@
         private Guna.UI2.WinForms.Guna2CustomGradientPanel pnlContent;
         private PictureBox pictureBox1;
         private Controls.StatCard stcdCoustomers;
-        private Controls.StatCard statCard1;
         private Controls.ModernButton btnAddCustomer;
         private Controls.ModernButton btnRefreshData;
     }

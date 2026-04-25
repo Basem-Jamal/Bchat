@@ -28,9 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            btnAddCustomer = new BChat.Controls.ModernButton();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pictureBox1 = new PictureBox();
             pnlContent = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             pnlContainer = new Car_Rental_System.CustomControls.CustomPanel();
@@ -40,19 +39,6 @@
             pnlContent.SuspendLayout();
             pnlContainer.SuspendLayout();
             SuspendLayout();
-            // 
-            // btnAddCustomer
-            // 
-            btnAddCustomer.BackColor = Color.Transparent;
-            btnAddCustomer.BorderRadius = 20;
-            btnAddCustomer.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
-            btnAddCustomer.Icon = Properties.Resources.plus;
-            btnAddCustomer.Location = new Point(1063, 63);
-            btnAddCustomer.Name = "btnAddCustomer";
-            btnAddCustomer.RightToLeft = RightToLeft.Yes;
-            btnAddCustomer.Size = new Size(209, 70);
-            btnAddCustomer.TabIndex = 16;
-            btnAddCustomer.Text = "اضافة مجموعة";
             // 
             // pictureBox1
             // 
@@ -68,15 +54,15 @@
             // pnlContent
             // 
             pnlContent.Controls.Add(pnlContainer);
-            pnlContent.CustomizableEdges = customizableEdges1;
+            pnlContent.CustomizableEdges = customizableEdges3;
             pnlContent.FillColor = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor2 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor3 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor4 = Color.FromArgb(248, 247, 255);
             pnlContent.Location = new Point(0, 172);
             pnlContent.Name = "pnlContent";
-            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            pnlContent.Size = new Size(1312, 659);
+            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            pnlContent.Size = new Size(1312, 594);
             pnlContent.TabIndex = 13;
             // 
             // pnlContainer
@@ -93,7 +79,7 @@
             pnlContainer.Name = "pnlContainer";
             pnlContainer.ShadowColor = Color.FromArgb(80, 0, 0, 0);
             pnlContainer.ShadowSize = 6;
-            pnlContainer.Size = new Size(1306, 653);
+            pnlContainer.Size = new Size(1306, 588);
             pnlContainer.TabIndex = 4;
             pnlContainer.UseShadow = true;
             // 
@@ -112,7 +98,7 @@
             groupsWrapPanel.PanelPaddingV = 40;
             groupsWrapPanel.RightToLeft = RightToLeft.Yes;
             groupsWrapPanel.ShowAddCard = true;
-            groupsWrapPanel.Size = new Size(1306, 653);
+            groupsWrapPanel.Size = new Size(1306, 588);
             groupsWrapPanel.TabIndex = 1;
             groupsWrapPanel.VerticalGap = 16;
             groupsWrapPanel.CardDeleteClicked += groupsWrapPanel_CardDeleteClicked;
@@ -140,11 +126,10 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(248, 247, 255);
             Controls.Add(btnRefreshData);
-            Controls.Add(btnAddCustomer);
             Controls.Add(pictureBox1);
             Controls.Add(pnlContent);
             Name = "GroupsControl";
-            Size = new Size(1312, 890);
+            Size = new Size(1318, 816);
             Load += CustomerGroupsControl_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             pnlContent.ResumeLayout(false);
@@ -153,8 +138,6 @@
         }
 
         #endregion
-
-        private Controls.ModernButton btnAddCustomer;
         private PictureBox pictureBox1;
         private Guna.UI2.WinForms.Guna2CustomGradientPanel pnlContent;
         private Custom_Controal.AddGroupCard addGroupCard1;

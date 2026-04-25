@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             picTemplates = new PictureBox();
             stcdCountCampaign = new BChat.Controls.StatCard();
             btnCreateACampaign = new BChat.Controls.ModernButton();
@@ -55,7 +55,7 @@
             stcdCountCampaign.CardColor = Color.White;
             stcdCountCampaign.IconBgColor = Color.FromArgb(220, 245, 235);
             stcdCountCampaign.IconColor = Color.FromArgb(32, 201, 151);
-            stcdCountCampaign.Location = new Point(814, 708);
+            stcdCountCampaign.Location = new Point(868, 667);
             stcdCountCampaign.Name = "stcdCountCampaign";
             stcdCountCampaign.ShadowColor = Color.FromArgb(30, 0, 0, 0);
             stcdCountCampaign.Size = new Size(425, 135);
@@ -83,18 +83,18 @@
             // pnlContent
             // 
             pnlContent.BackColor = Color.FromArgb(248, 247, 255);
-            pnlContent.CustomizableEdges = customizableEdges3;
+            pnlContent.CustomizableEdges = customizableEdges5;
             pnlContent.FillColor = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor2 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor3 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor4 = Color.FromArgb(248, 247, 255);
-            pnlContent.Location = new Point(0, 229);
+            pnlContent.Location = new Point(0, 190);
             pnlContent.Name = "pnlContent";
-            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges6;
             pnlContent.Size = new Size(1306, 461);
             pnlContent.TabIndex = 17;
             // 
-            // MessagesControl
+            // CampaignsControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -103,8 +103,8 @@
             Controls.Add(stcdCountCampaign);
             Controls.Add(btnCreateACampaign);
             Controls.Add(pnlContent);
-            Name = "MessagesControl";
-            Size = new Size(1306, 890);
+            Name = "CampaignsControl";
+            Size = new Size(1318, 816);
             ((System.ComponentModel.ISupportInitialize)picTemplates).EndInit();
             ResumeLayout(false);
         }
