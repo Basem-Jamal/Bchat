@@ -2,6 +2,7 @@
 using BChat.Data.DataStore;
 using BChat.Global;
 using BChat.Models;
+using BChat.WhatsApp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,11 +66,62 @@ namespace BChat.UserControls
             chatSidebar1.ChatSelected += OnChatSelected;
             chatConversation2.MessageSent += OnMessageSent;
 
+            // ─── إضافة جديدة: Transfer Bar ───────────────────────────────
+            // تمرير أسماء الموظفين من AppCache.Users
+            var agentNames = AppCache.Users
+                .Select(u => u.Name ?? u.Email ?? "موظف")
+                .ToList();
+            chatConversation2.SetTransferUsers(agentNames);
+
+            // ربط حدث التحويل
+            chatConversation2.ConversationTransferred += OnConversationTransferred;
+            // ─────────────────────────────────────────────────────────────
+
+            if (AppCache.WhatsAppListener != null)
+                AppCache.WhatsAppListener.MessageReceived += OnWhatsAppMessageReceived;
+
+
+
             // ربط استقبال رسائل واتساب الواردة
             if (AppCache.WhatsAppListener != null)
                 AppCache.WhatsAppListener.MessageReceived += OnWhatsAppMessageReceived;
         }
 
+        private void OnConversationTransferred(object sender, string agentName)
+        {
+            if (_activeContactId < 0) return;
+
+            // ابحث عن بيانات الموظف المختار
+            var targetAgent = AppCache.Users
+                .FirstOrDefault(u => (u.Name ?? u.Email) == agentName);
+
+            if (targetAgent == null) return;
+
+            // ① أرسل رسالة نظام داخلية تُخبر بالتحويل (اختياري)
+            var systemMsg = new ChatMessage
+            {
+                CustomerId = _activeContactId,
+                Text = $"📌 تم تحويل المحادثة إلى: {agentName}",
+                SentAt = DateTime.Now,
+                IsSent = true,
+                IsRead = false,
+                HasAttachment = false,
+                Status = "system",
+            };
+            systemMsg.Id = ChatMessageRepository.Add(systemMsg);
+            AppCache.ChatMessages.Add(systemMsg);
+            chatConversation2.AppendMessage(MapToUiMessage(systemMsg));
+
+            // ② سجّل التحويل في DB (إذا عندك جدول AssignedAgent أو ما شابه)
+            // CustomerRepository.UpdateAssignedAgent(_activeContactId, targetAgent.Id);
+
+            // ③ أخبر المستخدم
+            MessageBox.Show(
+                $"تم تحويل المحادثة إلى {agentName} بنجاح",
+                "تحويل المحادثة",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+        }
 
 
 
@@ -198,12 +250,10 @@ namespace BChat.UserControls
         }
 
         // ─── الخطوة 3: إرسال رسالة — Triple Update ───────────────────────────
-        private void OnMessageSent(object sender, string text)
+        private async void OnMessageSent(object sender, string text)
         {
-            
             if (_activeContactId < 0) return;
 
-            // ① بناء نموذج DB
             var dbMessage = new ChatMessage
             {
                 CustomerId = _activeContactId,
@@ -215,25 +265,28 @@ namespace BChat.UserControls
                 Status = "pending",
             };
 
-            // ② حفظ في DB وأخذ الـ ID الجديد
             dbMessage.Id = ChatMessageRepository.Add(dbMessage);
-
-            // ③ إضافة للكاش
             AppCache.ChatMessages.Add(dbMessage);
 
-            // ④ تحديث بيانات السايدبار
+            // ── إرسال عبر Meta ────────────────────────────────
+            var customer = AppCache.Customers.FirstOrDefault(c => c.Id == _activeContactId);
+            if (customer != null)
+            {
+                var success = await MetaSender.SendTextAsync(customer.Phone!, text);
+                dbMessage.Status = success ? "sent" : "failed";
+                System.Diagnostics.Debug.WriteLine(success ? "✅ أُرسلت لـ Meta" : "❌ فشل الإرسال");
+            }
+            // ──────────────────────────────────────────────────
+
             if (_contactsMap.TryGetValue(_activeContactId, out var contact))
             {
                 contact.LastMessage = text;
                 contact.Timestamp = FormatTimestamp(DateTime.Now);
                 contact.IsLastMessageSent = true;
-
                 contact.LastMessageAt = DateTime.Now;
-
                 chatSidebar1.MoveItemToTop(_activeContactId);
             }
 
-            // ⑤ إضافة الفقاعة للـ UI
             chatConversation2.AppendMessage(MapToUiMessage(dbMessage));
         }
         // ─── Mapper: ChatMessage (DB) → ChatMessageData (UI) ─────────────────

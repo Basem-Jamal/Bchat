@@ -10,7 +10,7 @@ namespace BChat.Data
     {
 
         public static string ConnectionString =
-    "Server=DESKTOP-FA969I1;Database=WaBusinessManagerDB;Trusted_Connection=True;TrustServerCertificate=True;";
+    "Server=DESKTOP-7DPOSF5;Database=WaBusinessManagerDB;Trusted_Connection=True;TrustServerCertificate=True;";
 
 
 

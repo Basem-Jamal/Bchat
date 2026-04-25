@@ -1,4 +1,6 @@
+using BChat.Auth;
 using BChat.Data.DataStore;
+using BChat.Data.DataStore.Users_DB;
 using BChat.Global;
 using System.Diagnostics;
 
@@ -21,6 +23,10 @@ namespace BChat
             ApplicationConfiguration.Initialize();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            //---------
+            //Users
+            AppCache.Users = UsersRepository.GetAll();
+            //---------
             AppCache.Customers = CustomerRepository.GetAll();
             AppCache.Groups = GroupRepository.GetAll();
             AppCache.GroupMembers = GroupMemberRepository.GetAll();
@@ -32,8 +38,12 @@ namespace BChat
             AppCache.WhatsAppListener = new BChat.WhatsApp.WhatsAppWebhookListener();
             AppCache.WhatsAppListener.Start();
 
+            var Login = new Login();
+            if (Login.ShowDialog() == DialogResult.OK)
+            {
+                Application.Run(new Home());
 
-            Application.Run(new Home());
+            }
         }
 
         private static void CalculateMembersCount()

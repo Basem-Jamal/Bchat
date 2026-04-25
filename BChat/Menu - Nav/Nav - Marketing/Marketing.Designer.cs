@@ -102,6 +102,7 @@
             btnSettings.Size = new Size(86, 90);
             btnSettings.TabIndex = 5;
             btnSettings.UseVisualStyleBackColor = false;
+            btnSettings.Click += btnSettings_Click;
             // 
             // btnNavCreateCampaign
             // 

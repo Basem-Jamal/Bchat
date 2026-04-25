@@ -5,12 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using BChat.Models;
 using System.Collections.Generic;
+using BChat.Models.Users;
 
 
 namespace BChat.Global
 {
     public static class AppCache
     {
+        //----------Users------------
+        
+        public static User? CurrentUser { get; set; }
+        public static List<User> Users { get; set; } = new List<User>();
+        //----------------------
         // ── Data ──────────────────────────────
         public static List <Groups> Groups { get; set; } = new List<Groups> ();
         public static List<Customer> Customers { get; set; } = new List<Customer>();

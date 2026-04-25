@@ -23,7 +23,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
         public string AttachmentName;
         public string AttachmentSize;
         public string AttachmentType;  // "pdf","image","video","audio",…
-
     }
 
 
@@ -63,6 +62,11 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
         private string _placeholder = "اكتب رسالتك هنا...";
         private int _headerHeight = 64;
         private int _composerHeight = 72;
+
+        // ── Transfer bar backing fields ────────────────────────────────────────
+        private List<string> _transferUsers = new();
+        private bool _showTransferBar = true;
+        private int _transferBarHeight = 48;
         #endregion
 
         #region Designer-exposed properties
@@ -206,6 +210,25 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             set { _composerHeight = Math.Max(52, value); if (_composer != null) _composer.Height = _composerHeight; }
         }
 
+        // ── Transfer bar designer properties ──────────────────────────────────
+        [Category("BChat - Transfer"), Description("Show or hide the transfer bar below the composer."), DefaultValue(true)]
+        public bool ShowTransferBar
+        {
+            get => _showTransferBar;
+            set
+            {
+                _showTransferBar = value;
+                if (_transferBar != null) _transferBar.Visible = value;
+            }
+        }
+
+        [Category("BChat - Transfer"), Description("Height of the transfer bar (px)."), DefaultValue(48)]
+        public int TransferBarHeight
+        {
+            get => _transferBarHeight;
+            set { _transferBarHeight = Math.Max(36, value); if (_transferBar != null) _transferBar.Height = _transferBarHeight; }
+        }
+
         // Hide irrelevant inherited properties
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
         public new Color BackColor { get => base.BackColor; set => base.BackColor = value; }
@@ -215,13 +238,14 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
 
         #region Child controls & state
         private HeaderPanel _header;
-        private VScrollOnlyPanel _msgScroll;      // تم تغيير النوع إلى VScrollOnlyPanel
-        private Panel _spacer;                    // فاصل لدفع الرسائل للأسفل
+        private VScrollOnlyPanel _msgScroll;
+        private Panel _spacer;
         private FlowLayoutPanel _flpMessages;
         private ComposerPanel _composer;
+        private TransferBarPanel _transferBar;          // ← NEW
         private readonly List<ChatMessageData> _messages = new();
         #endregion
-        // ✅ أضفه مع باقي الحقول في أعلى الكلاس
+
         private int _loadVersion = 0;
 
         // Shared fonts (internal so inner classes can read them)
@@ -235,6 +259,9 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
         public event EventHandler CallClicked;
         public event EventHandler SearchClicked;
         public event EventHandler<int> MessageAttachmentClicked;
+
+        /// <summary>Fired when the user selects an employee to transfer the conversation to.</summary>
+        public event EventHandler<string> ConversationTransferred;   // ← NEW
         #endregion
 
         #region Constructor & initialization
@@ -282,41 +309,49 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
         }
         #endregion
 
-        #region Layout (معدلة)
+        #region Layout
         private void BuildLayout()
         {
             base.BackColor = _pageBgColor;
             MinimumSize = new Size(300, 400);
 
-            // Header
+            // ── Header ────────────────────────────────────────────────────────
             _header = new HeaderPanel(this) { Dock = DockStyle.Top, Height = _headerHeight };
             _header.MenuClicked += (s, e) => MenuClicked?.Invoke(this, e);
             _header.CallClicked += (s, e) => CallClicked?.Invoke(this, e);
             _header.SearchClicked += (s, e) => SearchClicked?.Invoke(this, e);
 
-            // Composer
+            // ── Transfer bar ──────────────────────────────────────────────────
+            _transferBar = new TransferBarPanel(this)
+            {
+                Dock = DockStyle.Bottom,
+                Height = _transferBarHeight,
+                Visible = _showTransferBar,
+            };
+            _transferBar.TransferRequested += (s, name) =>
+                ConversationTransferred?.Invoke(this, name);
+
+            // ── Composer ──────────────────────────────────────────────────────
             _composer = new ComposerPanel(this) { Dock = DockStyle.Bottom, Height = _composerHeight };
             _composer.SendMessage += (s, t) => MessageSent?.Invoke(this, t);
             _composer.AttachmentClicked += (s, e) => AttachmentClicked?.Invoke(this, e);
             _composer.EmojiClicked += (s, e) => EmojiClicked?.Invoke(this, e);
 
-            // Scroll container (يدعم التمرير العمودي فقط)
+            // ── Scroll container ──────────────────────────────────────────────
             _msgScroll = new VScrollOnlyPanel
             {
                 Dock = DockStyle.Fill,
                 BackColor = _pageBgColor,
-                AutoScroll = true
+                AutoScroll = true,
             };
 
-            // Spacer يدفع المحتوى للأسفل عند قلة الرسائل
             _spacer = new Panel
             {
                 Dock = DockStyle.Top,
                 Height = 0,
-                BackColor = Color.Transparent
+                BackColor = Color.Transparent,
             };
 
-            // حامل الرسائل
             _flpMessages = new FlowLayoutPanel
             {
                 Dock = DockStyle.Top,
@@ -325,17 +360,19 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 BackColor = _pageBgColor,
                 Padding = new Padding(0, 8, 0, 16),
                 RightToLeft = RightToLeft.Yes,
-                AutoSize = true,                        // يتكيف تلقائياً مع ارتفاع المحتوى
-                AutoSizeMode = AutoSizeMode.GrowAndShrink
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
             };
 
-            // ترتيب الإضافة: الفاصل أولاً ثم حامل الرسائل
             _msgScroll.Controls.Add(_spacer);
             _msgScroll.Controls.Add(_flpMessages);
 
-            // إضافة اللوحات الرئيسية
+            // ── Dock order matters: Bottom controls stack upward by add order ──
+            // _transferBar added before _composer → _transferBar is at absolute bottom
+            // _composer sits directly above _transferBar
             Controls.Add(_msgScroll);
             Controls.Add(_composer);
+            Controls.Add(_transferBar);
             Controls.Add(_header);
         }
 
@@ -359,11 +396,21 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             _header.SetContact(name, status, isOnline, avatar);
         }
 
+        /// <summary>
+        /// Sets the list of employees shown in the transfer dropdown.
+        /// Call this at any time; the list updates immediately.
+        /// </summary>
+        public void SetTransferUsers(List<string> users)
+        {
+            _transferUsers = users ?? new List<string>();
+            _transferBar?.SetUsers(_transferUsers);
+        }
+
         public void LoadMessages(List<ChatMessageData> messages)
         {
             if (_isAnyDesignMode || _flpMessages == null) return;
 
-            _loadVersion++; // ✅ هذا السطر ناقص — أضفه هنا
+            _loadVersion++;
 
             _messages.Clear();
             _msgScroll.SuspendLayout();
@@ -392,6 +439,7 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
 
             DeferredScroll();
         }
+
         public void AppendMessage(ChatMessageData message)
         {
             if (_isAnyDesignMode || _flpMessages == null) return;
@@ -406,14 +454,13 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
         {
             if (_isAnyDesignMode || _flpMessages == null) return;
 
-            _loadVersion++; // ✅ مهم
+            _loadVersion++;
 
             _messages.Clear();
             _flpMessages.Controls.Clear();
             if (_spacer != null) _spacer.Height = 0;
             DeferredScroll();
         }
-
         #endregion
 
         #region Message rendering
@@ -426,7 +473,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
 
         private void AddBubble(ChatMessageData msg, int idx)
         {
-            // Date separator
             bool needSep = idx == 0 || _messages[idx - 1].SentAt.Date != msg.SentAt.Date;
             if (needSep)
             {
@@ -464,7 +510,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             return dt.ToString("d MMMM", new System.Globalization.CultureInfo("ar-SA"));
         }
 
-        // المعدلة الرئيسية لدعم دفع الرسائل للأسفل والتمرير الصحيح
         private void DeferredScroll()
         {
             if (!IsHandleCreated) return;
@@ -488,10 +533,8 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                         bc.MaxBubbleWidth = (int)((avail - sbw) * 65 / 100.0);
                 }
 
-                // ✅ أجبر الـ Layout يكتمل قبل قراءة الارتفاع
                 _flpMessages.PerformLayout();
 
-                // ✅ استخدم Height المباشر بدل PreferredSize (أدق بعد PerformLayout)
                 int totalContentHeight = _flpMessages.Height;
                 int containerHeight = _msgScroll.ClientSize.Height;
                 int spacerHeight = Math.Max(0, containerHeight - totalContentHeight);
@@ -508,7 +551,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             }));
         }
 
-
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
@@ -524,7 +566,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
         }
         #endregion
 
-        #region Inner controls (Header, DateSep, Bubble, Composer) – لم تتغير
         // ══════════════════════════════════════════════════════════════════════
         //  INNER ── HeaderPanel
         // ══════════════════════════════════════════════════════════════════════
@@ -748,7 +789,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 Height = 36;
             }
 
-        
             protected override void OnPaint(PaintEventArgs e)
             {
                 if (_o.F_DatePill == null) return;
@@ -803,30 +843,24 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
 
             public event EventHandler AttachmentClicked;
 
-
             public BubbleCtrl(ChatConversation owner, ChatMessageData data,
-                   bool lastInGroup, int topMargin)
+                               bool lastInGroup, int topMargin)
             {
                 _o = owner; _d = data; _lastInGroup = lastInGroup; _topMargin = topMargin;
                 SetStyle(ControlStyles.OptimizedDoubleBuffer |
                          ControlStyles.AllPaintingInWmPaint |
                          ControlStyles.UserPaint |
                          ControlStyles.ResizeRedraw, true);
-
-                // 👇 السطران الجديدان
                 SetStyle(ControlStyles.SupportsTransparentBackColor, true);
                 BackColor = Color.White;
-
                 RightToLeft = RightToLeft.No;
             }
-            // 👇 تجاوز دالة رسم الخلفية (أضفها داخل الكلاس)
 
             protected override void OnPaintBackground(PaintEventArgs e)
             {
                 using var br = new SolidBrush(_o._pageBgColor);
                 e.Graphics.FillRectangle(br, ClientRectangle);
             }
-
 
             private Rectangle AttachTile() =>
                 new Rectangle(_bubble.X + 6, _bubble.Y + 8, _bubble.Width - 12, 50);
@@ -850,7 +884,7 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 int bh = padV * 2 + (int)Math.Ceiling(textSz.Height) + tsH;
                 if (_d.HasAttachment) bh += 56;
 
-                Height = _topMargin + bh + 6; // +6 مساحة للظل والفقاعة
+                Height = _topMargin + bh + 6;
 
                 int rowW = Math.Max(10, Width);
 
@@ -900,7 +934,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 bool sent = _d.IsSent;
                 var br = _bubble;
 
-                // Shadow
                 for (int i = 2; i >= 1; i--)
                 {
                     var sr = new Rectangle(br.X - i, br.Y + i, br.Width + i * 2, br.Height + i);
@@ -912,9 +945,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 using var path = BubblePath(br, 16, 4, sent);
                 using (var bgb = new SolidBrush(sent ? _o._sentBubbleColor : _o._recvBubbleColor))
                     g.FillPath(bgb, path);
-                //if (!sent)
-                //    using (var bp = new Pen(_o._borderColor, 1f))
-                //        g.DrawPath(bp, path);
 
                 if (!sent && _lastInGroup)
                 {
@@ -1250,7 +1280,449 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 }, 0.3f);
             }
         }
-        #endregion
+
+        // ══════════════════════════════════════════════════════════════════════
+        //  INNER ── TransferBarPanel   ← NEW
+        // ══════════════════════════════════════════════════════════════════════
+        private sealed class TransferBarPanel : Panel
+        {
+            private readonly ChatConversation _o;
+            private List<string> _users = new();
+            private bool _btnHover;
+            private TransferDropdown _activeDropdown;
+
+            /// <summary>Raised with the chosen employee name.</summary>
+            public event EventHandler<string> TransferRequested;
+
+            public TransferBarPanel(ChatConversation owner)
+            {
+                _o = owner;
+                SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                         ControlStyles.AllPaintingInWmPaint |
+                         ControlStyles.UserPaint, true);
+                BackColor = ColorTranslator.FromHtml("#F8F7FF");
+                RightToLeft = RightToLeft.No;
+                Height = 48;
+            }
+
+            /// <summary>Updates the employee list shown in the dropdown.</summary>
+            public void SetUsers(List<string> users) =>
+                _users = users ?? new List<string>();
+
+            // ── Button geometry ───────────────────────────────────────────────
+            // The button sits on the LEFT side of the bar.
+            // In the Arabic-RTL context of the parent UserControl the left side
+            // is the natural "action" area (mirrors where the Send button lives).
+            private Rectangle BtnRect()
+            {
+                const int BtnW = 148, BtnH = 32;
+                int y = (Height - BtnH) / 2;
+                return new Rectangle(14, y, BtnW, BtnH);
+            }
+
+            // ── Mouse ─────────────────────────────────────────────────────────
+            protected override void OnMouseMove(MouseEventArgs e)
+            {
+                base.OnMouseMove(e);
+                bool was = _btnHover;
+                _btnHover = BtnRect().Contains(e.Location);
+                if (was != _btnHover) Invalidate();
+                Cursor = _btnHover ? Cursors.Hand : Cursors.Default;
+            }
+
+            protected override void OnMouseLeave(EventArgs e)
+            {
+                base.OnMouseLeave(e);
+                if (_btnHover) { _btnHover = false; Invalidate(); }
+                Cursor = Cursors.Default;
+            }
+
+            protected override void OnMouseClick(MouseEventArgs e)
+            {
+                base.OnMouseClick(e);
+                if (!BtnRect().Contains(e.Location)) return;
+
+                // Toggle: click again closes the open dropdown
+                if (_activeDropdown != null && !_activeDropdown.IsDisposed)
+                {
+                    _activeDropdown.Close();
+                    return;
+                }
+
+                ShowDropdown();
+            }
+
+            private void ShowDropdown()
+            {
+                var br = BtnRect();
+                // Anchor the dropdown's bottom-right corner to the button's top-right corner
+                var screenPt = PointToScreen(new Point(br.Right, br.Top));
+
+                const int ItemH = 42;
+                const int HeaderH = 36;
+                int ddW = Math.Max(br.Width + 20, 210);
+                int ddH = _users.Count == 0
+                    ? HeaderH + 50
+                    : Math.Min(HeaderH + _users.Count * ItemH + 8, 320);
+
+                int ddX = screenPt.X - ddW;          // right-align with button
+                int ddY = screenPt.Y - ddH;           // open upward
+
+                _activeDropdown = new TransferDropdown(_o, _users, ddW, ddH);
+                _activeDropdown.UserSelected += (_, name) =>
+                {
+                    TransferRequested?.Invoke(this, name);
+                };
+                _activeDropdown.FormClosed += (_, __) => { _activeDropdown = null; Invalidate(); };
+
+                _activeDropdown.SetBounds(ddX, ddY, ddW, ddH);
+                _activeDropdown.Show(FindForm());
+            }
+
+            // ── Paint ─────────────────────────────────────────────────────────
+            protected override void OnPaint(PaintEventArgs e)
+            {
+                var g = e.Graphics;
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                g.Clear(ColorTranslator.FromHtml("#F8F7FF"));
+
+                // Top separator
+                using (var bp = new Pen(_o._borderColor, 1f))
+                    g.DrawLine(bp, 0, 0, Width, 0);
+
+                // ── Button ──────────────────────────────────────────────────
+                var br = BtnRect();
+
+                // Subtle glow halo on hover
+                if (_btnHover)
+                {
+                    var glowR = br; glowR.Inflate(3, 3);
+                    using var glowB = new SolidBrush(Color.FromArgb(28, _o._accentColor));
+                    using var glowP = MkRoundedPath(glowR, 12);
+                    g.FillPath(glowB, glowP);
+                }
+
+                Color btnBg = _btnHover
+                    ? Color.FromArgb(230, _o._accentColor)
+                    : _o._accentColor;
+
+                using (var bb = new SolidBrush(btnBg))
+                using (var bp = MkRoundedPath(br, 10))
+                    g.FillPath(bb, bp);
+
+                // Icon (person + arrow)
+                const int IconSz = 18;
+                var iconR = new Rectangle(br.X + 10, br.Y + (br.Height - IconSz) / 2, IconSz, IconSz);
+                DrawTransferIcon(g, iconR);
+
+                // Label
+                if (_o.F_Status != null)
+                {
+                    using var tb = new SolidBrush(Color.White);
+                    var sf = new StringFormat
+                    {
+                        Alignment = StringAlignment.Near,
+                        LineAlignment = StringAlignment.Center,
+                        FormatFlags = StringFormatFlags.NoWrap,
+                    };
+                    var textR = new RectangleF(iconR.Right + 6, br.Y, br.Width - iconR.Right - 6 + br.X - 4, br.Height);
+                    g.DrawString("تحويل ▾", _o.F_Status, tb, textR, sf);
+                }
+
+                // ── Right-side caption ─────────────────────────────────────
+                if (_o.F_Status != null)
+                {
+                    int capLeft = br.Right + 14;
+                    int capRight = Width - 14;
+                    if (capRight > capLeft + 20)
+                    {
+                        using var cb = new SolidBrush(_o._mutedColor);
+                        var sf = new StringFormat(StringFormatFlags.NoWrap)
+                        {
+                            Alignment = StringAlignment.Far,
+                            LineAlignment = StringAlignment.Center,
+                            Trimming = StringTrimming.EllipsisCharacter,
+                        };
+                        g.DrawString("تحويل المحادثة إلى موظف آخر", _o.F_Status, cb,
+                            new RectangleF(capLeft, 0, capRight - capLeft, Height), sf);
+                    }
+                }
+            }
+
+            // Transfer icon: person silhouette + rightward arrow
+            private static void DrawTransferIcon(Graphics g, Rectangle r)
+            {
+                int cx = r.X + r.Width / 2;
+                int cy = r.Y + r.Height / 2;
+
+                using var p = new Pen(Color.White, 1.7f)
+                { StartCap = LineCap.Round, EndCap = LineCap.Round, LineJoin = LineJoin.Round };
+                using var wb = new SolidBrush(Color.White);
+
+                // Head
+                g.FillEllipse(wb, cx - 8, cy - 8, 6, 6);
+                // Shoulder arc
+                g.DrawArc(p, cx - 9, cy - 3, 10, 7, 180, 180);
+                // Arrow shaft
+                g.DrawLine(p, cx + 1, cy - 1, cx + 7, cy - 1);
+                // Arrow head
+                g.DrawLine(p, cx + 4, cy - 4, cx + 8, cy - 1);
+                g.DrawLine(p, cx + 4, cy + 2, cx + 8, cy - 1);
+            }
+
+            // Rounded rectangle path helper (local copy to keep the class self-contained)
+            private static GraphicsPath MkRoundedPath(Rectangle r, int rad)
+            {
+                rad = Math.Max(1, Math.Min(rad, Math.Min(r.Width, r.Height) / 2));
+                int d = rad * 2;
+                var p = new GraphicsPath();
+                p.AddArc(r.X, r.Y, d, d, 180, 90);
+                p.AddArc(r.Right - d, r.Y, d, d, 270, 90);
+                p.AddArc(r.Right - d, r.Bottom - d, d, d, 0, 90);
+                p.AddArc(r.X, r.Bottom - d, d, d, 90, 90);
+                p.CloseFigure();
+                return p;
+            }
+        }
+
+        // ══════════════════════════════════════════════════════════════════════
+        //  INNER ── TransferDropdown (borderless floating form)   ← NEW
+        // ══════════════════════════════════════════════════════════════════════
+        private sealed class TransferDropdown : Form
+        {
+            private readonly ChatConversation _o;
+            private readonly List<string> _users;
+            private int _hovered = -1;
+            private int _scrollOff = 0;
+
+            private const int ItemH = 42;
+            private const int HeaderH = 36;
+            private const int Radius = 10;
+
+            /// <summary>Raised with the selected employee name.</summary>
+            public event EventHandler<string> UserSelected;
+
+            public TransferDropdown(ChatConversation owner, List<string> users, int w, int h)
+            {
+                _o = owner;
+                _users = users ?? new List<string>();
+
+                FormBorderStyle = FormBorderStyle.None;
+                ShowInTaskbar = false;
+                StartPosition = FormStartPosition.Manual;
+                TopMost = true;
+                BackColor = Color.White;
+
+                SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                         ControlStyles.AllPaintingInWmPaint |
+                         ControlStyles.UserPaint |
+                         ControlStyles.ResizeRedraw, true);
+            }
+
+            // Drop shadow via CS_DROPSHADOW
+            protected override CreateParams CreateParams
+            {
+                get
+                {
+                    var cp = base.CreateParams;
+                    cp.ClassStyle |= 0x20000; // CS_DROPSHADOW
+                    return cp;
+                }
+            }
+
+            // Close when focus leaves
+            protected override void OnDeactivate(EventArgs e)
+            {
+                base.OnDeactivate(e);
+                Close();
+            }
+
+            // ── Geometry ───────────────────────────────────────────────────────
+            private Rectangle ItemRect(int i) =>
+                new Rectangle(1, HeaderH + i * ItemH - _scrollOff, Width - 2, ItemH);
+
+            private int MaxScroll =>
+                Math.Max(0, _users.Count * ItemH - (Height - HeaderH - 8));
+
+            // ── Mouse ──────────────────────────────────────────────────────────
+            protected override void OnMouseMove(MouseEventArgs e)
+            {
+                base.OnMouseMove(e);
+                int prev = _hovered; _hovered = -1;
+                for (int i = 0; i < _users.Count; i++)
+                    if (ItemRect(i).Contains(e.Location)) { _hovered = i; break; }
+                if (prev != _hovered) Invalidate();
+                Cursor = _hovered >= 0 ? Cursors.Hand : Cursors.Default;
+            }
+
+            protected override void OnMouseLeave(EventArgs e)
+            {
+                base.OnMouseLeave(e);
+                if (_hovered >= 0) { _hovered = -1; Invalidate(); }
+                Cursor = Cursors.Default;
+            }
+
+            protected override void OnMouseClick(MouseEventArgs e)
+            {
+                base.OnMouseClick(e);
+                for (int i = 0; i < _users.Count; i++)
+                {
+                    if (!ItemRect(i).Contains(e.Location)) continue;
+                    UserSelected?.Invoke(this, _users[i]);
+                    Close();
+                    return;
+                }
+            }
+
+            protected override void OnMouseWheel(MouseEventArgs e)
+            {
+                base.OnMouseWheel(e);
+                _scrollOff = Math.Max(0, Math.Min(_scrollOff - e.Delta / 3, MaxScroll));
+                Invalidate();
+            }
+
+            // ── Paint ──────────────────────────────────────────────────────────
+            protected override void OnPaint(PaintEventArgs e)
+            {
+                var g = e.Graphics;
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+                g.Clear(Color.White);
+
+                // ── Outer border ──────────────────────────────────────────────
+                using (var bp = new Pen(_o._borderColor, 1f))
+                using (var border = MkRoundedPath(new Rectangle(0, 0, Width - 1, Height - 1), Radius))
+                    g.DrawPath(bp, border);
+
+                // ── Header strip ──────────────────────────────────────────────
+                var headerR = new Rectangle(0, 0, Width, HeaderH);
+                using (var hb = new SolidBrush(ColorTranslator.FromHtml("#F8F7FF")))
+                using (var hp = MkRoundedPath(headerR, Radius))
+                {
+                    g.FillPath(hb, hp);
+                    // Fill the lower-half corners of the header so it blends flush
+                    g.FillRectangle(hb, new Rectangle(0, HeaderH / 2, Width, HeaderH / 2));
+                }
+
+                if (_o.F_DatePill != null)
+                {
+                    using var htb = new SolidBrush(_o._mutedColor);
+                    var sf = new StringFormat
+                    { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
+                    g.DrawString("اختر موظفاً للتحويل", _o.F_DatePill, htb, (RectangleF)headerR, sf);
+                }
+
+                // Separator line below header
+                using (var sp = new Pen(_o._borderColor, 1f))
+                    g.DrawLine(sp, 1, HeaderH, Width - 1, HeaderH);
+
+                // ── Clip to list area ─────────────────────────────────────────
+                g.SetClip(new Rectangle(1, HeaderH + 1, Width - 2, Height - HeaderH - 2));
+
+                if (_users.Count == 0)
+                {
+                    // Empty state
+                    if (_o.F_Status != null)
+                    {
+                        using var eb = new SolidBrush(_o._mutedColor);
+                        var sf = new StringFormat
+                        { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
+                        g.DrawString("لا يوجد موظفون متاحون",
+                            _o.F_Status, eb,
+                            new RectangleF(0, HeaderH, Width, Height - HeaderH), sf);
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < _users.Count; i++)
+                    {
+                        var ir = ItemRect(i);
+                        if (ir.Bottom < HeaderH || ir.Top > Height) continue;  // outside viewport
+
+                        // Hover highlight
+                        if (_hovered == i)
+                        {
+                            using var hb = new SolidBrush(Color.FromArgb(16, _o._accentColor));
+                            g.FillRectangle(hb, ir);
+                        }
+
+                        // ── Avatar circle ───────────────────────────────────
+                        const int AvSz = 28;
+                        // Place avatar on the right side (RTL reading: name on right → avatar on left of name)
+                        var avR = new Rectangle(ir.Right - AvSz - 10,
+                                                ir.Y + (ir.Height - AvSz) / 2, AvSz, AvSz);
+
+                        // Soft fill
+                        using (var ab = new SolidBrush(Color.FromArgb(25, _o._accentColor)))
+                            g.FillEllipse(ab, avR);
+                        // Ring
+                        using (var ap = new Pen(Color.FromArgb(70, _o._accentColor), 1f))
+                            g.DrawEllipse(ap, avR);
+                        // Initial letter
+                        if (_o.F_Timestamp != null)
+                        {
+                            string init = _users[i].Length > 0 ? _users[i][0].ToString() : "؟";
+                            using var ib = new SolidBrush(_o._accentColor);
+                            var isf = new StringFormat
+                            { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
+                            g.DrawString(init, _o.F_Timestamp, ib, (RectangleF)avR, isf);
+                        }
+
+                        // ── Employee name ────────────────────────────────────
+                        if (_o.F_AttachName != null)
+                        {
+                            using var nb = new SolidBrush(_o._recvTextColor);
+                            var nsf = new StringFormat(StringFormatFlags.NoWrap)
+                            {
+                                Alignment = StringAlignment.Far,
+                                LineAlignment = StringAlignment.Center,
+                                Trimming = StringTrimming.EllipsisCharacter,
+                            };
+                            var nameR = new RectangleF(
+                                ir.X + 12, ir.Y,
+                                avR.X - ir.X - 18, ir.Height);
+                            g.DrawString(_users[i], _o.F_AttachName, nb, nameR, nsf);
+                        }
+
+                        // Item divider
+                        if (i < _users.Count - 1)
+                        {
+                            using var div = new Pen(Color.FromArgb(40, _o._borderColor), 1f);
+                            g.DrawLine(div, 14, ir.Bottom - 1, Width - 14, ir.Bottom - 1);
+                        }
+                    }
+
+                    // ── Scroll indicator (thin right-side bar) ───────────────
+                    if (MaxScroll > 0)
+                    {
+                        int listH = Height - HeaderH;
+                        float ratio = (float)listH / (_users.Count * ItemH);
+                        int barH = Math.Max(24, (int)(listH * ratio));
+                        int barY = HeaderH + (int)((float)_scrollOff / MaxScroll * (listH - barH));
+                        var barR = new Rectangle(Width - 5, barY, 3, barH);
+                        using var sb = new SolidBrush(Color.FromArgb(80, _o._accentColor));
+                        using var sp = MkRoundedPath(barR, 2);
+                        g.FillPath(sb, sp);
+                    }
+                }
+
+                g.ResetClip();
+            }
+
+            private static GraphicsPath MkRoundedPath(Rectangle r, int rad)
+            {
+                rad = Math.Max(1, Math.Min(rad, Math.Min(r.Width, r.Height) / 2));
+                int d = rad * 2;
+                var p = new GraphicsPath();
+                p.AddArc(r.X, r.Y, d, d, 180, 90);
+                p.AddArc(r.Right - d, r.Y, d, d, 270, 90);
+                p.AddArc(r.Right - d, r.Bottom - d, d, d, 0, 90);
+                p.AddArc(r.X, r.Bottom - d, d, d, 90, 90);
+                p.CloseFigure();
+                return p;
+            }
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -1264,12 +1736,10 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             HorizontalScroll.Enabled = false;
             HorizontalScroll.Visible = false;
             AutoScrollMargin = new Size(0, 0);
-            // ✅ الحل الجذري للفلكرة
             SetStyle(ControlStyles.OptimizedDoubleBuffer |
                      ControlStyles.AllPaintingInWmPaint, true);
         }
 
-        // ✅ يفعّل الرسم المركب على مستوى النافذة
         protected override CreateParams CreateParams
         {
             get
@@ -1280,18 +1750,15 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             }
         }
 
-
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
-            if (HorizontalScroll.Visible)
-                HorizontalScroll.Visible = false;
+            if (HorizontalScroll.Visible) HorizontalScroll.Visible = false;
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (HorizontalScroll.Visible)
-                HorizontalScroll.Visible = false;
+            if (HorizontalScroll.Visible) HorizontalScroll.Visible = false;
             base.OnPaint(e);
         }
     }
