@@ -125,7 +125,7 @@
     <value>..\Data\Icon\Customers Icon\home.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="sent1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\Icon\Froms Icon\sent1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\Data\Icon\Froms Icon\Sent.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="templates" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Froms Icon\templates.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -193,6 +193,9 @@
   <data name="user-group1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Customers Icon\user-group.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="add-f1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Customers Icon\add-f.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Show1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Customers Icon\Show1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -208,13 +211,16 @@
   <data name="refersh" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\refersh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Logo-Black1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Me\Logo-Black.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Sent" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Froms Icon\Sent.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="message" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Customers Icon\message.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Sent1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\Icon\Froms Icon\Sent.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Logo-Blue1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Me\Logo-Blue.jpeg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

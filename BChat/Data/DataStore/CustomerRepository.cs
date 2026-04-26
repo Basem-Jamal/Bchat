@@ -90,7 +90,11 @@ namespace BChat.Data.DataStore
                     try
                     {
                         int newId = Convert.ToInt32(cmd.ExecuteScalar());
+                        customer.Id = newId;              // ← أضف
+
                         AppEvents.ChangeRefreshCustomesTable();
+                        AppEvents.NotifyCustomerAdded(customer); // ← أضف
+
                         return newId;
 
                     }

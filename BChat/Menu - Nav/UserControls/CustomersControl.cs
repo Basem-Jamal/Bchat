@@ -135,7 +135,9 @@ namespace BChat.UserControls
 
                     AppCache.GroupMembers.RemoveAll (m => m.CustomerId == id);
                     AppCache.Customers.RemoveAll (c => c.Id == id);
-
+                    AppCache.ChatMessages.RemoveAll (c => c.Id == id);
+                    AppEvents.NotifyCustomerDeleted(id);
+                    
                     foreach (var groupId in oldGroupIds)
                     {
                         var group = AppCache.Groups.FirstOrDefault(g => g.Id == groupId);

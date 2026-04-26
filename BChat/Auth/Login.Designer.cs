@@ -39,13 +39,16 @@
             lbl1 = new ReaLTaiizor.Controls.BigLabel();
             btnLogin = new BChat.Controls.ModernButton();
             customPanel3 = new Car_Rental_System.CustomControls.CustomPanel();
+            pictureBox1 = new PictureBox();
             txtEmail = new BChat.Controls.ModernTextBox();
             ((System.ComponentModel.ISupportInitialize)picClose).BeginInit();
             customPanel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // guna2BorderlessForm1
             // 
+            guna2BorderlessForm1.AnimateWindow = true;
             guna2BorderlessForm1.BorderRadius = 45;
             guna2BorderlessForm1.ContainerControl = this;
             guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6D;
@@ -106,7 +109,7 @@
             txtPassword.FocusBorderColor = Color.FromArgb(124, 111, 247);
             txtPassword.Font = new Font("Microsoft Sans Serif", 12F);
             txtPassword.LabelText = "";
-            txtPassword.Location = new Point(238, 227);
+            txtPassword.Location = new Point(240, 269);
             txtPassword.MaxLength = 32767;
             txtPassword.Name = "txtPassword";
             txtPassword.PlaceholderText = "Password";
@@ -122,7 +125,7 @@
             lbl2.BackColor = Color.Transparent;
             lbl2.Font = new Font("Microsoft Sans Serif", 16F);
             lbl2.ForeColor = Color.FromArgb(80, 80, 80);
-            lbl2.Location = new Point(37, 227);
+            lbl2.Location = new Point(39, 269);
             lbl2.Name = "lbl2";
             lbl2.Size = new Size(108, 26);
             lbl2.TabIndex = 31;
@@ -134,7 +137,7 @@
             lbl1.BackColor = Color.Transparent;
             lbl1.Font = new Font("Microsoft Sans Serif", 16F);
             lbl1.ForeColor = Color.FromArgb(80, 80, 80);
-            lbl1.Location = new Point(37, 102);
+            lbl1.Location = new Point(39, 144);
             lbl1.Name = "lbl1";
             lbl1.Size = new Size(68, 26);
             lbl1.TabIndex = 30;
@@ -161,6 +164,7 @@
             customPanel3.BorderColor = Color.Transparent;
             customPanel3.BorderRadius = 15;
             customPanel3.BorderThickness = 1;
+            customPanel3.Controls.Add(pictureBox1);
             customPanel3.Controls.Add(txtEmail);
             customPanel3.Controls.Add(btnLogin);
             customPanel3.Controls.Add(txtPassword);
@@ -172,9 +176,20 @@
             customPanel3.Name = "customPanel3";
             customPanel3.ShadowColor = Color.Transparent;
             customPanel3.ShadowSize = 6;
-            customPanel3.Size = new Size(738, 467);
+            customPanel3.Size = new Size(738, 508);
             customPanel3.TabIndex = 29;
             customPanel3.UseShadow = true;
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.Cursor = Cursors.Hand;
+            pictureBox1.Image = Properties.Resources.Logo_Blue1;
+            pictureBox1.Location = new Point(339, 3);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(114, 109);
+            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox1.TabIndex = 30;
+            pictureBox1.TabStop = false;
             // 
             // txtEmail
             // 
@@ -185,7 +200,7 @@
             txtEmail.FocusBorderColor = Color.FromArgb(124, 111, 247);
             txtEmail.Font = new Font("Microsoft Sans Serif", 12F);
             txtEmail.LabelText = "";
-            txtEmail.Location = new Point(238, 102);
+            txtEmail.Location = new Point(240, 144);
             txtEmail.MaxLength = 32767;
             txtEmail.Name = "txtEmail";
             txtEmail.PlaceholderText = "Email";
@@ -213,6 +228,7 @@
             ((System.ComponentModel.ISupportInitialize)picClose).EndInit();
             customPanel3.ResumeLayout(false);
             customPanel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
 
@@ -228,5 +244,6 @@
         private ReaLTaiizor.Controls.BigLabel lbl1;
         private Controls.ModernButton btnLogin;
         private Car_Rental_System.CustomControls.CustomPanel customPanel3;
+        private PictureBox pictureBox1;
     }
 }

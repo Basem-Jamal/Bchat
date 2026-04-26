@@ -80,7 +80,7 @@
             // 
             // btnAddOrEditCustomerGroups
             // 
-            btnAddOrEditCustomerGroups.BackColor = Color.Transparent;
+            btnAddOrEditCustomerGroups.BackColor = SystemColors.ControlLightLight;
             btnAddOrEditCustomerGroups.BorderRadius = 23;
             btnAddOrEditCustomerGroups.Font = new Font("IBM Plex Sans Arabic", 12F, FontStyle.Bold);
             btnAddOrEditCustomerGroups.Icon = Properties.Resources.plus;
@@ -193,9 +193,10 @@
             // txbGroupDescription
             // 
             txbGroupDescription.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            txbGroupDescription.BackColor = Color.Transparent;
             txbGroupDescription.BackColorEx = Color.FromArgb(237, 235, 255);
+            txbGroupDescription.BorderColor = Color.FromArgb(220, 215, 250);
             txbGroupDescription.BorderRadius = 14;
+            txbGroupDescription.Direction = BChat.Controls.TextDirection.Auto;
             txbGroupDescription.FocusBorderColor = Color.FromArgb(124, 111, 247);
             txbGroupDescription.Font = new Font("IBM Plex Sans Arabic", 12F);
             txbGroupDescription.LabelText = "";
@@ -206,13 +207,16 @@
             txbGroupDescription.RightToLeft = RightToLeft.Yes;
             txbGroupDescription.Size = new Size(460, 95);
             txbGroupDescription.TabIndex = 2;
+            txbGroupDescription.TextPadding = 14;
+            txbGroupDescription.UsePasswordChar = false;
             // 
             // txbGroupName
             // 
             txbGroupName.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            txbGroupName.BackColor = Color.Transparent;
             txbGroupName.BackColorEx = Color.FromArgb(237, 235, 255);
+            txbGroupName.BorderColor = Color.FromArgb(220, 215, 250);
             txbGroupName.BorderRadius = 14;
+            txbGroupName.Direction = BChat.Controls.TextDirection.Auto;
             txbGroupName.FocusBorderColor = Color.FromArgb(124, 111, 247);
             txbGroupName.Font = new Font("IBM Plex Sans Arabic", 12F);
             txbGroupName.LabelText = "";
@@ -223,6 +227,8 @@
             txbGroupName.RightToLeft = RightToLeft.Yes;
             txbGroupName.Size = new Size(460, 58);
             txbGroupName.TabIndex = 1;
+            txbGroupName.TextPadding = 14;
+            txbGroupName.UsePasswordChar = false;
             // 
             // lblCustomerName
             // 

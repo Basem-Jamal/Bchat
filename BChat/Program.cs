@@ -48,10 +48,15 @@ namespace BChat
             //}
             //catch { /* تجاهل لو Port مشغول */ }
 
-            var Login = new Login();
-            if (Login.ShowDialog() == DialogResult.OK)
+            while (true)
             {
-                Application.Run(new Home());
+                using (var login = new Login())
+                {
+                    if (login.ShowDialog() != DialogResult.OK)
+                        break;
+                }
+                var home = new Home();
+                Application.Run(home);
 
             }
         }

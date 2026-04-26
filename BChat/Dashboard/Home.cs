@@ -1,3 +1,4 @@
+using BChat.Auth;
 using BChat.Controls;
 using BChat.Global;
 using BChat.Menu___Nav.Nav___Marketing;
@@ -50,7 +51,9 @@ namespace BChat
             ResetButtons();
             btnNavHome.IsActive = true;
 
-            pnlContent.Controls.Clear();
+            // أخفِ كل الكنترولات بدل حذفها
+            foreach (Control c in pnlContent.Controls)
+                c.Visible = false;
 
 
         }
@@ -60,6 +63,8 @@ namespace BChat
             ResetButtons();
             btnNavCustomers.IsActive = true;
 
+            foreach (Control c in pnlContent.Controls)
+                c.Visible = false;
 
             if (!pnlContent.Controls.ContainsKey("Customers_View"))
             {
@@ -68,7 +73,7 @@ namespace BChat
                 customersPage.Dock = DockStyle.Fill;
                 pnlContent.Controls.Add(customersPage);
             }
-
+            pnlContent.Controls["Customers_View"].Visible = true;
             pnlContent.Controls["Customers_View"].BringToFront();
 
         }
@@ -78,6 +83,9 @@ namespace BChat
             btnNavMessages.IsActive = true;
 
 
+            foreach (Control c in pnlContent.Controls)
+                c.Visible = false;
+
             if (!pnlContent.Controls.ContainsKey("Messages_View"))
             {
                 MessageControl messagesPage = new MessageControl();
@@ -86,6 +94,7 @@ namespace BChat
                 pnlContent.Controls.Add(messagesPage);
             }
 
+            pnlContent.Controls["Messages_View"].Visible = true;
             pnlContent.Controls["Messages_View"].BringToFront();
 
         }
@@ -152,7 +161,7 @@ namespace BChat
                 if (ctrl is BChat.Controls.ModernNavButton btn)
                 {
 
-                    btn.BaseBackground = Color.FromArgb(37, 43, 74);
+                    btn.BaseBackground = Color.FromName("MenuBar");
                     btn.NormalTextColor = Color.Gray;
                     btn.IsActive = false;
                 }
@@ -175,6 +184,9 @@ namespace BChat
             ResetButtons();
             btnNavCustomerGroups.IsActive = true;
 
+            foreach (Control c in pnlContent.Controls)
+                c.Visible = false;
+
 
             if (!pnlContent.Controls.ContainsKey("CustomerGroups_View"))
             {
@@ -184,6 +196,7 @@ namespace BChat
                 pnlContent.Controls.Add(customerGroupsPage);
             }
 
+            pnlContent.Controls["CustomerGroups_View"].Visible = true;
             pnlContent.Controls["CustomerGroups_View"].BringToFront();
 
         }
@@ -215,5 +228,12 @@ namespace BChat
 
             //pnlContent.Controls["MarketingAPI_View"].BringToFront();
         }
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            AppCache.CurrentUser = null;
+            this.Close(); // يرجع للـ Program ويعيد فتح Login
+        }
+    
     }
 }

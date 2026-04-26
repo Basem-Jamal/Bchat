@@ -1,6 +1,7 @@
 ﻿using BChat.Custom_Controal.Custom_Bchat.Message_Controls;
 using BChat.Data.DataStore;
 using BChat.Data.DataStore.Chat_Messages_DB;
+using BChat.Events;
 using BChat.Global;
 using BChat.Models;
 using BChat.WhatsApp;
@@ -27,6 +28,10 @@ namespace BChat.UserControls
         // ─── الخطوة 1: تحميل البيانات الحقيقية من AppCache ───────────────────
         private void LoadFromCache()
         {
+            AppEvents.CustomerAdded += OnCustomerAdded;
+
+            AppEvents.CustomerDeleted += OnCustomerDeleted;
+
             var agentName = AppCache.Users
                 .Where(u => u.Id != AppCache.CurrentUser?.Id)
                 .Select(u => u.Name ?? u.Email ?? "موظف")
@@ -101,6 +106,52 @@ namespace BChat.UserControls
 
         }
 
+        // تحديث قائمة الرسائل بعد اضافة العميل
+        private void OnCustomerAdded(Customer customer)
+        {
+            if (!IsHandleCreated) return;
+            this.Invoke((Action)(() =>
+            {
+                var newItem = new ChatListItemData
+                {
+                    ContactId = customer.Id,
+                    ContactName = customer.Name,
+                    LastMessage = "",
+                    Timestamp = "",
+                    IsOnline = false,
+                    UnreadCount = 0,
+                    IsGroup = false,
+                    IsLastMessageSent = false,
+                    LastMessageAt = DateTime.MinValue
+                };
+                _contactsMap[customer.Id] = newItem;
+
+                var chats = _contactsMap.Values
+                    .OrderByDescending(c => c.LastMessageAt)
+                    .ToList();
+                chatSidebar1.LoadChats(chats);
+            }));
+        }
+        // تحديث قائمة الرسائل بعد حذف العميل
+        private void OnCustomerDeleted(int customerId)
+        {
+            if (!IsHandleCreated) return;
+            this.Invoke((Action)(() =>
+            {
+                _contactsMap.Remove(customerId);
+
+                if (_activeContactId == customerId)
+                {
+                    _activeContactId = -1;
+                    chatConversation2.ClearMessages();
+                }
+
+                var chats = _contactsMap.Values
+                    .OrderByDescending(c => c.LastMessageAt)
+                    .ToList();
+                chatSidebar1.LoadChats(chats);
+            }));
+        }
         private void OnConversationTransferred(object sender, string agentName)
         {
             if (_activeContactId < 0) return;
@@ -345,6 +396,7 @@ namespace BChat.UserControls
             chatConversation2.AppendMessage(MapToUiMessage(dbMessage));
         }
         // ─── Mapper: ChatMessage (DB) → ChatMessageData (UI) ─────────────────
+
         private static ChatMessageData MapToUiMessage(ChatMessage m) => new()
         {
             MessageId = m.Id,
@@ -357,8 +409,15 @@ namespace BChat.UserControls
             AttachmentName = m.AttachmentName ?? "",
             AttachmentSize = FormatSize(m.AttachmentSize),
             AttachmentType = m.AttachmentType ?? "",
-        };
+            IsSystemMessage = m.Status == "system",
+            SentByName = m.SentByUserId.HasValue
+                ? AppCache.Users.FirstOrDefault(u => u.Id == m.SentByUserId)?.Name ?? ""
+                : "",
+            // ← أضف هذا
+            SenderName = AppCache.Customers
+                .FirstOrDefault(c => c.Id == m.CustomerId)?.Name ?? "",
 
+        };
         // ─── مساعدات ──────────────────────────────────────────────────────────
         private static string FormatTimestamp(DateTime dt)
         {

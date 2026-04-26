@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BChat.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,7 +23,23 @@ namespace BChat.Events
             OnRefreshTemplatesTable?.Invoke();
         }
 
+
+        // Message Action
         public static event Action OnRefreshMessagesTable;
+
+        public static event Action<Customer>? CustomerAdded;
+        public static void NotifyCustomerAdded(Customer customer)
+        {
+            CustomerAdded?.Invoke(customer);
+        }
+            
+
+        public static event Action<int>? CustomerDeleted;
+        public static void NotifyCustomerDeleted(int customerId)
+        {
+            CustomerDeleted?.Invoke(customerId);
+        }
+            
 
         public static void ChangeRefreshMessagesTable()
         {

@@ -17,6 +17,7 @@ namespace BChat.Models
         public string? AttachmentUrl { get; set; }
         public string? WhatsAppMessageId { get; set; }
         public string? Status { get; set; } = "pending";
+        public int? SentByUserId { get; set; }  // ← هنا
 
         // ── UI-Only (لا تُحفظ في DB) ──────────────────────────
         public string? SenderName { get; set; }        // يُملأ من Customer

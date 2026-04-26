@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pictureBox1 = new PictureBox();
             pnlContent = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             pnlContainer = new Car_Rental_System.CustomControls.CustomPanel();
@@ -54,32 +54,32 @@
             // pnlContent
             // 
             pnlContent.Controls.Add(pnlContainer);
-            pnlContent.CustomizableEdges = customizableEdges3;
+            pnlContent.CustomizableEdges = customizableEdges1;
             pnlContent.FillColor = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor2 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor3 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor4 = Color.FromArgb(248, 247, 255);
-            pnlContent.Location = new Point(0, 172);
+            pnlContent.Location = new Point(0, 139);
             pnlContent.Name = "pnlContent";
-            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges4;
-            pnlContent.Size = new Size(1312, 594);
+            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            pnlContent.Size = new Size(1315, 627);
             pnlContent.TabIndex = 13;
             // 
             // pnlContainer
             // 
             pnlContainer.BackColor = Color.White;
-            pnlContainer.BackColorEx = Color.FromArgb(245, 247, 255);
+            pnlContainer.BackColorEx = Color.White;
             pnlContainer.BorderColor = Color.LightGray;
             pnlContainer.BorderRadius = 10;
             pnlContainer.BorderThickness = 1;
             pnlContainer.Controls.Add(groupsWrapPanel);
             pnlContainer.Font = new Font("Segoe UI", 10F);
             pnlContainer.ForeColor = Color.Black;
-            pnlContainer.Location = new Point(3, 3);
+            pnlContainer.Location = new Point(3, 13);
             pnlContainer.Name = "pnlContainer";
             pnlContainer.ShadowColor = Color.FromArgb(80, 0, 0, 0);
             pnlContainer.ShadowSize = 6;
-            pnlContainer.Size = new Size(1306, 588);
+            pnlContainer.Size = new Size(1309, 611);
             pnlContainer.TabIndex = 4;
             pnlContainer.UseShadow = true;
             // 
@@ -90,15 +90,14 @@
             groupsWrapPanel.BackColor = Color.White;
             groupsWrapPanel.CardHeight = 260;
             groupsWrapPanel.CardWidth = 280;
-            groupsWrapPanel.Dock = DockStyle.Fill;
             groupsWrapPanel.HorizontalGap = 20;
-            groupsWrapPanel.Location = new Point(0, 0);
+            groupsWrapPanel.Location = new Point(6, 3);
             groupsWrapPanel.Name = "groupsWrapPanel";
             groupsWrapPanel.PanelPaddingH = 20;
             groupsWrapPanel.PanelPaddingV = 40;
             groupsWrapPanel.RightToLeft = RightToLeft.Yes;
             groupsWrapPanel.ShowAddCard = true;
-            groupsWrapPanel.Size = new Size(1306, 588);
+            groupsWrapPanel.Size = new Size(1289, 583);
             groupsWrapPanel.TabIndex = 1;
             groupsWrapPanel.VerticalGap = 16;
             groupsWrapPanel.CardDeleteClicked += groupsWrapPanel_CardDeleteClicked;

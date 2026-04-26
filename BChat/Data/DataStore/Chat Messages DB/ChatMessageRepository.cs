@@ -24,8 +24,8 @@ namespace BChat.Data.DataStore
                 conn.Open();
 
                 string query = @"SELECT Id, CustomerId, Text, SentAt, IsSent, IsRead, 
-                                        HasAttachment, AttachmentName, AttachmentSize, 
-                                        AttachmentType, AttachmentUrl, WhatsAppMessageId, Status
+                                    HasAttachment, AttachmentName, AttachmentSize, 
+                                    AttachmentType, AttachmentUrl, WhatsAppMessageId, Status, SentByUserId
                                 FROM ChatMessage
                                 ORDER BY SentAt ASC";
 
@@ -51,9 +51,9 @@ namespace BChat.Data.DataStore
             {
                 conn.Open();
 
-                string query = @"SELECT Id, CustomerId, Text, SentAt, IsSent, IsRead,
-                                        HasAttachment, AttachmentName, AttachmentSize,
-                                        AttachmentType, AttachmentUrl, WhatsAppMessageId, Status
+                string query = @"SELECT Id, CustomerId, Text, SentAt, IsSent, IsRead, 
+                                    HasAttachment, AttachmentName, AttachmentSize, 
+                                    AttachmentType, AttachmentUrl, WhatsAppMessageId, Status, SentByUserId
                                  FROM ChatMessage
                                  WHERE CustomerId = @CustomerId
                                  ORDER BY SentAt ASC";
@@ -83,13 +83,13 @@ namespace BChat.Data.DataStore
 
                 string query = @"INSERT INTO ChatMessage
 
-                                    (CustomerId, Text, SentAt, IsSent, IsRead,
+                                  (CustomerId, Text, SentAt, IsSent, IsRead,
                                      HasAttachment, AttachmentName, AttachmentSize,
-                                     AttachmentType, AttachmentUrl, WhatsAppMessageId, Status)
-                                 VALUES
+                                     AttachmentType, AttachmentUrl, WhatsAppMessageId, Status, SentByUserId)
+                                    VALUES
                                     (@CustomerId, @Text, @SentAt, @IsSent, @IsRead,
                                      @HasAttachment, @AttachmentName, @AttachmentSize,
-                                     @AttachmentType, @AttachmentUrl, @WhatsAppMessageId, @Status);
+                                     @AttachmentType, @AttachmentUrl, @WhatsAppMessageId, @Status, @SentByUserId);
                                  SELECT SCOPE_IDENTITY()";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -159,7 +159,9 @@ namespace BChat.Data.DataStore
                 AttachmentType = r.IsDBNull(9) ? null : r.GetString(9),
                 AttachmentUrl = r.IsDBNull(10) ? null : r.GetString(10),
                 WhatsAppMessageId = r.IsDBNull(11) ? null : r.GetString(11),
-                Status = r.IsDBNull(12) ? null : r.GetString(12)
+                Status = r.IsDBNull(12) ? null : r.GetString(12),
+                SentByUserId = r.IsDBNull(13) ? null : r.GetInt32(13)
+
             };
 
 
@@ -179,6 +181,8 @@ namespace BChat.Data.DataStore
             cmd.Parameters.AddWithValue("@AttachmentUrl", (object?)msg.AttachmentUrl ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@WhatsAppMessageId", (object?)msg.WhatsAppMessageId ?? DBNull.Value);
             cmd.Parameters.AddWithValue("@Status", (object?)msg.Status ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@SentByUserId", (object?)msg.SentByUserId ?? DBNull.Value);
+
         }
 
 
