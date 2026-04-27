@@ -17,6 +17,7 @@ namespace BChat.WhatsApp
     /// </summary>
     public class WebhookRegistrationService : IDisposable
     {
+        int test = 0;
         private readonly string _webhookServerUrl;
         private readonly HttpClient _httpClient;
         private readonly string _localIp;

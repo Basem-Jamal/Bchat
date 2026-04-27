@@ -3,9 +3,6 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Net.NetworkInformation;
-using System.Net.Sockets;
-using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,10 +15,10 @@ namespace BChat.WhatsApp
         private readonly HttpListener _listener;
         private CancellationTokenSource _cts;
 
-        // ── التسجيل في webhook server ──────────────────
-        private readonly HttpClient _httpClient = new() { Timeout = TimeSpan.FromSeconds(5) };
+        // ── Polling ────────────────────────────────────
+        private readonly HttpClient _httpClient = new() { Timeout = TimeSpan.FromSeconds(10) };
         private readonly string _webhookServerUrl = "https://basemMetaWhatsapp.basemn8n.qzz.io";
-        private Timer? _heartbeatTimer;
+        private Timer? _pollTimer;
 
         public event Action<IncomingWhatsAppMessage>? MessageReceived;
 
@@ -37,85 +34,58 @@ namespace BChat.WhatsApp
             _listener.Start();
             Task.Run(() => ListenLoop(_cts.Token));
 
-            // سجّل هذا الجهاز في webhook server
-            _ = RegisterDeviceAsync();
+            // ابدأ الـ polling كل 3 ثواني
+            _pollTimer = new Timer(
+                async _ => await PollMessagesAsync(),
+                null,
+                TimeSpan.FromSeconds(3),
+                TimeSpan.FromSeconds(3));
+
+            System.Diagnostics.Debug.WriteLine("✅ Polling started");
         }
 
         public void Stop()
         {
+            _pollTimer?.Dispose();
             _cts?.Cancel();
             _listener?.Stop();
-
-            // الغِ التسجيل عند الإغلاق
-            _ = UnregisterDeviceAsync();
         }
 
-        // ── Register / Unregister ──────────────────────
-        private async Task RegisterDeviceAsync()
+        // ── Polling: يسأل كل 3 ثواني ──────────────────
+        private async Task PollMessagesAsync()
         {
             try
             {
-                var ip = GetLocalIpAddress();
-                var body = new StringContent(
-                    JsonSerializer.Serialize(new { ip }),
-                    Encoding.UTF8, "application/json");
+                var response = await _httpClient.GetStringAsync(
+                    $"{_webhookServerUrl}/api/messages/pending");
 
-                await _httpClient.PostAsync($"{_webhookServerUrl}/api/register", body);
-                System.Diagnostics.Debug.WriteLine($"✅ Registered device: {ip}");
+                var messages = JsonSerializer.Deserialize<PendingMessage[]>(response,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                // Heartbeat كل دقيقتين
-                _heartbeatTimer = new Timer(
-                    async _ => await RegisterDeviceAsync(),
-                    null,
-                    TimeSpan.FromMinutes(2),
-                    TimeSpan.FromMinutes(2));
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"⚠️ Registration failed: {ex.Message}");
-            }
-        }
+                if (messages == null || messages.Length == 0) return;
 
-        private async Task UnregisterDeviceAsync()
-        {
-            try
-            {
-                _heartbeatTimer?.Dispose();
-                var ip = GetLocalIpAddress();
-                var body = new StringContent(
-                    JsonSerializer.Serialize(new { ip }),
-                    Encoding.UTF8, "application/json");
-
-                await _httpClient.PostAsync($"{_webhookServerUrl}/api/unregister", body);
-                System.Diagnostics.Debug.WriteLine($"🔴 Unregistered device: {ip}");
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"⚠️ Unregister failed: {ex.Message}");
-            }
-        }
-
-        private static string GetLocalIpAddress()
-        {
-            foreach (var ni in NetworkInterface.GetAllNetworkInterfaces())
-            {
-                if (ni.OperationalStatus != OperationalStatus.Up) continue;
-                if (ni.NetworkInterfaceType == NetworkInterfaceType.Loopback) continue;
-
-                foreach (var addr in ni.GetIPProperties().UnicastAddresses)
+                foreach (var m in messages)
                 {
-                    if (addr.Address.AddressFamily == AddressFamily.InterNetwork)
+                    var msg = new IncomingWhatsAppMessage
                     {
-                        var ip = addr.Address.ToString();
-                        if (ip.StartsWith("192.168.") || ip.StartsWith("10."))
-                            return ip;
-                    }
+                        Phone = m.Phone ?? "",
+                        SenderName = m.Sender_Name ?? "",
+                        Text = m.Message_Text ?? "",
+                        WhatsAppMessageId = m.Whatsapp_Message_Id ?? "",
+                        SentAt = m.Received_At,
+                    };
+
+                    System.Diagnostics.Debug.WriteLine($"📩 Polled: {msg.SenderName} - {msg.Text}");
+                    MessageReceived?.Invoke(msg);
                 }
             }
-            return "127.0.0.1";
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"⚠️ Poll failed: {ex.Message}");
+            }
         }
 
-        // ── Listen Loop ────────────────────────────────
+        // ── Listen Loop (للـ BChat Webhook المحلي) ────
         private async Task ListenLoop(CancellationToken token)
         {
             while (!token.IsCancellationRequested)
@@ -228,7 +198,6 @@ namespace BChat.WhatsApp
             {
                 context.Response.StatusCode = 403;
                 context.Response.Close();
-                System.Diagnostics.Debug.WriteLine("❌ Meta Verification Failed!");
             }
         }
 
@@ -282,6 +251,17 @@ namespace BChat.WhatsApp
                     System.Diagnostics.Debug.WriteLine($"❌ Meta Parse Error: {ex.Message}");
                 }
             });
+        }
+
+        // ── Model للـ Polling ──────────────────────────
+        private class PendingMessage
+        {
+            public int Id { get; set; }
+            public string? Phone { get; set; }
+            public string? Sender_Name { get; set; }
+            public string? Message_Text { get; set; }
+            public string? Whatsapp_Message_Id { get; set; }
+            public DateTime Received_At { get; set; }
         }
     }
 
