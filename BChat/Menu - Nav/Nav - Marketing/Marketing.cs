@@ -1,5 +1,6 @@
 ﻿using BChat.Controls;
 using BChat.Menu___Nav.Nav___Marketing.Settings.ApiSettings;
+using BChat.Menu___Nav.Nav___Marketing.Settings.User_Settings;
 using BChat.UserControls;
 using System;
 using System.Collections.Generic;
@@ -70,10 +71,31 @@ namespace BChat.Menu___Nav.Nav___Marketing
             var mainForm = this.FindForm();
             var overlay = OverlayPanel.Show(mainForm);
 
+            UserSettings userSettings = new UserSettings();
+            userSettings.ShowDialog();
+
+            overlay.Close(userSettings);
+        }
+
+        private void btnNavAPIs_Click(object sender, EventArgs e)
+        {
+            ResetButtons();
+
+            btnNavAPIs.IsActive = true;
+
+            var mainForm = this.FindForm();
+            var overlay = OverlayPanel.Show(mainForm);
+
             ApiSettings apiSettings = new ApiSettings();
             apiSettings.ShowDialog();
 
             overlay.Close(apiSettings);
+
+        }
+
+        private void btnNavHome_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

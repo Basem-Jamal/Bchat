@@ -1,25 +1,14 @@
 // =====================================================================
-//  GradientPanel.cs — v5 (Transparent Children Fixed)
-//  ✅ لا يحتاج System.Design.dll
-//  ✅ Gradient قابل للتخصيص من Designer
-//  ✅ Shadow ناعم من كل الاتجاهات
-//  ✅ Glassmorphism shimmer layer
-//  ✅ Hover Glow effect
-//  ✅ Drag & Drop في Designer بدون أخطاء
+//  GradientPanel.cs — v8 (Definitive Border Fix)
 //
-//  ✅ FIX v5: الأبناء الشفافين يرون الـ Gradient صح
-//  ─────────────────────────────────────────────────
-//  المشكلة السابقة:
-//    OnPaintBackground كانت فارغة.
-//    الأبناء ذوو BackColor=Transparent يطلبون من
-//    الـ Parent خلفيته عبر OnPaintBackground →
-//    يحصلون على لا شيء → يظهرون خلفية جدّ الـ Parent.
-//
-//  الحل:
-//    OnPaintBackground ترسم الـ Gradient الآن.
-//    OnPaint يعيد رسم الـ Gradient + Shadow + Shimmer + Border.
-//    مع OptimizedDoubleBuffer كلاهما يذهبان لنفس
-//    الـ BackBuffer → لا فلكيرينج.
+//  ✅ [FIX] إزالة WM_NCCALCSIZE (كان يسبب مشكلة في v7)
+//  ✅ [FIX] WM_ERASEBKGND مُعطّل — يمنع مسح الخلفية بالأبيض
+//  ✅ [FIX] WM_NCPAINT مُعطّل — يمنع رسم Non-Client border
+//  ✅ [FIX] CreateParams — إزالة كل Border styles من Win32
+//  ✅ [FIX] OnPaint يُعيد رسم الخلفية الخارجية أولاً قبل كل شيء
+//  ✅ Shadow ناعم Gaussian-like falloff
+//  ✅ Padding تلقائي + Shimmer + Glass Border
+//  ✅ الأبناء الشفافون يرون الـ Gradient
 // =====================================================================
 
 using System;
@@ -32,24 +21,82 @@ namespace BChat
 {
     [ToolboxItem(true)]
     [DefaultProperty("GradientStartColor")]
-    [Description("بانل عصري مع Gradient وShadow من كل الاتجاهات")]
+    [Description("بانل عصري مع Gradient وShadow ناعم وتأثيرات Glassmorphism")]
     public class GradientPanel : Panel
     {
         // ─────────────────────────────────────────
         //  Private Fields
         // ─────────────────────────────────────────
-        private Color _gradientStart   = Color.FromArgb(56, 203, 180);
-        private Color _gradientEnd     = Color.FromArgb(35, 120, 220);
-        private Color _gradientMid     = Color.Empty;
-        private float _gradientAngle   = 135f;
-        private bool  _useThreeColors  = false;
-        private Color _shadowColor     = Color.FromArgb(90, 35, 120, 220);
-        private int   _shadowRadius    = 18;
-        private bool  _hoverGlow       = true;
-        private Color _hoverGlowColor  = Color.FromArgb(140, 56, 203, 180);
-        private int   _hoverGlowRadius = 26;
-        private int   _cornerRadius    = 22;
-        private bool  _isHovered       = false;
+        private Color _gradientStart = Color.FromArgb(56, 203, 180);
+        private Color _gradientEnd = Color.FromArgb(35, 120, 220);
+        private Color _gradientMid = Color.Empty;
+        private float _gradientAngle = 135f;
+        private bool _useThreeColors = false;
+        private int _cornerRadius = 22;
+
+        private bool _showShadow = true;
+        private Color _shadowColor = Color.FromArgb(80, 20, 80, 180);
+        private int _shadowRadius = 18;
+        private int _shadowOffsetX = 0;
+        private int _shadowOffsetY = 4;
+
+        private bool _hoverGlow = true;
+        private Color _hoverGlowColor = Color.FromArgb(120, 56, 203, 180);
+        private int _hoverGlowRadius = 24;
+
+        private bool _showShimmer = true;
+        private int _shimmerOpacity = 40;
+
+        private bool _showGlassBorder = true;
+        private int _glassBorderAlpha = 45;
+
+        private bool _isHovered = false;
+
+        // ─────────────────────────────────────────
+        //  Win32 Message IDs
+        // ─────────────────────────────────────────
+        private const int WM_NCPAINT = 0x0085;
+        private const int WM_ERASEBKGND = 0x0014;
+
+        // ─────────────────────────────────────────
+        //  ✅ FIX 1: CreateParams — إزالة كل Border من Win32 Level
+        // ─────────────────────────────────────────
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.Style &= ~0x00800000; // WS_BORDER
+                cp.ExStyle &= ~0x00000200; // WS_EX_CLIENTEDGE  (3D sunken border)
+                cp.ExStyle &= ~0x00020000; // WS_EX_STATICEDGE
+                cp.ExStyle &= ~0x00000001; // WS_EX_DLGMODALFRAME
+                return cp;
+            }
+        }
+
+        // ─────────────────────────────────────────
+        //  ✅ FIX 2: WndProc
+        //  - WM_NCPAINT    → منع رسم الحد في Non-Client Area
+        //  - WM_ERASEBKGND → منع Windows من مسح الخلفية بلون أبيض
+        //  ❌ لا نعترض WM_NCCALCSIZE (كان يسبب مشكلة في v7)
+        // ─────────────────────────────────────────
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == WM_NCPAINT)
+            {
+                m.Result = IntPtr.Zero;
+                return;
+            }
+
+            if (m.Msg == WM_ERASEBKGND)
+            {
+                // نخبر Windows أننا معالجون الخلفية بأنفسنا
+                m.Result = new IntPtr(1);
+                return;
+            }
+
+            base.WndProc(ref m);
+        }
 
         // ─────────────────────────────────────────
         //  Constructor
@@ -57,44 +104,52 @@ namespace BChat
         public GradientPanel()
         {
             SetStyle(
-                ControlStyles.UserPaint             |
-                ControlStyles.ResizeRedraw          |
-                ControlStyles.AllPaintingInWmPaint  |
+                ControlStyles.UserPaint |
+                ControlStyles.ResizeRedraw |
+                ControlStyles.AllPaintingInWmPaint |
                 ControlStyles.OptimizedDoubleBuffer |
                 ControlStyles.SupportsTransparentBackColor,
                 true);
 
+            UpdateStyles();
+
             BackColor = Color.Transparent;
-            Size      = new Size(300, 200);
+            BorderStyle = BorderStyle.None;
+            Size = new Size(300, 200);
+
+            UpdatePadding();
         }
 
         // ─────────────────────────────────────────
-        //  ✅ FIX: OnPaintBackground ترسم الـ Gradient
-        //
-        //  هذا هو سبب المشكلة السابقة:
-        //  كانت فارغة → أبناء Transparent لا يرون شيئاً.
-        //
-        //  الآن: ترسم Parent bg + Gradient في الـ BackBuffer.
-        //  الأبناء الشفافون يطلبون OnPaintBackground فيحصلون
-        //  على الـ Gradient الصحيح.
+        //  UpdatePadding
+        // ─────────────────────────────────────────
+        private void UpdatePadding()
+        {
+            int sr = _showShadow ? _shadowRadius : 4;
+            int ox = Math.Abs(_shadowOffsetX);
+            int oy = Math.Abs(_shadowOffsetY);
+
+            Padding = new Padding(
+                Math.Max(sr + (_shadowOffsetX < 0 ? ox : 0), 6),
+                Math.Max(sr + (_shadowOffsetY < 0 ? oy : 0), 6),
+                Math.Max(sr + (_shadowOffsetX > 0 ? ox : 0), 6),
+                Math.Max(sr + (_shadowOffsetY > 0 ? oy : 0), 6));
+        }
+
+        // ─────────────────────────────────────────
+        //  OnPaintBackground — الأبناء الشفافون يرون الـ Gradient
         // ─────────────────────────────────────────
         protected override void OnPaintBackground(PaintEventArgs e)
         {
-            // لا نستدعي base — نرسم بأنفسنا
+            // ❌ لا نستدعي base — نرسم كل شيء بأنفسنا
             var g = e.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
-            // ① مسح المنطقة الخارجية (خلف الـ Shadow وزوايا الـ Gradient)
-            Color outerBg = Parent?.BackColor ?? SystemColors.Control;
-            // إذا الـ Parent نفسه شفاف، نمشي للأعلى
-            if (outerBg == Color.Transparent || outerBg.A == 0)
-                outerBg = GetSolidAncestorColor();
+            Color outerBg = GetSolidAncestorColor();
             using (var brush = new SolidBrush(outerBg))
                 g.FillRectangle(brush, ClientRectangle);
 
-            // ② رسم الـ Gradient داخل الـ Rounded Rect
-            int       sr = DesignMode ? 4 : _shadowRadius;
-            Rectangle rc = new Rectangle(sr, sr, Width - sr * 2 - 1, Height - sr * 2 - 1);
+            Rectangle rc = GetCardRect();
             if (rc.Width <= 0 || rc.Height <= 0) return;
 
             using (var path = RoundedRect(rc, _cornerRadius))
@@ -106,7 +161,165 @@ namespace BChat
         }
 
         // ─────────────────────────────────────────
-        //  OnControlAdded — تطبيق الشفافية على الأبناء
+        //  OnPaint
+        // ─────────────────────────────────────────
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+            Rectangle rc = GetCardRect();
+            if (rc.Width <= 0 || rc.Height <= 0) { base.OnPaint(e); return; }
+
+            // ✅ أولاً: ملء كامل مساحة الكنترول بلون الـ Parent
+            // هذا يمنع ظهور أي بقايا أو artifacts على الحواف
+            Color outerBg = GetSolidAncestorColor();
+            using (var brush = new SolidBrush(outerBg))
+                g.FillRectangle(brush, ClientRectangle);
+
+            // ② Shadow / Glow
+            if (_showShadow)
+            {
+                bool hov = _isHovered && _hoverGlow && !DesignMode;
+                Color glowC = hov ? _hoverGlowColor : _shadowColor;
+                int glowR = hov ? _hoverGlowRadius : _shadowRadius;
+                PaintShadow(g, rc, glowC, DesignMode ? 4 : glowR);
+            }
+
+            // ③ Gradient + Shimmer + Glass Border
+            using (var path = RoundedRect(rc, _cornerRadius))
+            {
+                g.SetClip(path);
+                PaintGradient(g, rc);
+
+                if (_showShimmer && _shimmerOpacity > 0)
+                    PaintShimmer(g, rc);
+
+                g.ResetClip();
+
+                if (_showGlassBorder && _glassBorderAlpha > 0)
+                    using (var pen = new Pen(Color.FromArgb(_glassBorderAlpha, 255, 255, 255), 1.2f))
+                        g.DrawPath(pen, path);
+            }
+
+            base.OnPaint(e);
+        }
+
+        // ─────────────────────────────────────────
+        //  Gradient Renderer
+        // ─────────────────────────────────────────
+        private void PaintGradient(Graphics g, Rectangle rc)
+        {
+            if (rc.Width <= 0 || rc.Height <= 0) return;
+            Rectangle inf = Rectangle.Inflate(rc, 2, 2);
+
+            if (_useThreeColors && _gradientMid != Color.Empty)
+            {
+                int h2 = Math.Max(1, rc.Height / 2);
+                var top = new Rectangle(rc.X, rc.Y, rc.Width, h2 + 1);
+                var bot = new Rectangle(rc.X, rc.Y + h2, rc.Width, Math.Max(1, rc.Height - h2));
+
+                if (top.Height > 0)
+                    using (var lg1 = new LinearGradientBrush(top, _gradientStart, _gradientMid, _gradientAngle))
+                        g.FillRectangle(lg1, top);
+
+                if (bot.Height > 0)
+                    using (var lg2 = new LinearGradientBrush(bot, _gradientMid, _gradientEnd, _gradientAngle))
+                        g.FillRectangle(lg2, bot);
+            }
+            else
+            {
+                try
+                {
+                    using (var lg = new LinearGradientBrush(inf, _gradientStart, _gradientEnd, _gradientAngle))
+                    {
+                        lg.InterpolationColors = new ColorBlend(3)
+                        {
+                            Colors = new[] { _gradientStart, BlendColor(_gradientStart, _gradientEnd, 0.42f), _gradientEnd },
+                            Positions = new[] { 0f, 0.5f, 1f }
+                        };
+                        g.FillRectangle(lg, rc);
+                    }
+                }
+                catch
+                {
+                    using (var lg = new LinearGradientBrush(inf, _gradientStart, _gradientEnd, _gradientAngle))
+                        g.FillRectangle(lg, rc);
+                }
+            }
+        }
+
+        // ─────────────────────────────────────────
+        //  Shimmer
+        // ─────────────────────────────────────────
+        private void PaintShimmer(Graphics g, Rectangle rc)
+        {
+            int shimH = Math.Max(1, rc.Height * 2 / 5);
+            var shimR = new Rectangle(rc.X, rc.Y, rc.Width, shimH);
+
+            using (var lg = new LinearGradientBrush(
+                new Rectangle(shimR.X, shimR.Y, shimR.Width, shimR.Height + 1),
+                Color.FromArgb(Math.Min(255, _shimmerOpacity), 255, 255, 255),
+                Color.FromArgb(0, 255, 255, 255),
+                LinearGradientMode.Vertical))
+            {
+                lg.SetSigmaBellShape(0.4f, 0.9f);
+                g.FillRectangle(lg, shimR);
+            }
+        }
+
+        // ─────────────────────────────────────────
+        //  Shadow
+        // ─────────────────────────────────────────
+        private void PaintShadow(Graphics g, Rectangle card, Color clr, int radius)
+        {
+            if (radius <= 0 || clr.A == 0) return;
+
+            int ox = DesignMode ? 0 : _shadowOffsetX;
+            int oy = DesignMode ? 0 : _shadowOffsetY;
+
+            for (int i = radius; i >= 1; i--)
+            {
+                float t = (float)i / radius;
+                int alpha = (int)(clr.A * (1f - t * t) * 0.75f);
+                if (alpha <= 0) continue;
+
+                var sr = new Rectangle(
+                    card.Left - i + ox, card.Top - i + oy,
+                    card.Width + i * 2, card.Height + i * 2);
+
+                int cr = Math.Min(_cornerRadius + i, Math.Min(sr.Width, sr.Height) / 2);
+
+                using (var sp = RoundedRect(sr, cr))
+                using (var sb = new SolidBrush(Color.FromArgb(Math.Min(255, alpha), clr.R, clr.G, clr.B)))
+                    g.FillPath(sb, sp);
+            }
+        }
+
+        // ─────────────────────────────────────────
+        //  GetCardRect
+        // ─────────────────────────────────────────
+        private Rectangle GetCardRect()
+        {
+            int sr = DesignMode ? 4 : (_showShadow ? _shadowRadius : 4);
+            int ox = DesignMode ? 0 : _shadowOffsetX;
+            int oy = DesignMode ? 0 : _shadowOffsetY;
+
+            int left = sr + Math.Max(0, -ox);
+            int top = sr + Math.Max(0, -oy);
+            int right = sr + Math.Max(0, ox);
+            int bottom = sr + Math.Max(0, oy);
+
+            return new Rectangle(
+                left, top,
+                Math.Max(1, Width - left - right - 1),
+                Math.Max(1, Height - top - bottom - 1));
+        }
+
+        // ─────────────────────────────────────────
+        //  OnControlAdded
         // ─────────────────────────────────────────
         protected override void OnControlAdded(ControlEventArgs e)
         {
@@ -119,74 +332,30 @@ namespace BChat
             if (ctrl is ButtonBase btn)
             {
                 if (btn.FlatStyle != FlatStyle.Flat && btn.FlatStyle != FlatStyle.Popup)
-                {
-                    btn.FlatStyle = FlatStyle.Flat;
-                    btn.FlatAppearance.BorderSize = 0;
-                }
+                { btn.FlatStyle = FlatStyle.Flat; btn.FlatAppearance.BorderSize = 0; }
                 if (btn.BackColor == SystemColors.Control || btn.BackColor == SystemColors.ButtonFace)
                     btn.BackColor = Color.Transparent;
             }
-            else if (ctrl is Label lbl)    { lbl.BackColor = Color.Transparent; }
-            else if (ctrl is PictureBox pb) { pb.BackColor  = Color.Transparent; }
+            else if (ctrl is Label lbl) { lbl.BackColor = Color.Transparent; }
+            else if (ctrl is PictureBox pb) { pb.BackColor = Color.Transparent; }
             else
             {
                 ctrl.SetStyle_IfSupported(ControlStyles.SupportsTransparentBackColor, true);
                 if (ctrl.BackColor == SystemColors.Control)
                     ctrl.BackColor = Color.Transparent;
             }
-
             foreach (Control child in ctrl.Controls)
                 ApplyTransparency(child);
         }
 
         // ─────────────────────────────────────────
-        //  Gradient Properties
-        // ─────────────────────────────────────────
-        [Category("✦ Gradient")] [Description("لون بداية الجراديينت")]
-        public Color GradientStartColor { get => _gradientStart; set { _gradientStart = value; Invalidate(); } }
-
-        [Category("✦ Gradient")] [Description("لون نهاية الجراديينت")]
-        public Color GradientEndColor   { get => _gradientEnd;   set { _gradientEnd   = value; Invalidate(); } }
-
-        [Category("✦ Gradient")] [Description("لون وسط اختياري — يعمل مع UseThreeColors = true")]
-        public Color GradientMidColor   { get => _gradientMid;   set { _gradientMid   = value; Invalidate(); } }
-
-        [Category("✦ Gradient")] [DefaultValue(false)] [Description("فعّل ثلاثة ألوان في الجراديينت")]
-        public bool UseThreeColors { get => _useThreeColors; set { _useThreeColors = value; Invalidate(); } }
-
-        [Category("✦ Gradient")] [DefaultValue(135f)] [Description("زاوية الجراديينت: 0=أفقي | 90=عمودي | 135=قطري")]
-        public float GradientAngle { get => _gradientAngle; set { _gradientAngle = value % 360f; Invalidate(); } }
-
-        [Category("✦ Gradient")] [DefaultValue(22)] [Description("نصف قطر الزوايا المدورة")]
-        public int CornerRadius { get => _cornerRadius; set { _cornerRadius = Math.Max(0, value); Invalidate(); } }
-
-        // ─────────────────────────────────────────
-        //  Shadow Properties
-        // ─────────────────────────────────────────
-        [Category("✦ Shadow")] [Description("لون الظل — Alpha يتحكم في الكثافة")]
-        public Color ShadowColor { get => _shadowColor; set { _shadowColor = value; Invalidate(); } }
-
-        [Category("✦ Shadow")] [DefaultValue(18)] [Description("نصف قطر الظل")]
-        public int ShadowRadius { get => _shadowRadius; set { _shadowRadius = Math.Max(0, value); Invalidate(); } }
-
-        [Category("✦ Shadow")] [DefaultValue(true)] [Description("تأثير Glow عند تمرير الماوس")]
-        public bool HoverGlow { get => _hoverGlow; set { _hoverGlow = value; Invalidate(); } }
-
-        [Category("✦ Shadow")] [Description("لون Glow عند Hover")]
-        public Color HoverGlowColor { get => _hoverGlowColor; set { _hoverGlowColor = value; Invalidate(); } }
-
-        [Category("✦ Shadow")] [DefaultValue(26)] [Description("حجم Glow عند Hover")]
-        public int HoverGlowRadius { get => _hoverGlowRadius; set { _hoverGlowRadius = Math.Max(0, value); Invalidate(); } }
-
-        // ─────────────────────────────────────────
-        //  Mouse — Hover Glow
+        //  Mouse Events
         // ─────────────────────────────────────────
         protected override void OnMouseEnter(EventArgs e)
         {
             if (!DesignMode) { _isHovered = true; Invalidate(); }
             base.OnMouseEnter(e);
         }
-
         protected override void OnMouseLeave(EventArgs e)
         {
             if (!DesignMode && !ClientRectangle.Contains(PointToClient(MousePosition)))
@@ -195,104 +364,92 @@ namespace BChat
         }
 
         // ─────────────────────────────────────────
-        //  OnPaint — Shadow + Gradient + Shimmer + Border + Children
-        //
-        //  نعيد رسم الـ Gradient هنا لأن Shadow قد يرسم فوقه.
-        //  مع OptimizedDoubleBuffer كل هذا في BackBuffer واحد.
+        //  Properties
         // ─────────────────────────────────────────
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            Graphics g = e.Graphics;
-            g.SmoothingMode     = SmoothingMode.AntiAlias;
-            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            g.PixelOffsetMode   = PixelOffsetMode.HighQuality;
+        [Category("✦ Gradient")]
+        [Description("لون بداية الجراديينت")]
+        public Color GradientStartColor { get => _gradientStart; set { _gradientStart = value; Invalidate(); } }
 
-            int       sr = DesignMode ? 4 : _shadowRadius;
-            Rectangle rc = new Rectangle(sr, sr, Width - sr * 2 - 1, Height - sr * 2 - 1);
-            if (rc.Width <= 0 || rc.Height <= 0) { base.OnPaint(e); return; }
+        [Category("✦ Gradient")]
+        [Description("لون نهاية الجراديينت")]
+        public Color GradientEndColor { get => _gradientEnd; set { _gradientEnd = value; Invalidate(); } }
 
-            // ① Shadow / Glow
-            Color glowC = (_isHovered && _hoverGlow) ? _hoverGlowColor : _shadowColor;
-            int   glowR = (_isHovered && _hoverGlow) ? _hoverGlowRadius : _shadowRadius;
-            PaintShadow(g, rc, glowC, DesignMode ? 4 : glowR);
+        [Category("✦ Gradient")]
+        [Description("لون وسط اختياري")]
+        public Color GradientMidColor { get => _gradientMid; set { _gradientMid = value; Invalidate(); } }
 
-            // ② Gradient (يُعاد رسمه فوق الـ Shadow)
-            using (GraphicsPath path = RoundedRect(rc, _cornerRadius))
-            {
-                g.SetClip(path);
-                PaintGradient(g, rc);
+        [Category("✦ Gradient")]
+        [DefaultValue(false)]
+        [Description("ثلاثة ألوان")]
+        public bool UseThreeColors { get => _useThreeColors; set { _useThreeColors = value; Invalidate(); } }
 
-                // ③ Glassmorphism shimmer
-                Rectangle shimmer = new Rectangle(rc.X, rc.Y, rc.Width, rc.Height / 3);
-                if (shimmer.Height > 0)
-                {
-                    using (var sg = new LinearGradientBrush(shimmer,
-                        Color.FromArgb(50, 255, 255, 255),
-                        Color.FromArgb(0,  255, 255, 255), 90f))
-                        g.FillRectangle(sg, shimmer);
-                }
+        [Category("✦ Gradient")]
+        [DefaultValue(135f)]
+        [Description("زاوية الجراديينت")]
+        public float GradientAngle { get => _gradientAngle; set { _gradientAngle = value % 360f; Invalidate(); } }
 
-                g.ResetClip();
+        [Category("✦ Gradient")]
+        [DefaultValue(22)]
+        [Description("نصف قطر الزوايا")]
+        public int CornerRadius { get => _cornerRadius; set { _cornerRadius = Math.Max(0, value); Invalidate(); } }
 
-                // ④ Glass border
-                using (var glassPen = new Pen(Color.FromArgb(55, 255, 255, 255), 1.5f))
-                    g.DrawPath(glassPen, path);
-            }
+        [Category("✦ Shadow")]
+        [DefaultValue(true)]
+        [Description("تفعيل الظل")]
+        public bool ShowShadow { get => _showShadow; set { _showShadow = value; UpdatePadding(); Invalidate(); } }
 
-            // ⑤ رسم الأبناء فوق كل شيء
-            base.OnPaint(e);
-        }
+        [Category("✦ Shadow")]
+        [Description("لون الظل")]
+        public Color ShadowColor { get => _shadowColor; set { _shadowColor = value; Invalidate(); } }
 
-        // ─────────────────────────────────────────
-        //  Gradient Renderer (مشترك بين OnPaintBackground و OnPaint)
-        // ─────────────────────────────────────────
-        private void PaintGradient(Graphics g, Rectangle rc)
-        {
-            Rectangle inf = new Rectangle(rc.X - 1, rc.Y - 1, rc.Width + 2, rc.Height + 2);
+        [Category("✦ Shadow")]
+        [DefaultValue(18)]
+        [Description("نصف قطر الظل")]
+        public int ShadowRadius { get => _shadowRadius; set { _shadowRadius = Math.Max(0, value); UpdatePadding(); Invalidate(); } }
 
-            if (_useThreeColors && _gradientMid != Color.Empty)
-            {
-                int h2 = rc.Height / 2;
-                var top = new Rectangle(rc.X, rc.Y,       rc.Width, h2 + 1);
-                var bot = new Rectangle(rc.X, rc.Y + h2,  rc.Width, rc.Height - h2);
+        [Category("✦ Shadow")]
+        [DefaultValue(0)]
+        [Description("إزاحة الظل أفقياً")]
+        public int ShadowOffsetX { get => _shadowOffsetX; set { _shadowOffsetX = value; UpdatePadding(); Invalidate(); } }
 
-                using (var lg1 = new LinearGradientBrush(top, _gradientStart, _gradientMid, _gradientAngle))
-                    g.FillRectangle(lg1, top);
-                using (var lg2 = new LinearGradientBrush(bot, _gradientMid, _gradientEnd, _gradientAngle))
-                    g.FillRectangle(lg2, bot);
-            }
-            else
-            {
-                using (var lg = new LinearGradientBrush(inf, _gradientStart, _gradientEnd, _gradientAngle))
-                {
-                    lg.InterpolationColors = new ColorBlend(3)
-                    {
-                        Colors    = new[] { _gradientStart, BlendColor(_gradientStart, _gradientEnd, 0.45f), _gradientEnd },
-                        Positions = new[] { 0f, 0.5f, 1f }
-                    };
-                    g.FillRectangle(lg, rc);
-                }
-            }
-        }
+        [Category("✦ Shadow")]
+        [DefaultValue(4)]
+        [Description("إزاحة الظل عمودياً")]
+        public int ShadowOffsetY { get => _shadowOffsetY; set { _shadowOffsetY = value; UpdatePadding(); Invalidate(); } }
 
-        // ─────────────────────────────────────────
-        //  Shadow
-        // ─────────────────────────────────────────
-        private void PaintShadow(Graphics g, Rectangle card, Color clr, int radius)
-        {
-            if (radius <= 0) return;
-            for (int i = radius; i >= 1; i--)
-            {
-                var  sr    = new Rectangle(card.Left - i, card.Top - i, card.Width + i * 2, card.Height + i * 2);
-                float t    = 1f - (i / (float)radius);
-                int  alpha = Math.Max(0, Math.Min(255, (int)(clr.A * t * t * 0.55f)));
-                if (alpha == 0) continue;
+        [Category("✦ Shadow")]
+        [DefaultValue(true)]
+        [Description("Glow عند Hover")]
+        public bool HoverGlow { get => _hoverGlow; set { _hoverGlow = value; Invalidate(); } }
 
-                using (var sp = RoundedRect(sr, _cornerRadius + i))
-                using (var sb = new SolidBrush(Color.FromArgb(alpha, clr.R, clr.G, clr.B)))
-                    g.FillPath(sb, sp);
-            }
-        }
+        [Category("✦ Shadow")]
+        [Description("لون Glow")]
+        public Color HoverGlowColor { get => _hoverGlowColor; set { _hoverGlowColor = value; Invalidate(); } }
+
+        [Category("✦ Shadow")]
+        [DefaultValue(24)]
+        [Description("حجم Glow")]
+        public int HoverGlowRadius { get => _hoverGlowRadius; set { _hoverGlowRadius = Math.Max(0, value); Invalidate(); } }
+
+        [Category("✦ Appearance")]
+        [DefaultValue(true)]
+        [Description("تأثير Shimmer")]
+        public bool ShowShimmer { get => _showShimmer; set { _showShimmer = value; Invalidate(); } }
+
+        [Category("✦ Appearance")]
+        [DefaultValue(40)]
+        [Description("شدة Shimmer: 0–120")]
+        public int ShimmerOpacity { get => _shimmerOpacity; set { _shimmerOpacity = Math.Max(0, Math.Min(120, value)); Invalidate(); } }
+
+        [Category("✦ Appearance")]
+        [DefaultValue(true)]
+        [Description("الحد الزجاجي")]
+        public bool ShowGlassBorder { get => _showGlassBorder; set { _showGlassBorder = value; Invalidate(); } }
+
+        [Category("✦ Appearance")]
+        [DefaultValue(45)]
+        [Description("شفافية الحد الزجاجي")]
+        public int GlassBorderAlpha { get => _glassBorderAlpha; set { _glassBorderAlpha = Math.Max(0, Math.Min(255, value)); Invalidate(); } }
 
         // ─────────────────────────────────────────
         //  Helpers
@@ -300,44 +457,48 @@ namespace BChat
         private static GraphicsPath RoundedRect(Rectangle r, int radius)
         {
             radius = Math.Max(0, Math.Min(radius, Math.Min(r.Width, r.Height) / 2));
-            var p = new GraphicsPath();
-            if (radius == 0) { p.AddRectangle(r); return p; }
+            var path = new GraphicsPath();
+            if (radius == 0) { path.AddRectangle(r); return path; }
             int d = radius * 2;
-            p.AddArc(r.Left,      r.Top,       d, d, 180, 90);
-            p.AddArc(r.Right - d, r.Top,       d, d, 270, 90);
-            p.AddArc(r.Right - d, r.Bottom - d, d, d,  0, 90);
-            p.AddArc(r.Left,      r.Bottom - d, d, d, 90, 90);
-            p.CloseFigure();
-            return p;
+            path.AddArc(r.Left, r.Top, d, d, 180, 90);
+            path.AddArc(r.Right - d, r.Top, d, d, 270, 90);
+            path.AddArc(r.Right - d, r.Bottom - d, d, d, 0, 90);
+            path.AddArc(r.Left, r.Bottom - d, d, d, 90, 90);
+            path.CloseFigure();
+            return path;
         }
 
         private Color GetSolidAncestorColor()
         {
             var p = Parent;
-            while (p != null) { if (p.BackColor.A > 0 && p.BackColor != Color.Transparent) return p.BackColor; p = p.Parent; }
+            while (p != null)
+            {
+                if (p.BackColor.A > 0 && p.BackColor != Color.Transparent)
+                    return p.BackColor;
+                p = p.Parent;
+            }
             return SystemColors.Control;
         }
 
         private static Color BlendColor(Color a, Color b, float t) =>
             Color.FromArgb(
-                (int)(a.A + (b.A - a.A) * t),
-                (int)(a.R + (b.R - a.R) * t),
-                (int)(a.G + (b.G - a.G) * t),
-                (int)(a.B + (b.B - a.B) * t));
+                Clamp255((int)(a.A + (b.A - a.A) * t)),
+                Clamp255((int)(a.R + (b.R - a.R) * t)),
+                Clamp255((int)(a.G + (b.G - a.G) * t)),
+                Clamp255((int)(a.B + (b.B - a.B) * t)));
+
+        private static int Clamp255(int v) => v < 0 ? 0 : v > 255 ? 255 : v;
     }
 
-    // ─────────────────────────────────────────
-    //  Extension Method — SetStyle للأبناء
-    // ─────────────────────────────────────────
     internal static class ControlExtensions
     {
         public static void SetStyle_IfSupported(this Control ctrl, ControlStyles flag, bool value)
         {
             try
             {
-                var method = typeof(Control).GetMethod("SetStyle",
+                var m = typeof(Control).GetMethod("SetStyle",
                     System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
-                method?.Invoke(ctrl, new object[] { flag, value });
+                m?.Invoke(ctrl, new object[] { flag, value });
             }
             catch { }
         }

@@ -161,8 +161,8 @@ namespace BChat
                 if (ctrl is BChat.Controls.ModernNavButton btn)
                 {
 
-                    btn.BaseBackground = Color.FromName("MenuBar");
-                    btn.NormalTextColor = Color.Gray;
+                    //btn.BaseBackground = Color.FromName("White");
+                    btn.NormalTextColor = Color.White;
                     btn.IsActive = false;
                 }
             }
