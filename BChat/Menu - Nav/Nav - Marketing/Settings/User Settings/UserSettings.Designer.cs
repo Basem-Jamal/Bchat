@@ -31,7 +31,6 @@
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserSettings));
             guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(components);
-            btnNavEditUser = new BChat.Controls.ModernNavButton();
             pnlMenuSidebar = new GradientPanel();
             pictureBox1 = new PictureBox();
             label1 = new Label();
@@ -40,7 +39,6 @@
             picClose = new PictureBox();
             gradientPanel3 = new GradientPanel();
             pnlContent = new Car_Rental_System.CustomControls.CustomPanel();
-            pnlMenuSidebar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             pnlHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)picClose).BeginInit();
@@ -54,50 +52,16 @@
             guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6D;
             guna2BorderlessForm1.TransparentWhileDrag = true;
             // 
-            // btnNavEditUser
-            // 
-            btnNavEditUser.ActiveBackground = Color.White;
-            btnNavEditUser.ActiveBarColor = Color.FromArgb(85, 69, 205);
-            btnNavEditUser.ActiveBarFullHeight = false;
-            btnNavEditUser.ActiveBarPadding = 2;
-            btnNavEditUser.ActiveBarWidth = 5;
-            btnNavEditUser.ActiveTextColor = Color.FromArgb(124, 111, 247);
-            btnNavEditUser.BackColor = Color.Transparent;
-            btnNavEditUser.BaseBackground = Color.Transparent;
-            btnNavEditUser.BorderRadius = 8;
-            btnNavEditUser.CardPadding = 0;
-            btnNavEditUser.ContentPadding = 12;
-            btnNavEditUser.Font = new Font("Microsoft Sans Serif", 13.5F, FontStyle.Bold);
-            btnNavEditUser.ForeColor = Color.Transparent;
-            btnNavEditUser.HoverBackground = Color.Transparent;
-            btnNavEditUser.HoverTextColor = Color.White;
-            btnNavEditUser.Icon = Properties.Resources.edit;
-            btnNavEditUser.IconSize = 30;
-            btnNavEditUser.IsActive = false;
-            btnNavEditUser.Location = new Point(13, 274);
-            btnNavEditUser.Name = "btnNavEditUser";
-            btnNavEditUser.NormalTextColor = Color.White;
-            btnNavEditUser.RightToLeft = RightToLeft.Yes;
-            btnNavEditUser.Size = new Size(171, 70);
-            btnNavEditUser.TabIndex = 23;
-            btnNavEditUser.Text = "تعديل  المعلومات";
-            btnNavEditUser.UseActiveEffect = true;
-            btnNavEditUser.UseHoverEffect = true;
-            btnNavEditUser.Click += btnNavEditPermissions_Click;
-            // 
             // pnlMenuSidebar
             // 
             pnlMenuSidebar.BackColor = Color.Transparent;
-            pnlMenuSidebar.Controls.Add(pictureBox1);
-            pnlMenuSidebar.Controls.Add(label1);
-            pnlMenuSidebar.Controls.Add(btnNavEditUser);
             pnlMenuSidebar.GradientAngle = 140F;
             pnlMenuSidebar.GradientEndColor = Color.Violet;
             pnlMenuSidebar.GradientMidColor = Color.Violet;
             pnlMenuSidebar.GradientStartColor = Color.FromArgb(85, 69, 205);
             pnlMenuSidebar.HoverGlowColor = Color.Transparent;
             pnlMenuSidebar.HoverGlowRadius = 0;
-            pnlMenuSidebar.Location = new Point(777, -8);
+            pnlMenuSidebar.Location = new Point(934, -21);
             pnlMenuSidebar.Name = "pnlMenuSidebar";
             pnlMenuSidebar.Padding = new Padding(6, 6, 6, 8);
             pnlMenuSidebar.ShadowColor = Color.Transparent;
@@ -105,7 +69,7 @@
             pnlMenuSidebar.ShowGlassBorder = false;
             pnlMenuSidebar.ShowShadow = false;
             pnlMenuSidebar.ShowShimmer = false;
-            pnlMenuSidebar.Size = new Size(209, 688);
+            pnlMenuSidebar.Size = new Size(52, 722);
             pnlMenuSidebar.TabIndex = 23;
             // 
             // pictureBox1
@@ -113,9 +77,9 @@
             pictureBox1.BackColor = Color.Transparent;
             pictureBox1.Cursor = Cursors.Hand;
             pictureBox1.Image = Properties.Resources.permission22;
-            pictureBox1.Location = new Point(56, 32);
+            pictureBox1.Location = new Point(545, 58);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(87, 81);
+            pictureBox1.Size = new Size(50, 41);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 3;
             pictureBox1.TabStop = false;
@@ -125,8 +89,8 @@
             label1.AutoSize = true;
             label1.BackColor = Color.Transparent;
             label1.Font = new Font("Segoe UI Semibold", 13F, FontStyle.Bold);
-            label1.ForeColor = Color.WhiteSmoke;
-            label1.Location = new Point(21, 116);
+            label1.ForeColor = Color.DimGray;
+            label1.Location = new Point(392, 65);
             label1.Name = "label1";
             label1.Size = new Size(146, 25);
             label1.TabIndex = 1;
@@ -142,7 +106,7 @@
             gradientPanel2.HoverGlow = false;
             gradientPanel2.HoverGlowColor = Color.Transparent;
             gradientPanel2.HoverGlowRadius = 0;
-            gradientPanel2.Location = new Point(-28, -8);
+            gradientPanel2.Location = new Point(-28, -38);
             gradientPanel2.Name = "gradientPanel2";
             gradientPanel2.Padding = new Padding(6, 6, 6, 8);
             gradientPanel2.ShadowColor = Color.Transparent;
@@ -150,7 +114,7 @@
             gradientPanel2.ShowGlassBorder = false;
             gradientPanel2.ShowShadow = false;
             gradientPanel2.ShowShimmer = false;
-            gradientPanel2.Size = new Size(37, 570);
+            gradientPanel2.Size = new Size(51, 744);
             gradientPanel2.TabIndex = 24;
             // 
             // pnlHeader
@@ -167,7 +131,7 @@
             pnlHeader.Name = "pnlHeader";
             pnlHeader.ShadowColor = Color.FromArgb(80, 0, 0, 0);
             pnlHeader.ShadowSize = 6;
-            pnlHeader.Size = new Size(747, 56);
+            pnlHeader.Size = new Size(893, 55);
             pnlHeader.TabIndex = 25;
             pnlHeader.UseShadow = true;
             // 
@@ -176,7 +140,7 @@
             picClose.BackColor = Color.Transparent;
             picClose.Cursor = Cursors.Hand;
             picClose.Image = (Image)resources.GetObject("picClose.Image");
-            picClose.Location = new Point(660, 6);
+            picClose.Location = new Point(845, 8);
             picClose.Name = "picClose";
             picClose.Size = new Size(40, 40);
             picClose.SizeMode = PictureBoxSizeMode.Zoom;
@@ -194,7 +158,7 @@
             gradientPanel3.HoverGlow = false;
             gradientPanel3.HoverGlowColor = Color.Transparent;
             gradientPanel3.HoverGlowRadius = 0;
-            gradientPanel3.Location = new Point(26, 632);
+            gradientPanel3.Location = new Point(29, 669);
             gradientPanel3.Name = "gradientPanel3";
             gradientPanel3.Padding = new Padding(6, 6, 6, 8);
             gradientPanel3.ShadowColor = Color.Transparent;
@@ -202,7 +166,7 @@
             gradientPanel3.ShowGlassBorder = false;
             gradientPanel3.ShowShadow = false;
             gradientPanel3.ShowShimmer = false;
-            gradientPanel3.Size = new Size(736, 37);
+            gradientPanel3.Size = new Size(882, 37);
             gradientPanel3.TabIndex = 25;
             // 
             // pnlContent
@@ -214,11 +178,11 @@
             pnlContent.BorderThickness = 1;
             pnlContent.Font = new Font("Segoe UI", 10F);
             pnlContent.ForeColor = Color.Black;
-            pnlContent.Location = new Point(15, 71);
+            pnlContent.Location = new Point(29, 99);
             pnlContent.Name = "pnlContent";
             pnlContent.ShadowColor = Color.FromArgb(80, 0, 0, 0);
             pnlContent.ShadowSize = 6;
-            pnlContent.Size = new Size(750, 550);
+            pnlContent.Size = new Size(899, 564);
             pnlContent.TabIndex = 26;
             pnlContent.UseShadow = true;
             // 
@@ -227,8 +191,10 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(956, 649);
+            ClientSize = new Size(956, 679);
+            Controls.Add(label1);
             Controls.Add(gradientPanel3);
+            Controls.Add(pictureBox1);
             Controls.Add(pnlContent);
             Controls.Add(pnlMenuSidebar);
             Controls.Add(pnlHeader);
@@ -237,19 +203,17 @@
             Name = "UserSettings";
             StartPosition = FormStartPosition.CenterParent;
             Text = "UserSettings";
-            pnlMenuSidebar.ResumeLayout(false);
-            pnlMenuSidebar.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             pnlHeader.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)picClose).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private Guna.UI2.WinForms.Guna2BorderlessForm guna2BorderlessForm1;
         private GradientPanel pnlMenuSidebar;
-        private Controls.ModernNavButton btnNavEditUser;
         private GradientPanel gradientPanel2;
         private PictureBox picClose;
         private Car_Rental_System.CustomControls.CustomPanel pnlHeader;

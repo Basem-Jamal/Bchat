@@ -1,6 +1,8 @@
-﻿using BChat.Models.Users;
+﻿using BChat.Events;
+using BChat.Models.Users;
 using Microsoft.Data.SqlClient;
 using System.Collections.Generic;
+using static BChat.Models.Users.ModulePermission.Permission;
 
 namespace BChat.Data.DataStore.Users_DB
 {
@@ -72,5 +74,46 @@ namespace BChat.Data.DataStore.Users_DB
             }
             return null;
         }
+
+        public static bool Update(User user)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                string queryUpdate = @"UPDATE Users SET
+                                 Name = @Name,
+                                 Email= @Email,
+                                 Password = @Password,
+                                 Role     = @Role,
+                                 BranchId = @BranchId,
+                                 IsActive = @IsActive
+                              WHERE Id = @Id";
+
+                using (SqlCommand cmd = new SqlCommand(queryUpdate, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Id", user.Id);
+                    cmd.Parameters.AddWithValue("@Name", user.Name);
+                    cmd.Parameters.AddWithValue("@Email", user.Email);
+                    cmd.Parameters.AddWithValue("@Password", user.Password);
+                    cmd.Parameters.AddWithValue("@Role", user.Role);
+                    cmd.Parameters.AddWithValue("@BranchId", user.BranchId ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@IsActive", user.IsActive);
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                    if (rowsAffected >= 1)
+                    {
+
+                        return true;
+                    }
+
+                    
+                }
+
+                return false;
+            }
+        }
+
     }
 }

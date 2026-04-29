@@ -46,7 +46,7 @@ namespace BChat.Events
             OnRefreshMessagesTable?.Invoke();
         }
 
-        public static class Groups
+        public static class AppGroups
         {
             public static event Action<Models.Groups> OnGroupAdded;
             public static event Action<Models.Groups> OnGroupUpdated;
@@ -61,6 +61,15 @@ namespace BChat.Events
                 OnGroupUpdated?.Invoke(group);
             }
 
+        }
+
+        public static class AppUsers
+        {
+            public static event Action OnRefershUsers;
+            public static void ChangeRefershAllUsers()
+            {
+                OnRefershUsers?.Invoke();
+            }
         }
     }
 }

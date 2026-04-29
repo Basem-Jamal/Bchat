@@ -147,7 +147,7 @@ namespace BChat.UserControls
                             int count = AppCache.GroupMembers.Count(m => m.GroupId  == groupId);
                             group.StatOneValue = count.ToString();
 
-                            AppEvents.Groups.ChangeGroupUpdated(group);
+                            AppEvents.AppGroups.ChangeGroupUpdated(group);
 
                         }
                     }

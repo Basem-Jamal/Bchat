@@ -29,7 +29,7 @@ namespace BChat.Forms
             _status = status;
 
 
-            AppEvents.Groups.OnGroupAdded += (group) => groupSelector.LoadGroups(AppCache.Groups, GeneralFunctions.Base64ToImage);
+            AppEvents.AppGroups.OnGroupAdded += (group) => groupSelector.LoadGroups(AppCache.Groups, GeneralFunctions.Base64ToImage);
 
 
             groupSelector.LoadGroups(AppCache.Groups, GeneralFunctions.Base64ToImage);  // ← أضف هذا
@@ -122,7 +122,7 @@ namespace BChat.Forms
                                 int count = AppCache.GroupMembers.Count(m => m.GroupId == groupId);
                                 group.StatOneValue = count.ToString();
 
-                                AppEvents.Groups.ChangeGroupUpdated(group);
+                                AppEvents.AppGroups.ChangeGroupUpdated(group);
                             }
 
 
@@ -190,7 +190,7 @@ namespace BChat.Forms
 
                         group.StatOneValue = count.ToString();
 
-                        AppEvents.Groups.ChangeGroupUpdated(group);
+                        AppEvents.AppGroups.ChangeGroupUpdated(group);
                     }
 
 

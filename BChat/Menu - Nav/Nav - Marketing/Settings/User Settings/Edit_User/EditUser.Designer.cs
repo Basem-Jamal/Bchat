@@ -29,11 +29,15 @@
         private void InitializeComponent()
         {
             customPanel1 = new Car_Rental_System.CustomControls.CustomPanel();
+            label6 = new Label();
+            lblCurrentPermission = new Label();
+            txbPassword = new BChat.Controls.ModernTextBox();
+            label4 = new Label();
             label2 = new Label();
             cmbUser = new BChat.Controls.ModernComboBox();
             btnUpdateUser = new BChat.Controls.ModernButton();
             cmbBranch = new BChat.Controls.ModernComboBox();
-            cmbPermissions = new BChat.Controls.ModernComboBox();
+            cmbSelectNewPermissions = new BChat.Controls.ModernComboBox();
             txbEmail = new BChat.Controls.ModernTextBox();
             txbName = new BChat.Controls.ModernTextBox();
             label7 = new Label();
@@ -52,11 +56,15 @@
             customPanel1.BorderColor = Color.Transparent;
             customPanel1.BorderRadius = 1;
             customPanel1.BorderThickness = 0;
+            customPanel1.Controls.Add(label6);
+            customPanel1.Controls.Add(lblCurrentPermission);
+            customPanel1.Controls.Add(txbPassword);
+            customPanel1.Controls.Add(label4);
             customPanel1.Controls.Add(label2);
             customPanel1.Controls.Add(cmbUser);
             customPanel1.Controls.Add(btnUpdateUser);
             customPanel1.Controls.Add(cmbBranch);
-            customPanel1.Controls.Add(cmbPermissions);
+            customPanel1.Controls.Add(cmbSelectNewPermissions);
             customPanel1.Controls.Add(txbEmail);
             customPanel1.Controls.Add(txbName);
             customPanel1.Controls.Add(label7);
@@ -72,15 +80,65 @@
             customPanel1.Name = "customPanel1";
             customPanel1.ShadowColor = Color.Transparent;
             customPanel1.ShadowSize = 0;
-            customPanel1.Size = new Size(750, 544);
+            customPanel1.Size = new Size(899, 564);
             customPanel1.TabIndex = 0;
             customPanel1.UseShadow = true;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Font = new Font("IBM Plex Sans Arabic", 14.25F);
+            label6.Location = new Point(290, 257);
+            label6.Name = "label6";
+            label6.Size = new Size(128, 32);
+            label6.TabIndex = 23;
+            label6.Text = "الصلاحية الحالية";
+            // 
+            // lblCurrentPermission
+            // 
+            lblCurrentPermission.AutoSize = true;
+            lblCurrentPermission.Font = new Font("IBM Plex Sans Arabic SemiBold", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblCurrentPermission.Location = new Point(106, 257);
+            lblCurrentPermission.Name = "lblCurrentPermission";
+            lblCurrentPermission.Size = new Size(71, 32);
+            lblCurrentPermission.TabIndex = 22;
+            lblCurrentPermission.Text = "Admin";
+            // 
+            // txbPassword
+            // 
+            txbPassword.BackColor = SystemColors.ActiveBorder;
+            txbPassword.BackColorEx = Color.FromArgb(237, 235, 255);
+            txbPassword.BorderColor = Color.FromArgb(220, 215, 250);
+            txbPassword.BorderRadius = 14;
+            txbPassword.Direction = BChat.Controls.TextDirection.Auto;
+            txbPassword.FocusBorderColor = Color.FromArgb(124, 111, 247);
+            txbPassword.Font = new Font("Microsoft Sans Serif", 10F);
+            txbPassword.LabelText = "";
+            txbPassword.Location = new Point(536, 343);
+            txbPassword.MaxLength = 32767;
+            txbPassword.Name = "txbPassword";
+            txbPassword.PlaceholderText = "";
+            txbPassword.RightToLeft = RightToLeft.Yes;
+            txbPassword.Size = new Size(220, 39);
+            txbPassword.TabIndex = 21;
+            txbPassword.TextPadding = 14;
+            txbPassword.UsePasswordChar = false;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Font = new Font("IBM Plex Sans Arabic", 14.25F);
+            label4.Location = new Point(797, 343);
+            label4.Name = "label4";
+            label4.Size = new Size(88, 32);
+            label4.TabIndex = 20;
+            label4.Text = "كلمة المرور";
             // 
             // label2
             // 
             label2.AutoSize = true;
             label2.Font = new Font("IBM Plex Sans Arabic", 14.25F);
-            label2.Location = new Point(646, 31);
+            label2.Location = new Point(552, 36);
             label2.Name = "label2";
             label2.Size = new Size(89, 32);
             label2.TabIndex = 19;
@@ -95,7 +153,7 @@
             cmbUser.Font = new Font("Microsoft Sans Serif", 10F);
             cmbUser.ItemHoverColor = Color.FromArgb(237, 235, 255);
             cmbUser.LabelText = "";
-            cmbUser.Location = new Point(407, 24);
+            cmbUser.Location = new Point(313, 29);
             cmbUser.Name = "cmbUser";
             cmbUser.PlaceholderText = "";
             cmbUser.RightToLeft = RightToLeft.Yes;
@@ -114,12 +172,13 @@
             btnUpdateUser.BorderRadius = 23;
             btnUpdateUser.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             btnUpdateUser.Icon = Properties.Resources.plus;
-            btnUpdateUser.Location = new Point(40, 450);
+            btnUpdateUser.Location = new Point(40, 488);
             btnUpdateUser.Name = "btnUpdateUser";
             btnUpdateUser.RightToLeft = RightToLeft.Yes;
             btnUpdateUser.Size = new Size(162, 62);
             btnUpdateUser.TabIndex = 17;
             btnUpdateUser.Text = "تحديث";
+            btnUpdateUser.Click += btnUpdateUser_Click;
             // 
             // cmbBranch
             // 
@@ -130,7 +189,7 @@
             cmbBranch.Font = new Font("Microsoft Sans Serif", 10F);
             cmbBranch.ItemHoverColor = Color.FromArgb(237, 235, 255);
             cmbBranch.LabelText = "";
-            cmbBranch.Location = new Point(407, 367);
+            cmbBranch.Location = new Point(536, 432);
             cmbBranch.Name = "cmbBranch";
             cmbBranch.PlaceholderText = "";
             cmbBranch.RightToLeft = RightToLeft.Yes;
@@ -142,26 +201,26 @@
             cmbBranch.TextColor = Color.FromArgb(40, 40, 70);
             cmbBranch.UsePlaceholder = true;
             // 
-            // cmbPermissions
+            // cmbSelectNewPermissions
             // 
-            cmbPermissions.ArrowColor = Color.FromArgb(124, 111, 247);
-            cmbPermissions.BorderColor = Color.FromArgb(220, 215, 250);
-            cmbPermissions.DropdownBackColor = Color.White;
-            cmbPermissions.FocusBorderColor = Color.FromArgb(124, 111, 247);
-            cmbPermissions.Font = new Font("Microsoft Sans Serif", 10F);
-            cmbPermissions.ItemHoverColor = Color.FromArgb(237, 235, 255);
-            cmbPermissions.LabelText = "";
-            cmbPermissions.Location = new Point(11, 168);
-            cmbPermissions.Name = "cmbPermissions";
-            cmbPermissions.PlaceholderText = "";
-            cmbPermissions.RightToLeft = RightToLeft.Yes;
-            cmbPermissions.SelectedIndex = -1;
-            cmbPermissions.SelectedItem = null;
-            cmbPermissions.Size = new Size(220, 39);
-            cmbPermissions.TabIndex = 14;
-            cmbPermissions.Text = "modernComboBox1";
-            cmbPermissions.TextColor = Color.FromArgb(40, 40, 70);
-            cmbPermissions.UsePlaceholder = true;
+            cmbSelectNewPermissions.ArrowColor = Color.FromArgb(124, 111, 247);
+            cmbSelectNewPermissions.BorderColor = Color.FromArgb(220, 215, 250);
+            cmbSelectNewPermissions.DropdownBackColor = Color.White;
+            cmbSelectNewPermissions.FocusBorderColor = Color.FromArgb(124, 111, 247);
+            cmbSelectNewPermissions.Font = new Font("Microsoft Sans Serif", 10F);
+            cmbSelectNewPermissions.ItemHoverColor = Color.FromArgb(237, 235, 255);
+            cmbSelectNewPermissions.LabelText = "";
+            cmbSelectNewPermissions.Location = new Point(31, 165);
+            cmbSelectNewPermissions.Name = "cmbSelectNewPermissions";
+            cmbSelectNewPermissions.PlaceholderText = "";
+            cmbSelectNewPermissions.RightToLeft = RightToLeft.Yes;
+            cmbSelectNewPermissions.SelectedIndex = -1;
+            cmbSelectNewPermissions.SelectedItem = null;
+            cmbSelectNewPermissions.Size = new Size(220, 39);
+            cmbSelectNewPermissions.TabIndex = 14;
+            cmbSelectNewPermissions.Text = "modernComboBox1";
+            cmbSelectNewPermissions.TextColor = Color.FromArgb(40, 40, 70);
+            cmbSelectNewPermissions.UsePlaceholder = true;
             // 
             // txbEmail
             // 
@@ -173,7 +232,7 @@
             txbEmail.FocusBorderColor = Color.FromArgb(124, 111, 247);
             txbEmail.Font = new Font("Microsoft Sans Serif", 10F);
             txbEmail.LabelText = "";
-            txbEmail.Location = new Point(407, 262);
+            txbEmail.Location = new Point(536, 254);
             txbEmail.MaxLength = 32767;
             txbEmail.Name = "txbEmail";
             txbEmail.PlaceholderText = "";
@@ -193,7 +252,7 @@
             txbName.FocusBorderColor = Color.FromArgb(124, 111, 247);
             txbName.Font = new Font("Microsoft Sans Serif", 10F);
             txbName.LabelText = "";
-            txbName.Location = new Point(407, 168);
+            txbName.Location = new Point(536, 165);
             txbName.MaxLength = 32767;
             txbName.Name = "txbName";
             txbName.PlaceholderText = "";
@@ -207,7 +266,7 @@
             // 
             label7.AutoSize = true;
             label7.Font = new Font("IBM Plex Sans Arabic", 14.25F);
-            label7.Location = new Point(207, 262);
+            label7.Location = new Point(281, 342);
             label7.Name = "label7";
             label7.Size = new Size(144, 32);
             label7.TabIndex = 8;
@@ -217,17 +276,17 @@
             // 
             label9.AutoSize = true;
             label9.Font = new Font("IBM Plex Sans Arabic", 14.25F);
-            label9.Location = new Point(262, 168);
+            label9.Location = new Point(294, 165);
             label9.Name = "label9";
-            label9.Size = new Size(89, 32);
+            label9.Size = new Size(124, 32);
             label9.TabIndex = 6;
-            label9.Text = "الصلاحيات";
+            label9.Text = "تحديد الصلاحية";
             // 
             // label5
             // 
             label5.AutoSize = true;
             label5.Font = new Font("IBM Plex Sans Arabic", 14.25F);
-            label5.Location = new Point(633, 374);
+            label5.Location = new Point(783, 432);
             label5.Name = "label5";
             label5.Size = new Size(102, 32);
             label5.TabIndex = 4;
@@ -236,10 +295,10 @@
             // lblUserDate
             // 
             lblUserDate.AutoSize = true;
-            lblUserDate.Font = new Font("IBM Plex Sans Arabic", 14.25F);
-            lblUserDate.Location = new Point(52, 262);
+            lblUserDate.Font = new Font("IBM Plex Sans Arabic SemiBold", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblUserDate.Location = new Point(106, 342);
             lblUserDate.Name = "lblUserDate";
-            lblUserDate.Size = new Size(94, 32);
+            lblUserDate.Size = new Size(96, 32);
             lblUserDate.TabIndex = 3;
             lblUserDate.Text = "2026/5/5";
             // 
@@ -247,7 +306,7 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("IBM Plex Sans Arabic", 14.25F);
-            label3.Location = new Point(668, 269);
+            label3.Location = new Point(823, 254);
             label3.Name = "label3";
             label3.Size = new Size(62, 32);
             label3.TabIndex = 2;
@@ -257,7 +316,7 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("IBM Plex Sans Arabic", 14.25F);
-            label1.Location = new Point(668, 168);
+            label1.Location = new Point(831, 165);
             label1.Name = "label1";
             label1.Size = new Size(54, 32);
             label1.TabIndex = 0;
@@ -269,7 +328,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(customPanel1);
             Name = "EditUser";
-            Size = new Size(750, 544);
+            Size = new Size(899, 564);
             customPanel1.ResumeLayout(false);
             customPanel1.PerformLayout();
             ResumeLayout(false);
@@ -287,9 +346,13 @@
         private Controls.ModernTextBox txbEmail;
         private Controls.ModernTextBox txbName;
         private Controls.ModernComboBox cmbBranch;
-        private Controls.ModernComboBox cmbPermissions;
+        private Controls.ModernComboBox cmbSelectNewPermissions;
         private Controls.ModernButton btnUpdateUser;
         private Label label2;
         private Controls.ModernComboBox cmbUser;
+        private Controls.ModernTextBox txbPassword;
+        private Label label4;
+        private Label label6;
+        private Label lblCurrentPermission;
     }
 }

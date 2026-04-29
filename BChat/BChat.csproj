@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <Folder Include="Customers\" />
+    <Folder Include="Menu - Nav\Nav - Marketing\Settings\User Settings\Add_User\" />
     <Folder Include="ScheduledMessages\" />
     <Folder Include="Templates\" />
   </ItemGroup>

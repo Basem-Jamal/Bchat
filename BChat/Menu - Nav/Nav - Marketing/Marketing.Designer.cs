@@ -223,6 +223,7 @@
             // 
             // pnlBigContent
             // 
+            pnlBigContent.BackColor = Color.White;
             pnlBigContent.BackColorEx = Color.White;
             pnlBigContent.BorderColor = Color.LightGray;
             pnlBigContent.BorderRadius = 15;

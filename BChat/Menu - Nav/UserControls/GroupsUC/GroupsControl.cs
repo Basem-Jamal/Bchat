@@ -26,8 +26,8 @@ namespace BChat.UserControls
             InitializeComponent();
             groupsWrapPanel.RightToLeft = RightToLeft.Yes;
 
-            AppEvents.Groups.OnGroupAdded += group => groupsWrapPanel.AddGroup(group, GeneralFunctions.Base64ToImage);
-            AppEvents.Groups.OnGroupUpdated += group => groupsWrapPanel.UpdateGroup(group);
+            AppEvents.AppGroups.OnGroupAdded += group => groupsWrapPanel.AddGroup(group, GeneralFunctions.Base64ToImage);
+            AppEvents.AppGroups.OnGroupUpdated += group => groupsWrapPanel.UpdateGroup(group);
 
 
         }

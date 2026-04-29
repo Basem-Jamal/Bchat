@@ -1,5 +1,6 @@
 using BChat.Auth;
 using BChat.Controls;
+using BChat.Events;
 using BChat.Global;
 using BChat.Menu___Nav.Nav___Marketing;
 using BChat.Salla;
@@ -39,11 +40,24 @@ namespace BChat
                           ControlStyles.AllPaintingInWmPaint |
                           ControlStyles.UserPaint, true);
 
-            lblUserCurrentName.Text = AppCache.CurrentUser.Name.ToString();
+            AppEvents.AppUsers.OnRefershUsers += RefreshUserUI;
+
+            lblUserCurrentName.Text = AppCache.CurrentUser.Name;
         }
 
         private async void Home_Load(object sender, EventArgs e)
         {
+        }
+
+        public void RefreshUserUI()
+        {
+            lblUserCurrentName.Text = AppCache.CurrentUser.Name;
+
+            PermissionsInHome();
+        }
+        private void PermissionsInHome()
+        {
+            MessageBox.Show("تم تحديث الصلاحيات");
         }
 
         private void btnNavHome_Click(object sender, EventArgs e)
@@ -170,6 +184,11 @@ namespace BChat
 
         private void picClose_Click(object sender, EventArgs e)
         {
+            FormClosed += (s, e) =>
+            {
+                AppEvents.AppUsers.OnRefershUsers -= RefreshUserUI;
+            };
+
             this.Close();
         }
 
