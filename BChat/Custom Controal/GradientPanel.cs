@@ -1,14 +1,10 @@
 // =====================================================================
-//  GradientPanel.cs — v8 (Definitive Border Fix)
+//  GradientPanel.cs — v9 (True BorderRadius via Region)
 //
-//  ✅ [FIX] إزالة WM_NCCALCSIZE (كان يسبب مشكلة في v7)
-//  ✅ [FIX] WM_ERASEBKGND مُعطّل — يمنع مسح الخلفية بالأبيض
-//  ✅ [FIX] WM_NCPAINT مُعطّل — يمنع رسم Non-Client border
-//  ✅ [FIX] CreateParams — إزالة كل Border styles من Win32
-//  ✅ [FIX] OnPaint يُعيد رسم الخلفية الخارجية أولاً قبل كل شيء
-//  ✅ Shadow ناعم Gaussian-like falloff
-//  ✅ Padding تلقائي + Shimmer + Glass Border
-//  ✅ الأبناء الشفافون يرون الـ Gradient
+//  ✅ [NEW] UpdateRegion() — يطبّق Region حقيقي على الكنترول
+//  ✅ [NEW] OnResize يُحدّث الـ Region تلقائياً
+//  ✅ الأبناء الآن محصورون داخل الزوايا الدائرية
+//  ✅ كل إصلاحات v8 محفوظة
 // =====================================================================
 
 using System;
@@ -59,15 +55,15 @@ namespace BChat
         private const int WM_ERASEBKGND = 0x0014;
 
         // ─────────────────────────────────────────
-        //  ✅ FIX 1: CreateParams — إزالة كل Border من Win32 Level
+        //  CreateParams
         // ─────────────────────────────────────────
         protected override CreateParams CreateParams
         {
             get
             {
                 CreateParams cp = base.CreateParams;
-                cp.Style &= ~0x00800000; // WS_BORDER
-                cp.ExStyle &= ~0x00000200; // WS_EX_CLIENTEDGE  (3D sunken border)
+                cp.Style &= ~0x00800000;   // WS_BORDER
+                cp.ExStyle &= ~0x00000200; // WS_EX_CLIENTEDGE
                 cp.ExStyle &= ~0x00020000; // WS_EX_STATICEDGE
                 cp.ExStyle &= ~0x00000001; // WS_EX_DLGMODALFRAME
                 return cp;
@@ -75,26 +71,12 @@ namespace BChat
         }
 
         // ─────────────────────────────────────────
-        //  ✅ FIX 2: WndProc
-        //  - WM_NCPAINT    → منع رسم الحد في Non-Client Area
-        //  - WM_ERASEBKGND → منع Windows من مسح الخلفية بلون أبيض
-        //  ❌ لا نعترض WM_NCCALCSIZE (كان يسبب مشكلة في v7)
+        //  WndProc
         // ─────────────────────────────────────────
         protected override void WndProc(ref Message m)
         {
-            if (m.Msg == WM_NCPAINT)
-            {
-                m.Result = IntPtr.Zero;
-                return;
-            }
-
-            if (m.Msg == WM_ERASEBKGND)
-            {
-                // نخبر Windows أننا معالجون الخلفية بأنفسنا
-                m.Result = new IntPtr(1);
-                return;
-            }
-
+            if (m.Msg == WM_NCPAINT) { m.Result = IntPtr.Zero; return; }
+            if (m.Msg == WM_ERASEBKGND) { m.Result = new IntPtr(1); return; }
             base.WndProc(ref m);
         }
 
@@ -112,12 +94,36 @@ namespace BChat
                 true);
 
             UpdateStyles();
-
             BackColor = Color.Transparent;
             BorderStyle = BorderStyle.None;
             Size = new Size(300, 200);
 
             UpdatePadding();
+            UpdateRegion(); // ✅ تطبيق الـ Region من البداية
+        }
+
+        // ─────────────────────────────────────────
+        //  ✅ UpdateRegion — القلب الجديد
+        //  يُطبّق Region حقيقي على الكنترول بناءً على CardRect و CornerRadius
+        //  بدونه: الزوايا مرسومة مدوّرة لكن الكنترول لا يزال مستطيلاً فعلياً
+        // ─────────────────────────────────────────
+        private void UpdateRegion()
+        {
+            Rectangle rc = GetCardRect();
+            if (rc.Width <= 0 || rc.Height <= 0) return;
+
+            using var path = RoundedRect(rc, _cornerRadius);
+            Region = new Region(path);
+        }
+
+        // ─────────────────────────────────────────
+        //  OnResize — تحديث الـ Region عند تغيير الحجم
+        // ─────────────────────────────────────────
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            UpdateRegion();
+            Invalidate();
         }
 
         // ─────────────────────────────────────────
@@ -137,11 +143,10 @@ namespace BChat
         }
 
         // ─────────────────────────────────────────
-        //  OnPaintBackground — الأبناء الشفافون يرون الـ Gradient
+        //  OnPaintBackground
         // ─────────────────────────────────────────
         protected override void OnPaintBackground(PaintEventArgs e)
         {
-            // ❌ لا نستدعي base — نرسم كل شيء بأنفسنا
             var g = e.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
@@ -173,13 +178,10 @@ namespace BChat
             Rectangle rc = GetCardRect();
             if (rc.Width <= 0 || rc.Height <= 0) { base.OnPaint(e); return; }
 
-            // ✅ أولاً: ملء كامل مساحة الكنترول بلون الـ Parent
-            // هذا يمنع ظهور أي بقايا أو artifacts على الحواف
             Color outerBg = GetSolidAncestorColor();
             using (var brush = new SolidBrush(outerBg))
                 g.FillRectangle(brush, ClientRectangle);
 
-            // ② Shadow / Glow
             if (_showShadow)
             {
                 bool hov = _isHovered && _hoverGlow && !DesignMode;
@@ -188,7 +190,6 @@ namespace BChat
                 PaintShadow(g, rc, glowC, DesignMode ? 4 : glowR);
             }
 
-            // ③ Gradient + Shimmer + Glass Border
             using (var path = RoundedRect(rc, _cornerRadius))
             {
                 g.SetClip(path);
@@ -391,12 +392,25 @@ namespace BChat
         [Category("✦ Gradient")]
         [DefaultValue(22)]
         [Description("نصف قطر الزوايا")]
-        public int CornerRadius { get => _cornerRadius; set { _cornerRadius = Math.Max(0, value); Invalidate(); } }
+        public int CornerRadius
+        {
+            get => _cornerRadius;
+            set
+            {
+                _cornerRadius = Math.Max(0, value);
+                UpdateRegion(); // ✅ تحديث الـ Region فور تغيير القيمة
+                Invalidate();
+            }
+        }
 
         [Category("✦ Shadow")]
         [DefaultValue(true)]
         [Description("تفعيل الظل")]
-        public bool ShowShadow { get => _showShadow; set { _showShadow = value; UpdatePadding(); Invalidate(); } }
+        public bool ShowShadow
+        {
+            get => _showShadow;
+            set { _showShadow = value; UpdatePadding(); UpdateRegion(); Invalidate(); }
+        }
 
         [Category("✦ Shadow")]
         [Description("لون الظل")]
@@ -405,17 +419,29 @@ namespace BChat
         [Category("✦ Shadow")]
         [DefaultValue(18)]
         [Description("نصف قطر الظل")]
-        public int ShadowRadius { get => _shadowRadius; set { _shadowRadius = Math.Max(0, value); UpdatePadding(); Invalidate(); } }
+        public int ShadowRadius
+        {
+            get => _shadowRadius;
+            set { _shadowRadius = Math.Max(0, value); UpdatePadding(); UpdateRegion(); Invalidate(); }
+        }
 
         [Category("✦ Shadow")]
         [DefaultValue(0)]
         [Description("إزاحة الظل أفقياً")]
-        public int ShadowOffsetX { get => _shadowOffsetX; set { _shadowOffsetX = value; UpdatePadding(); Invalidate(); } }
+        public int ShadowOffsetX
+        {
+            get => _shadowOffsetX;
+            set { _shadowOffsetX = value; UpdatePadding(); UpdateRegion(); Invalidate(); }
+        }
 
         [Category("✦ Shadow")]
         [DefaultValue(4)]
         [Description("إزاحة الظل عمودياً")]
-        public int ShadowOffsetY { get => _shadowOffsetY; set { _shadowOffsetY = value; UpdatePadding(); Invalidate(); } }
+        public int ShadowOffsetY
+        {
+            get => _shadowOffsetY;
+            set { _shadowOffsetY = value; UpdatePadding(); UpdateRegion(); Invalidate(); }
+        }
 
         [Category("✦ Shadow")]
         [DefaultValue(true)]

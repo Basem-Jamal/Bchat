@@ -276,6 +276,7 @@
             Controls.Add(pnlContent);
             FormBorderStyle = FormBorderStyle.None;
             Name = "ApiSettings";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "ApiSettings";
             ((System.ComponentModel.ISupportInitialize)picClose).EndInit();
             pnlContent.ResumeLayout(false);

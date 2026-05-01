@@ -10,6 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ExcelDataReader" Version="3.8.0" />
+    <PackageReference Include="ExcelDataReader.DataSet" Version="3.8.0" />
     <PackageReference Include="FontAwesome.Sharp" Version="6.6.0" />
     <PackageReference Include="Guna.UI2.WinForms" Version="2.0.4.7" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.0" />
@@ -18,7 +20,6 @@
 
   <ItemGroup>
     <Folder Include="Customers\" />
-    <Folder Include="Menu - Nav\Nav - Marketing\Settings\User Settings\Add_User\" />
     <Folder Include="ScheduledMessages\" />
     <Folder Include="Templates\" />
   </ItemGroup>

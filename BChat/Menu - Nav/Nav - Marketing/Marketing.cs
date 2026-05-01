@@ -1,4 +1,5 @@
 ﻿using BChat.Controls;
+using BChat.Events;
 using BChat.Menu___Nav.Nav___Marketing.Settings.ApiSettings;
 using BChat.Menu___Nav.Nav___Marketing.Settings.User_Settings;
 using BChat.UserControls;
@@ -17,6 +18,7 @@ namespace BChat.Menu___Nav.Nav___Marketing
 {
     public partial class Marketing : Form
     {
+
         public Marketing()
         {
             InitializeComponent();
@@ -40,12 +42,14 @@ namespace BChat.Menu___Nav.Nav___Marketing
 
             btnNavTemplates.IsActive = true;
 
+
             if (!pnlSubContent.Controls.ContainsKey("Templates_View"))
             {
                 TemplatesControl templatesPage = new TemplatesControl();
                 templatesPage.Name = "Templates_View";
                 templatesPage.Dock = DockStyle.Fill;
                 pnlSubContent.Controls.Add(templatesPage);
+
             }
 
             pnlSubContent.Controls["Templates_View"].BringToFront();
@@ -59,7 +63,7 @@ namespace BChat.Menu___Nav.Nav___Marketing
                 if (ctrl is BChat.Controls.ModernNavButton btn)
                 {
 
-                    btn.BaseBackground = Color.FromName("ButtonFace");
+                    btn.BaseBackground = Color.Transparent;
                     btn.NormalTextColor = Color.Gray;
                     btn.IsActive = false;
                 }
@@ -75,6 +79,7 @@ namespace BChat.Menu___Nav.Nav___Marketing
             userSettings.ShowDialog();
 
             overlay.Close(userSettings);
+
         }
 
         private void btnNavAPIs_Click(object sender, EventArgs e)
@@ -94,6 +99,11 @@ namespace BChat.Menu___Nav.Nav___Marketing
         }
 
         private void btnNavHome_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Marketing_Load(object sender, EventArgs e)
         {
 
         }

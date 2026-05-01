@@ -32,8 +32,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Login));
             guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(components);
             picClose = new PictureBox();
-            customPanel2 = new Car_Rental_System.CustomControls.CustomPanel();
-            customPanel1 = new Car_Rental_System.CustomControls.CustomPanel();
             txtPassword = new BChat.Controls.ModernTextBox();
             lbl2 = new ReaLTaiizor.Controls.BigLabel();
             lbl1 = new ReaLTaiizor.Controls.BigLabel();
@@ -41,6 +39,8 @@
             customPanel3 = new Car_Rental_System.CustomControls.CustomPanel();
             pictureBox1 = new PictureBox();
             txtEmail = new BChat.Controls.ModernTextBox();
+            gradientPanel3 = new GradientPanel();
+            gradientPanel1 = new GradientPanel();
             ((System.ComponentModel.ISupportInitialize)picClose).BeginInit();
             customPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -58,47 +58,13 @@
             // 
             picClose.Cursor = Cursors.Hand;
             picClose.Image = Properties.Resources.close;
-            picClose.Location = new Point(727, 12);
+            picClose.Location = new Point(727, 10);
             picClose.Name = "picClose";
             picClose.Size = new Size(56, 49);
             picClose.SizeMode = PictureBoxSizeMode.Zoom;
             picClose.TabIndex = 29;
             picClose.TabStop = false;
             picClose.Click += picClose_Click;
-            // 
-            // customPanel2
-            // 
-            customPanel2.BackColor = Color.FromArgb(85, 69, 205);
-            customPanel2.BackColorEx = Color.FromArgb(85, 69, 205);
-            customPanel2.BorderColor = Color.Transparent;
-            customPanel2.BorderRadius = 15;
-            customPanel2.BorderThickness = 1;
-            customPanel2.Font = new Font("Segoe UI", 10F);
-            customPanel2.ForeColor = Color.Black;
-            customPanel2.Location = new Point(639, 548);
-            customPanel2.Name = "customPanel2";
-            customPanel2.ShadowColor = Color.Transparent;
-            customPanel2.ShadowSize = 6;
-            customPanel2.Size = new Size(214, 100);
-            customPanel2.TabIndex = 28;
-            customPanel2.UseShadow = true;
-            // 
-            // customPanel1
-            // 
-            customPanel1.BackColor = Color.FromArgb(85, 69, 205);
-            customPanel1.BackColorEx = Color.FromArgb(85, 69, 205);
-            customPanel1.BorderColor = Color.Transparent;
-            customPanel1.BorderRadius = 15;
-            customPanel1.BorderThickness = 1;
-            customPanel1.Font = new Font("Segoe UI", 10F);
-            customPanel1.ForeColor = Color.Black;
-            customPanel1.Location = new Point(-59, -37);
-            customPanel1.Name = "customPanel1";
-            customPanel1.ShadowColor = Color.Transparent;
-            customPanel1.ShadowSize = 6;
-            customPanel1.Size = new Size(550, 86);
-            customPanel1.TabIndex = 27;
-            customPanel1.UseShadow = true;
             // 
             // txtPassword
             // 
@@ -149,7 +115,7 @@
             btnLogin.BorderRadius = 15;
             btnLogin.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             btnLogin.Icon = (Image)resources.GetObject("btnLogin.Icon");
-            btnLogin.Location = new Point(349, 372);
+            btnLogin.Location = new Point(339, 374);
             btnLogin.Name = "btnLogin";
             btnLogin.RightToLeft = RightToLeft.Yes;
             btnLogin.Size = new Size(145, 55);
@@ -176,7 +142,7 @@
             customPanel3.Name = "customPanel3";
             customPanel3.ShadowColor = Color.Transparent;
             customPanel3.ShadowSize = 6;
-            customPanel3.Size = new Size(738, 508);
+            customPanel3.Size = new Size(723, 508);
             customPanel3.TabIndex = 29;
             customPanel3.UseShadow = true;
             // 
@@ -210,15 +176,57 @@
             txtEmail.TextPadding = 14;
             txtEmail.UsePasswordChar = false;
             // 
+            // gradientPanel3
+            // 
+            gradientPanel3.BackColor = Color.Transparent;
+            gradientPanel3.CornerRadius = 15;
+            gradientPanel3.GradientEndColor = Color.Violet;
+            gradientPanel3.GradientMidColor = Color.Violet;
+            gradientPanel3.GradientStartColor = Color.FromArgb(85, 69, 205);
+            gradientPanel3.HoverGlowColor = Color.Transparent;
+            gradientPanel3.HoverGlowRadius = 0;
+            gradientPanel3.Location = new Point(-30, -29);
+            gradientPanel3.Name = "gradientPanel3";
+            gradientPanel3.Padding = new Padding(6);
+            gradientPanel3.ShadowColor = Color.Transparent;
+            gradientPanel3.ShadowOffsetY = 0;
+            gradientPanel3.ShadowRadius = 0;
+            gradientPanel3.ShowGlassBorder = false;
+            gradientPanel3.ShowShadow = false;
+            gradientPanel3.ShowShimmer = false;
+            gradientPanel3.Size = new Size(422, 71);
+            gradientPanel3.TabIndex = 30;
+            // 
+            // gradientPanel1
+            // 
+            gradientPanel1.BackColor = Color.Transparent;
+            gradientPanel1.CornerRadius = 15;
+            gradientPanel1.GradientEndColor = Color.Violet;
+            gradientPanel1.GradientMidColor = Color.Violet;
+            gradientPanel1.GradientStartColor = Color.FromArgb(85, 69, 205);
+            gradientPanel1.HoverGlowColor = Color.Transparent;
+            gradientPanel1.HoverGlowRadius = 0;
+            gradientPanel1.Location = new Point(519, 580);
+            gradientPanel1.Name = "gradientPanel1";
+            gradientPanel1.Padding = new Padding(6);
+            gradientPanel1.ShadowColor = Color.Transparent;
+            gradientPanel1.ShadowOffsetY = 0;
+            gradientPanel1.ShadowRadius = 0;
+            gradientPanel1.ShowGlassBorder = false;
+            gradientPanel1.ShowShadow = false;
+            gradientPanel1.ShowShimmer = false;
+            gradientPanel1.Size = new Size(310, 80);
+            gradientPanel1.TabIndex = 32;
+            // 
             // Login
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(795, 611);
+            Controls.Add(gradientPanel1);
+            Controls.Add(gradientPanel3);
             Controls.Add(picClose);
-            Controls.Add(customPanel2);
-            Controls.Add(customPanel1);
             Controls.Add(customPanel3);
             Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             FormBorderStyle = FormBorderStyle.None;
@@ -236,8 +244,6 @@
 
         private Guna.UI2.WinForms.Guna2BorderlessForm guna2BorderlessForm1;
         private PictureBox picClose;
-        private Car_Rental_System.CustomControls.CustomPanel customPanel2;
-        private Car_Rental_System.CustomControls.CustomPanel customPanel1;
         private Controls.ModernTextBox txtPassword;
         private Controls.ModernTextBox txtEmail;
         private ReaLTaiizor.Controls.BigLabel lbl2;
@@ -245,5 +251,7 @@
         private Controls.ModernButton btnLogin;
         private Car_Rental_System.CustomControls.CustomPanel customPanel3;
         private PictureBox pictureBox1;
+        private GradientPanel gradientPanel1;
+        private GradientPanel gradientPanel3;
     }
 }

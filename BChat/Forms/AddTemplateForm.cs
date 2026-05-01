@@ -1,6 +1,7 @@
 ﻿using BChat.Controls;
 using BChat.Data.DataStore;
 using BChat.Models;
+using BChat.Models.Meta_Business;
 using BChat.Services;
 using System;
 using System.Collections.Generic;
@@ -16,9 +17,9 @@ namespace BChat.Forms
 {
     public partial class AddTemplateForm : Form
     {
-        private Template _template;
+        private WhatsAppTemplate _template;
         private TemplateStatus _status;
-        public AddTemplateForm(Template template, TemplateStatus status)
+        public AddTemplateForm(WhatsAppTemplate template, TemplateStatus status)
         {
             InitializeComponent();
 
@@ -59,7 +60,7 @@ namespace BChat.Forms
             if (status == TemplateStatus.Update && template != null)
             {
                 txbTemplateName.Text = template.Name;
-                rtbxContent.SetContent(template.Content);
+                rtbxContent.SetContent(template.BodyText);
 
                 if (!string.IsNullOrEmpty(template.Category))
                     cmbCategory.SelectedItem = template.Category;
@@ -160,20 +161,20 @@ namespace BChat.Forms
             };
 
             // ── 5. إرسال لـ Meta ────────────────────────────────
-            var service = new WhatsAppService();
-            bool success = await service.CreateTemplateAsync(payload);
+            //var service = new WhatsAppService();
+            //bool success = await service.CreateTemplateAsync(payload);
 
-            if (success)
-            {
-                MessageBox.Show("✅ تم إرسال القالب لـ Meta وينتظر الموافقة!",
-                    "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.Close();
-            }
-            else
-            {
-                MessageBox.Show("❌ فشل إرسال القالب — تحقق من البيانات!",
-                    "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            //if ()
+            //{
+            //    MessageBox.Show("✅ تم إرسال القالب لـ Meta وينتظر الموافقة!",
+            //        "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //    this.Close();
+            //}
+            //else
+            //{
+            //    MessageBox.Show("❌ فشل إرسال القالب — تحقق من البيانات!",
+            //        "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //}
         }
     }
 }

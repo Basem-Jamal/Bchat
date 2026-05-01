@@ -32,38 +32,27 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pnlContent = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
-            cmbTemplate = new ComboBox();
             btnAddTemplate = new BChat.Controls.ModernButton();
-            stcdTemplates = new BChat.Controls.StatCard();
             picTemplates = new PictureBox();
             btnSyncTemplates = new BChat.Controls.ModernButton();
             guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(components);
-            pnlContent.SuspendLayout();
+            stcdTemplates = new BChat.Controls.StatCard();
             ((System.ComponentModel.ISupportInitialize)picTemplates).BeginInit();
             SuspendLayout();
             // 
             // pnlContent
             // 
             pnlContent.BackColor = Color.FromArgb(248, 247, 255);
-            pnlContent.Controls.Add(cmbTemplate);
             pnlContent.CustomizableEdges = customizableEdges1;
             pnlContent.FillColor = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor2 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor3 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor4 = Color.FromArgb(248, 247, 255);
-            pnlContent.Location = new Point(20, 168);
+            pnlContent.Location = new Point(20, 153);
             pnlContent.Name = "pnlContent";
             pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            pnlContent.Size = new Size(1472, 455);
+            pnlContent.Size = new Size(1472, 520);
             pnlContent.TabIndex = 13;
-            // 
-            // cmbTemplate
-            // 
-            cmbTemplate.FormattingEnabled = true;
-            cmbTemplate.Location = new Point(500, 42);
-            cmbTemplate.Name = "cmbTemplate";
-            cmbTemplate.Size = new Size(446, 23);
-            cmbTemplate.TabIndex = 0;
             // 
             // btnAddTemplate
             // 
@@ -78,24 +67,6 @@
             btnAddTemplate.TabIndex = 14;
             btnAddTemplate.Text = "اضافة قالب";
             btnAddTemplate.Click += btnAddTemplate_Click;
-            // 
-            // stcdTemplates
-            // 
-            stcdTemplates.AccentColor = Color.FromArgb(32, 201, 151);
-            stcdTemplates.BackColor = Color.Transparent;
-            stcdTemplates.CardColor = Color.White;
-            stcdTemplates.IconBgColor = Color.FromArgb(220, 245, 235);
-            stcdTemplates.IconColor = Color.FromArgb(32, 201, 151);
-            stcdTemplates.Location = new Point(1041, 650);
-            stcdTemplates.Name = "stcdTemplates";
-            stcdTemplates.ShadowColor = Color.FromArgb(30, 0, 0, 0);
-            stcdTemplates.Size = new Size(425, 135);
-            stcdTemplates.TabIndex = 15;
-            stcdTemplates.Text = "statCard1";
-            stcdTemplates.Title = "القوالب النشطة";
-            stcdTemplates.TitleColor = Color.FromArgb(150, 160, 175);
-            stcdTemplates.Value = "0";
-            stcdTemplates.ValueColor = Color.FromArgb(25, 35, 60);
             // 
             // picTemplates
             // 
@@ -130,6 +101,25 @@
             guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6D;
             guna2BorderlessForm1.TransparentWhileDrag = true;
             // 
+            // stcdTemplates
+            // 
+            stcdTemplates.AccentColor = Color.FromArgb(32, 201, 151);
+            stcdTemplates.BackColor = Color.Transparent;
+            stcdTemplates.CardColor = Color.White;
+            stcdTemplates.IconBgColor = Color.FromArgb(220, 245, 235);
+            stcdTemplates.IconColor = Color.FromArgb(32, 201, 151);
+            stcdTemplates.Location = new Point(1173, 676);
+            stcdTemplates.Name = "stcdTemplates";
+            stcdTemplates.ShadowColor = Color.FromArgb(30, 0, 0, 0);
+            stcdTemplates.Size = new Size(307, 109);
+            stcdTemplates.TabIndex = 15;
+            stcdTemplates.Text = "statCard1";
+            stcdTemplates.Title = "القوالب النشطة";
+            stcdTemplates.TitleColor = Color.FromArgb(150, 160, 175);
+            stcdTemplates.Value = "0";
+            stcdTemplates.ValueColor = Color.FromArgb(25, 35, 60);
+            stcdTemplates.ValueFontSize = 17F;
+            // 
             // TemplatesControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -143,7 +133,6 @@
             Name = "TemplatesControl";
             Size = new Size(1510, 785);
             Load += TemplatesControl_Load;
-            pnlContent.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)picTemplates).EndInit();
             ResumeLayout(false);
         }
@@ -151,10 +140,9 @@
         #endregion
         private Guna.UI2.WinForms.Guna2CustomGradientPanel pnlContent;
         private Controls.ModernButton btnAddTemplate;
-        private Controls.StatCard stcdTemplates;
         private PictureBox picTemplates;
-        private ComboBox cmbTemplate;
         private Controls.ModernButton btnSyncTemplates;
         private Guna.UI2.WinForms.Guna2BorderlessForm guna2BorderlessForm1;
+        private Controls.StatCard stcdTemplates;
     }
 }

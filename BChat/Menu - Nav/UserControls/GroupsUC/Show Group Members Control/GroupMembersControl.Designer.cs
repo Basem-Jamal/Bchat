@@ -48,7 +48,7 @@
             // 
             // btnBack
             // 
-            btnBack.BackColor = Color.Transparent;
+            btnBack.BackColor = Color.Tomato;
             btnBack.BorderRadius = 20;
             btnBack.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
             btnBack.Icon = Properties.Resources.refersh;

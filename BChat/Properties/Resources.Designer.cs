@@ -63,6 +63,16 @@ namespace BChat.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ad_campaign {
+            get {
+                object obj = ResourceManager.GetObject("ad-campaign", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap add_f {
             get {
                 object obj = ResourceManager.GetObject("add-f", resourceCulture);
@@ -123,6 +133,36 @@ namespace BChat.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap api__1_ {
+            get {
+                object obj = ResourceManager.GetObject("api (1)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap chat {
+            get {
+                object obj = ResourceManager.GetObject("chat", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap chat__1_ {
+            get {
+                object obj = ResourceManager.GetObject("chat (1)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap close {
             get {
                 object obj = ResourceManager.GetObject("close", resourceCulture);
@@ -173,6 +213,16 @@ namespace BChat.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Customers2 {
+            get {
+                object obj = ResourceManager.GetObject("Customers2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap edit {
             get {
                 object obj = ResourceManager.GetObject("edit", resourceCulture);
@@ -186,6 +236,36 @@ namespace BChat.Properties {
         internal static System.Drawing.Bitmap edit__1_ {
             get {
                 object obj = ResourceManager.GetObject("edit (1)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap group {
+            get {
+                object obj = ResourceManager.GetObject("group", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap group__1_ {
+            get {
+                object obj = ResourceManager.GetObject("group (1)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap group__1_1 {
+            get {
+                object obj = ResourceManager.GetObject("group (1)1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -226,6 +306,26 @@ namespace BChat.Properties {
         internal static System.Drawing.Bitmap home {
             get {
                 object obj = ResourceManager.GetObject("home", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap layers {
+            get {
+                object obj = ResourceManager.GetObject("layers", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap layout {
+            get {
+                object obj = ResourceManager.GetObject("layout", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -286,6 +386,16 @@ namespace BChat.Properties {
         internal static System.Drawing.Bitmap message {
             get {
                 object obj = ResourceManager.GetObject("message", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap message__1_ {
+            get {
+                object obj = ResourceManager.GetObject("message (1)", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

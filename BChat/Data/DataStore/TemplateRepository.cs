@@ -1,7 +1,7 @@
 ﻿using BChat.Events;
-using BChat.Models;
 using BChat.Models.Meta_Business;
 using Microsoft.Data.SqlClient;
+using System.Collections.Generic;
 
 namespace BChat.Data.DataStore
 {
@@ -9,71 +9,45 @@ namespace BChat.Data.DataStore
     {
         private static string _connectionString = DatabaseConfig.ConnectionString;
 
-        public static List<Template> GetAll()
+        // ── جلب كل القوالب ───────────────────────────────────────────────────
+        public static List<WhatsAppTemplate> GetAll()
         {
-            List<Template> templates = new List<Template>();
+            var templates = new List<WhatsAppTemplate>();
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
                 string query = @"SELECT Id, Name, Content, Category, CreatedAt, 
-                         Language, HeaderType, HeaderText, ComponentsJson 
-                         FROM Templates";
+                                        Language, HeaderType, HeaderText, ComponentsJson, MetaTemplateId
+                                 FROM Templates";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
-                    {
-                        templates.Add(new Template
-                        {
-                            Id = reader.GetInt32(0),
-                            Name = reader.GetString(1),
-                            Content = reader.IsDBNull(2) ? "" : reader.GetString(2),
-                            Category = reader.IsDBNull(3) ? null : reader.GetString(3),
-                            CreatedAt = reader.GetDateTime(4),
-                            Language = reader.IsDBNull(5) ? "ar" : reader.GetString(5),
-                            HeaderType = reader.IsDBNull(6) ? "NONE" : reader.GetString(6),
-                            HeaderText = reader.IsDBNull(7) ? "" : reader.GetString(7),
-                            ComponentsJson = reader.IsDBNull(8) ? "[]" : reader.GetString(8)
-                        });
-                    }
+                        templates.Add(Map(reader));
                 }
             }
 
             return templates;
         }
 
-        public static Template GetById(int id)
+        // ── جلب قالب بالـ ID ─────────────────────────────────────────────────
+        public static WhatsAppTemplate GetById(int id)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
                 string query = @"SELECT Id, Name, Content, Category, CreatedAt, 
-                         Language, HeaderType, HeaderText, ComponentsJson 
-                         FROM Templates WHERE Id = @Id";
+                                        Language, HeaderType, HeaderText, ComponentsJson, MetaTemplateId
+                                 FROM Templates WHERE Id = @Id";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@Id", id);
-
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        if (reader.Read())
-                        {
-                            return new Template
-                            {
-                                Id = reader.GetInt32(0),
-                                Name = reader.GetString(1),
-                                Content = reader.IsDBNull(2) ? "" : reader.GetString(2),
-                                Category = reader.IsDBNull(3) ? null : reader.GetString(3),
-                                CreatedAt = reader.GetDateTime(4),
-                                Language = reader.IsDBNull(5) ? "ar" : reader.GetString(5),
-                                HeaderType = reader.IsDBNull(6) ? "NONE" : reader.GetString(6),
-                                HeaderText = reader.IsDBNull(7) ? "" : reader.GetString(7),
-                                ComponentsJson = reader.IsDBNull(8) ? "[]" : reader.GetString(8)
-                            };
-                        }
+                        if (reader.Read()) return Map(reader);
                     }
                 }
             }
@@ -81,86 +55,40 @@ namespace BChat.Data.DataStore
             return null;
         }
 
+        // ── مزامنة من Meta (يضيف أو يحدث) ───────────────────────────────────
         public static void Upsert(WhatsAppTemplate t)
         {
-            using var conn = new SqlConnection(DatabaseConfig.ConnectionString);
-            conn.Open();
-
-            string query = @"
-    IF EXISTS (SELECT 1 FROM Templates WHERE Name = @Name)
-        UPDATE Templates 
-        SET [Content] = @Content, Category = @Category, 
-            Language = @Language, ComponentsJson = @ComponentsJson,
-            HeaderType = @HeaderType, HeaderText = @HeaderText
-        WHERE Name = @Name
-    ELSE
-        INSERT INTO Templates (Name, [Content], Category, Language, ComponentsJson, HeaderType, HeaderText, CreatedAt)
-        VALUES (@Name, @Content, @Category, @Language, @ComponentsJson, @HeaderType, @HeaderText, GETDATE())";
-
-            using var cmd = new SqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@Name", t.Name);
-            cmd.Parameters.AddWithValue("@Content", t.BodyText);
-            cmd.Parameters.AddWithValue("@Category", t.Category);
-            cmd.Parameters.AddWithValue("@Language", t.Language ?? "ar");
-            cmd.Parameters.AddWithValue("@ComponentsJson", t.ComponentsJson ?? "[]");
-            cmd.Parameters.AddWithValue("@HeaderType", t.HeaderType ?? "NONE");
-            cmd.Parameters.AddWithValue("@HeaderText", t.HeaderText ?? "");
-
-
-            cmd.ExecuteNonQuery();
-        }
-        public static bool Add(Template template)
-        {
-            bool result = false;
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
-                string query = "INSERT INTO Templates (Name, Content, Category) VALUES (@Name, @Content, @Category)";
+                string query = @"
+                    IF EXISTS (SELECT 1 FROM Templates WHERE Name = @Name)
+                        UPDATE Templates 
+                        SET [Content]      = @Content,
+                            Category       = @Category,
+                            Language       = @Language,
+                            ComponentsJson = @ComponentsJson,
+                            HeaderType     = @HeaderType,
+                            HeaderText     = @HeaderText,
+                            MetaTemplateId = @MetaTemplateId
+                        WHERE Name = @Name
+                    ELSE
+                        INSERT INTO Templates 
+                            (Name, [Content], Category, Language, ComponentsJson, HeaderType, HeaderText, MetaTemplateId, CreatedAt)
+                        VALUES 
+                            (@Name, @Content, @Category, @Language, @ComponentsJson, @HeaderType, @HeaderText, @MetaTemplateId, GETDATE())";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@Name", template.Name);
-                    cmd.Parameters.AddWithValue("@Content", template.Content);
-                    cmd.Parameters.AddWithValue("@Category", (object)template.Category ?? DBNull.Value);
-
-                    result = cmd.ExecuteNonQuery() > 0;
+                    BindParams(cmd, t);
+                    cmd.ExecuteNonQuery();
                 }
             }
-
-            AppEvents.ChangeRefreshTemplatesTable();
-
-            return result;
         }
 
-        public static bool Update(Template template)
-        {
-            bool result = false;
-
-            using (SqlConnection conn = new SqlConnection(_connectionString))
-            {
-                conn.Open();
-                string query = "UPDATE Templates SET Name=@Name, Content=@Content, Category=@Category WHERE Id=@Id";
-
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@Id", template.Id);
-                    cmd.Parameters.AddWithValue("@Name", template.Name);
-                    cmd.Parameters.AddWithValue("@Content", template.Content);
-                    cmd.Parameters.AddWithValue("@Category", (object)template.Category ?? DBNull.Value);
-
-                    result = cmd.ExecuteNonQuery() > 0;
-                }
-            }
-
-            AppEvents.ChangeRefreshTemplatesTable();
-
-            return result;
-
-        }
-
+        // ── حذف ──────────────────────────────────────────────────────────────
         public static bool Delete(int id)
         {
-            bool result = false;
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
@@ -169,13 +97,38 @@ namespace BChat.Data.DataStore
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@Id", id);
-                    result = cmd.ExecuteNonQuery() > 0;
+                    bool result = cmd.ExecuteNonQuery() > 0;
+                    AppEvents.ChangeRefreshTemplatesTable();
+                    return result;
                 }
             }
+        }
 
-            AppEvents.ChangeRefreshTemplatesTable(); 
+        // ── Helpers ───────────────────────────────────────────────────────────
+        private static WhatsAppTemplate Map(SqlDataReader r) => new WhatsAppTemplate
+        {
+            Id = r.GetInt32(0),
+            Name = r.GetString(1),
+            BodyText = r.IsDBNull(2) ? "" : r.GetString(2),
+            Category = r.IsDBNull(3) ? null : r.GetString(3),
+            CreatedAt = r.GetDateTime(4),
+            Language = r.IsDBNull(5) ? "ar" : r.GetString(5),
+            HeaderType = r.IsDBNull(6) ? "NONE" : r.GetString(6),
+            HeaderText = r.IsDBNull(7) ? "" : r.GetString(7),
+            ComponentsJson = r.IsDBNull(8) ? "[]" : r.GetString(8),
+            MetaTemplateId = r.IsDBNull(9) ? "" : r.GetString(9),
+        };
 
-            return result;
+        private static void BindParams(SqlCommand cmd, WhatsAppTemplate t)
+        {
+            cmd.Parameters.AddWithValue("@Name", t.Name);
+            cmd.Parameters.AddWithValue("@Content", (object)t.BodyText ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@Category", (object)t.Category ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@Language", t.Language ?? "ar");
+            cmd.Parameters.AddWithValue("@ComponentsJson", t.ComponentsJson ?? "[]");
+            cmd.Parameters.AddWithValue("@HeaderType", t.HeaderType ?? "NONE");
+            cmd.Parameters.AddWithValue("@HeaderText", t.HeaderText ?? "");
+            cmd.Parameters.AddWithValue("@MetaTemplateId", (object)t.MetaTemplateId ?? DBNull.Value);
         }
     }
-}
+} 

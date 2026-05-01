@@ -28,23 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pnlContent = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             pictureBox1 = new PictureBox();
             stcdCoustomers = new BChat.Controls.StatCard();
             btnAddCustomer = new BChat.Controls.ModernButton();
             btnRefreshData = new BChat.Controls.ModernButton();
+            btnImportExcel = new BChat.Controls.ModernButton();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // pnlContent
             // 
             pnlContent.BackColor = Color.White;
-            pnlContent.CustomizableEdges = customizableEdges1;
+            pnlContent.CustomizableEdges = customizableEdges3;
             pnlContent.Location = new Point(0, 190);
             pnlContent.Name = "pnlContent";
-            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges4;
             pnlContent.Size = new Size(1306, 461);
             pnlContent.TabIndex = 0;
             // 
@@ -105,11 +106,26 @@
             btnRefreshData.Text = "تحديث";
             btnRefreshData.Click += btnRefreshData_Click;
             // 
+            // btnImportExcel
+            // 
+            btnImportExcel.BackColor = Color.Transparent;
+            btnImportExcel.BorderRadius = 20;
+            btnImportExcel.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
+            btnImportExcel.Icon = null;
+            btnImportExcel.Location = new Point(409, 41);
+            btnImportExcel.Name = "btnImportExcel";
+            btnImportExcel.RightToLeft = RightToLeft.Yes;
+            btnImportExcel.Size = new Size(140, 66);
+            btnImportExcel.TabIndex = 13;
+            btnImportExcel.Text = "رفع ملف عملاء";
+            btnImportExcel.Click += btnImportExcel_Click;
+            // 
             // CustomersControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(248, 247, 255);
+            Controls.Add(btnImportExcel);
             Controls.Add(btnRefreshData);
             Controls.Add(btnAddCustomer);
             Controls.Add(stcdCoustomers);
@@ -128,5 +144,6 @@
         private Controls.StatCard stcdCoustomers;
         private Controls.ModernButton btnAddCustomer;
         private Controls.ModernButton btnRefreshData;
+        private Controls.ModernButton btnImportExcel;
     }
 }

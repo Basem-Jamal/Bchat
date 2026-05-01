@@ -1,9 +1,10 @@
 ﻿using BChat.Controls;
-using BChat.Data.DataStore;
+using BChat.Data.DataStore.Customers_Repository;
 using BChat.Events;
 using BChat.Forms;
 using BChat.Global;
 using BChat.Models;
+using BChat.Services;
 
 namespace BChat.UserControls
 {
@@ -51,9 +52,10 @@ namespace BChat.UserControls
         }
         private void LoadCustomers()
         {
+            AppCache.Customers = CustomerRepository.GetAll();
             var customers = AppCache.Customers;
 
-            stcdCoustomers.Value = customers.Count.ToString();
+            stcdCoustomers.Value = customers.Count.ToString("N0")+"K";
 
             var rows = new List<Dictionary<string, object>>();
 
@@ -133,18 +135,18 @@ namespace BChat.UserControls
                 {
                     var oldGroupIds = AppCache.GetGroupIdsByCustomer(id);
 
-                    AppCache.GroupMembers.RemoveAll (m => m.CustomerId == id);
-                    AppCache.Customers.RemoveAll (c => c.Id == id);
-                    AppCache.ChatMessages.RemoveAll (c => c.Id == id);
+                    AppCache.GroupMembers.RemoveAll(m => m.CustomerId == id);
+                    AppCache.Customers.RemoveAll(c => c.Id == id);
+                    AppCache.ChatMessages.RemoveAll(c => c.Id == id);
                     AppEvents.NotifyCustomerDeleted(id);
-                    
+
                     foreach (var groupId in oldGroupIds)
                     {
                         var group = AppCache.Groups.FirstOrDefault(g => g.Id == groupId);
 
                         if (group != null)
                         {
-                            int count = AppCache.GroupMembers.Count(m => m.GroupId  == groupId);
+                            int count = AppCache.GroupMembers.Count(m => m.GroupId == groupId);
                             group.StatOneValue = count.ToString();
 
                             AppEvents.AppGroups.ChangeGroupUpdated(group);
@@ -181,6 +183,28 @@ namespace BChat.UserControls
         private void btnRefreshData_Click(object sender, EventArgs e)
         {
             LoadCustomers();
+        }
+
+        private void btnImportExcel_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog dialog = new OpenFileDialog())
+            {
+                dialog.Title = "اختر ملف Excel";
+                dialog.Filter = "Excel Files|*.xlsx;*.xls";
+
+                if (dialog.ShowDialog() != DialogResult.OK) return;
+
+                var (added, skipped) = ExcelImportService.ImportCustomers(dialog.FileName);
+
+                MessageBox.Show(
+                             $"✅ تم إضافة {added} عميل\n⚠️ تم تخطّي {skipped} صف",
+                             "نتيجة الاستيراد",
+                             MessageBoxButtons.OK,
+                             MessageBoxIcon.Information);
+
+                LoadCustomers();
+
+            }
         }
     }
 }

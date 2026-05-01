@@ -4,6 +4,7 @@ using BChat.Events;
 using BChat.Forms;
 using BChat.Models;
 using BChat.Services;
+using BChat.Services.Meta___Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,8 +25,8 @@ namespace BChat.UserControls
         {
             InitializeComponent();
 
-            this.Load += TemplatesControl_Load;
-
+            AppEvents.OnRefreshTemplatesTable -= LoadTemplates;
+            AppEvents.OnRefreshTemplatesTable += LoadTemplates;
 
         }
 
@@ -37,9 +38,6 @@ namespace BChat.UserControls
             _table.IsRtl = true;
             _table.BorderRadius = 10;
             _table.ShadowDepth = 0;
-
-            AppEvents.OnRefreshTemplatesTable += LoadTemplates;
-            await LoadTemplatesCombo();
 
         }
         private async Task InitTable()
@@ -69,58 +67,30 @@ namespace BChat.UserControls
             _table.EditClicked += Table_EditClicked;
             pnlContent.Controls.Add(_table);
         }
-        private async Task LoadTemplatesCombo()
+        private void LoadTemplates()
         {
-            var templates =  TemplateRepository.GetAll();
-
-            cmbTemplate.Items.Clear();
-            foreach (var t in templates)
-            {
-                cmbTemplate.Items.Add(t.Name);
-            }
-        }
-        private async void LoadTemplates()
-        {
-            //var templates = TemplateRepository.GetAll();
-
-            //stcdTemplates.Value = templates.Count.ToString();
-
-            //var rows = new List<Dictionary<string, object>>();
-
-            //foreach (var t in templates)
-            //{
-            //    rows.Add(new Dictionary<string, object>
-            //    {
-            //        { "Id",        t.Id },
-            //        { "Name",      t.Name },
-            //        { "Content",    t.Content },
-            //        { "Category",     t.Category },
-            //        { "CreatedAt", t.CreatedAt.ToString("yyyy/MM/dd") }
-            //    });
-            //}
-
-            //_table.SetData(rows);
-
-
-            var service = new WhatsAppService();
-            var templates = await service.GetTemplatesAsync();
+            var templates = TemplateRepository.GetAll();
 
             stcdTemplates.Value = templates.Count.ToString();
 
             var rows = new List<Dictionary<string, object>>();
+
             foreach (var t in templates)
             {
                 rows.Add(new Dictionary<string, object>
                 {
-                    { "Id",       t.Name },   // ← أضف هذا
-                    { "Name",     t.Name },
-                    { "Content",  t.BodyText },
-                    { "Category", t.Category },
-                    { "CreatedAt", "-" },        // ← أضف هذا
-
+                    { "Id",        t.Id },
+                    { "Name",      t.Name },
+                    { "Content",    t.BodyText },
+                    { "Category",     t.Category },
+                    { "CreatedAt", t.CreatedAt.ToString("yyyy/MM/dd") }
                 });
             }
+
             _table.SetData(rows);
+            _table.Invalidate();
+            _table.Update();
+
 
         }
 
@@ -140,19 +110,19 @@ namespace BChat.UserControls
 
         private void Table_EditClicked(object sender, int rowIndex)
         {
-            var row = _table.GetSelectedRow();
-            if (row == null) return;
+            //var row = _table.GetSelectedRow();
+            //if (row == null) return;
 
-            Template template = new Template()
-            {
-                Id = Convert.ToInt32(row["Id"]),
-                Name = row["Name"].ToString(),
-                Content = row["Content"].ToString(),
-                Category = row["Category"].ToString(),
-                CreatedAt = Convert.ToDateTime(row["CreatedAt"]) // "-" مو تاريخ
-            };
-            AddTemplateForm updateTemplate = new AddTemplateForm(template, TemplateStatus.Update);
-            updateTemplate.ShowDialog();
+            //Template template = new Template()
+            //{
+            //    Id = Convert.ToInt32(row["Id"]),
+            //    Name = row["Name"].ToString(),
+            //    Content = row["Content"].ToString(),
+            //    Category = row["Category"].ToString(),
+            //    CreatedAt = Convert.ToDateTime(row["CreatedAt"]) // "-" مو تاريخ
+            //};
+            //AddTemplateForm updateTemplate = new AddTemplateForm(template, TemplateStatus.Update);
+            //updateTemplate.ShowDialog();
         }
         private void Table_DeleteClicked(object sender, int rowIndex)
         {
@@ -187,24 +157,30 @@ namespace BChat.UserControls
         {
 
 
-            var mainForm = this.FindForm();
+            //var mainForm = this.FindForm();
 
-            var overlay = OverlayPanel.Show(mainForm);
+            //var overlay = OverlayPanel.Show(mainForm);
 
-            Template newTemplate = new Template();
-            AddTemplateForm addTemplateForm = new AddTemplateForm(newTemplate, TemplateStatus.Add);
-            addTemplateForm.ShowDialog();
+            //Template newTemplate = new Template();
+            //AddTemplateForm addTemplateForm = new AddTemplateForm(newTemplate, TemplateStatus.Add);
+            //addTemplateForm.ShowDialog();
 
-            overlay.Close(mainForm);
+            //overlay.Close(mainForm);
 
         }
 
         private async void btnSyncTemplates_Click(object sender, EventArgs e)
         {
-            var service = new WhatsAppService();
-            await service.SyncTemplatesToDatabase();
-            MessageBox.Show("✅ تمت المزامنة بنجاح!", "مزامنة", MessageBoxButtons.OK);
-            LoadTemplates(); // تحديث الجدول
+            btnSyncTemplates.Enabled = false;
+            btnSyncTemplates.Variant = ButtonVariant.CustomBasem;
+
+            await MetaTemplateService.SyncTemplatesToDbAsync();
+            LoadTemplates();
+            MessageBox.Show("✅ تمت مزامنة القوالب من Meta");
+
+            btnSyncTemplates.Enabled = true;
+            btnSyncTemplates.Variant = ButtonVariant.Primary;
+
 
         }
     }

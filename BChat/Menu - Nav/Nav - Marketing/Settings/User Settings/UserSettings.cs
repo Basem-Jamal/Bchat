@@ -17,6 +17,16 @@ namespace BChat.Menu___Nav.Nav___Marketing.Settings.User_Settings
         {
             InitializeComponent();
 
+
+        }
+
+        private void UserSettings_Load(object sender, EventArgs e)
+        {
+            LoadPage();
+        }
+        private void LoadPage()
+        {
+
             if (!pnlContent.Controls.ContainsKey("EditUser_View"))
             {
                 EditUser editUser = new EditUser();
@@ -27,15 +37,15 @@ namespace BChat.Menu___Nav.Nav___Marketing.Settings.User_Settings
 
             pnlContent.Controls["EditUser_View"].BringToFront();
 
-
         }
-
-
-
         private void picClose_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
+        private void btnAddUser_Click(object sender, EventArgs e)
+        {
+            
+        }
     }
 }

@@ -17,8 +17,9 @@ namespace BChat.WhatsApp
 
         // ── Polling ────────────────────────────────────
         private readonly HttpClient _httpClient = new() { Timeout = TimeSpan.FromSeconds(10) };
-        private readonly string _webhookServerUrl = "https://basemMetaWhatsapp.basemn8n.qzz.io";
+        private readonly string _webhookServerUrl = "https://meta-webhook.basemn8n.qzz.io";
         private Timer? _pollTimer;
+        
 
         public event Action<IncomingWhatsAppMessage>? MessageReceived;
 
@@ -31,15 +32,15 @@ namespace BChat.WhatsApp
         public void Start()
         {
             _cts = new CancellationTokenSource();
-            _listener.Start();
-            Task.Run(() => ListenLoop(_cts.Token));
+            //_listener.Start();
+            //Task.Run(() => ListenLoop(_cts.Token));
 
-            // ابدأ الـ polling كل 3 ثواني
-            _pollTimer = new Timer(
-                async _ => await PollMessagesAsync(),
-                null,
-                TimeSpan.FromSeconds(3),
-                TimeSpan.FromSeconds(3));
+            //ابدأ الـ polling كل 3 ثواني
+           _pollTimer = new Timer(
+               async _ => await PollMessagesAsync(),
+               null,
+               TimeSpan.FromSeconds(3),
+               TimeSpan.FromSeconds(3));
 
             System.Diagnostics.Debug.WriteLine("✅ Polling started");
         }
@@ -77,6 +78,9 @@ namespace BChat.WhatsApp
 
                     System.Diagnostics.Debug.WriteLine($"📩 Polled: {msg.SenderName} - {msg.Text}");
                     MessageReceived?.Invoke(msg);
+                    // ✅ علّم الرسالة كمعالجة
+                    await _httpClient.PostAsync($"{_webhookServerUrl}/api/messages/processed/{m.Id}", null);
+
                 }
             }
             catch (Exception ex)

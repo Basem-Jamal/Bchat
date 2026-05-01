@@ -9,14 +9,29 @@ namespace BChat.Data
     internal static class DatabaseConfig
     {
 
+        // Server In VPS
         public static string ConnectionString =
-    "Server=DESKTOP-FA969I1;Database=WaBusinessManagerDB;Trusted_Connection=True;TrustServerCertificate=True;";
+                    "Server=tcp:76.13.57.99,1433;" +
+                    "Initial Catalog=WaBusinessManagerDB;" +
+                    "User ID=sa;" +
+                    "Password=Bb@!ServerCloudBchat0534926949;" +
+                    "Encrypt=False;" +
+                    "TrustServerCertificate=True;" +
+                    "Connection Timeout=30;";
 
 
 
 
-    //    public static string ConnectionString =
-    //"Server=DESKTOP-ROIBB36\\MSSQLSERVER1;Database=WaBusinessManagerDB;Trusted_Connection=True;TrustServerCertificate=True;";
+
+        //DESKTOP-FA969I1 -- PC
+        //    public static string ConnectionString =
+        //"Server=DESKTOP-FA969I1;Database=WaBusinessManagerDB;Trusted_Connection=True;TrustServerCertificate=True;";
+
+
+
+
+        //    public static string ConnectionString =
+        //"Server=DESKTOP-ROIBB36\\MSSQLSERVER1;Database=WaBusinessManagerDB;Trusted_Connection=True;TrustServerCertificate=True;";
         //public static string ConnectionString =
         //    "Server=DESKTOP-ROIBB36;Database=WaBusinessManagerDB;Trusted_Connection=True;TrustServerCertificate=True;";
     }

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BChat.Data.DataStore
+namespace BChat.Data.DataStore.Customers_Repository
 {
     public static class CustomerRepository
     {
@@ -21,7 +21,8 @@ namespace BChat.Data.DataStore
             {
                 conn.Open();
 
-                string query = "SELECT Id, Name, Phone, CreatedAt FROM Customers";
+                string query = "SELECT Id, Name, Phone, CreatedAt  FROM Customers " +
+                    "ORDER BY CreatedAt ASC";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 using (SqlDataReader reader = cmd.ExecuteReader())
@@ -107,6 +108,35 @@ namespace BChat.Data.DataStore
             }
         }
 
+        public static int AddIfNotExists(Customer customer)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                string checkQuery = "SELECT Id FROM Customers WHERE Phone = @Phone";
+                using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn))
+                {
+                    checkCmd.Parameters.AddWithValue("@Phone", customer.Phone);
+                    var existing = checkCmd.ExecuteScalar();
+                    if (existing != null)
+                        return Convert.ToInt32(existing);
+                    
+                }
+
+                string insertQuery = @"INSERT INTO Customers (Name, Phone, CreatedAt)
+                                       VALUES (@Name, @Phone, @CreatedAt);
+                                       SELECT SCOPE_IDENTITY()";
+
+                using (SqlCommand cmd = new SqlCommand(insertQuery, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Name", customer.Name);
+                    cmd.Parameters.AddWithValue("@Phone", customer.Phone);
+                    cmd.Parameters.AddWithValue("@CreatedAt", customer.CreatedAt);
+                    return Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+        }
         public static bool Delete(int Id)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))

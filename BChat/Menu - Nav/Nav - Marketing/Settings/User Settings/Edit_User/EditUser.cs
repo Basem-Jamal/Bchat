@@ -21,6 +21,8 @@ namespace BChat.Menu___Nav.Nav___Marketing.Settings.User_Settings.InfoUser
     {
         private Dictionary<string, int> userMap = new();
 
+        private bool _isLoading = false;
+
         private User _user = new User();
         public EditUser()
         {
@@ -32,7 +34,11 @@ namespace BChat.Menu___Nav.Nav___Marketing.Settings.User_Settings.InfoUser
         }
         private void LoadUsers()
         {
+
+            _isLoading = true;
+
             cmbUser.Items.Clear();
+            userMap.Clear();
 
             foreach (var item in AppCache.Users)
             {
@@ -41,7 +47,16 @@ namespace BChat.Menu___Nav.Nav___Marketing.Settings.User_Settings.InfoUser
                 cmbUser.AddItem(Result);
 
                 userMap[Result] = item.Id;
+
+
             }
+
+            _isLoading = false;
+
+
+            if (cmbUser.Items.Count > 0)
+                cmbUser.SelectedIndex = 0;
+
         }
 
         private void LoadDataUser(int Id)
@@ -152,6 +167,7 @@ namespace BChat.Menu___Nav.Nav___Marketing.Settings.User_Settings.InfoUser
         }
         private void cmbUser_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_isLoading) return;
 
             var selected = cmbUser.SelectedItem;
 
@@ -159,10 +175,10 @@ namespace BChat.Menu___Nav.Nav___Marketing.Settings.User_Settings.InfoUser
             {
                 string text = selected.ToString();
 
-                if (userMap.TryGetValue(text, out int id))
+                if (userMap.TryGetValue(text, out int Id))
                 {
-                    _user.Id = id;
-                    LoadDataUser(id);
+                    _user.Id = Id;
+                    LoadDataUser(Id);
                 }
 
             }

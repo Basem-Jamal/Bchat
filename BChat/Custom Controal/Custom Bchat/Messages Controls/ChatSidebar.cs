@@ -1,12 +1,17 @@
 ﻿// ============================================================
-//  BChat — ChatSidebar Custom Control  (v3 — Designer Properties)
-//  Namespace : BChat.Custom_Controal.Chat
+//  BChat — ChatSidebar Custom Control  (v4 — Virtual Scrolling)
+//  Namespace : BChat.Custom_Controal.Custom_Bchat.Message_Controls
 //  Target    : .NET 8 / Windows Forms
 //
-//  التحديثات في v3:
+//  التحديثات في v4:
+//  ① استبدال FlowLayoutPanel بـ VirtualChatList (Custom Control واحد)
+//  ② رسم العناصر المرئية فقط + buffer (10 فوق و 10 تحت)
+//  ③ يتعامل مع 100,000+ محادثة بدون أي مشاكل في الـ window handles
+//  ④ Mouse wheel يشتغل بدون سرقة الـ focus من البحث (IMessageFilter)
+//
+//  التحديثات السابقة في v3 (محتفظ بها):
 //  ① إصلاح مشكلة الـ Panel (مستطيل خلف الأيقونة) → g.Clear(parentBg)
-//  ② خصائص Designer كاملة للزر: ButtonColor, ButtonSize,
-//     ButtonIconPadding, ButtonShape, HeaderTitle, HeaderIcon
+//  ② خصائص Designer كاملة للزر
 //  ③ Enum ButtonShapeStyle: Circle / RoundedSquare / Square
 // ============================================================
 
@@ -54,32 +59,29 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
     // ─────────────────────────────────────────────────────────
     [ToolboxItem(true)]
     [Category("BChat - Chat")]
-    [Description("WhatsApp/Telegram-style chat list sidebar.")]
+    [Description("WhatsApp/Telegram-style chat list sidebar with virtual scrolling.")]
     public class ChatSidebar : UserControl
     {
         // ── Design Tokens ────────────────────────────────────
-        internal static readonly Color C_BG = Color.FromArgb(255, 255, 255);
+        internal static readonly Color C_BG = Color.FromArgb(255, 255, 255); // #FFFFFF
         internal static readonly Color C_BORDER = Color.FromArgb(226, 232, 240);
         internal static readonly Color C_SEARCH_BG = Color.FromArgb(248, 247, 255);
-        internal static readonly Color C_ACCENT = Color.FromArgb(124, 111, 247);
-        internal static readonly Color C_ONLINE = Color.FromArgb(16, 185, 129);
-        internal static readonly Color C_ITEM_SEL = Color.FromArgb(248, 247, 255);
-        internal static readonly Color C_ITEM_HOV = Color.FromArgb(252, 251, 255);
+        internal static readonly Color C_ACCENT = Color.FromArgb(124, 111, 247); // #7C6FF7
+        internal static readonly Color C_ONLINE = Color.FromArgb(16, 185, 129); // #10B981
+        internal static readonly Color C_ITEM_SEL = Color.FromArgb(248, 247, 255); // #F8F7FF
+        internal static readonly Color C_ITEM_HOV = Color.FromArgb(250, 250, 255); // #FAFAFF
         internal static readonly Color C_TITLE = Color.FromArgb(15, 23, 42);
-        internal static readonly Color C_NAME = Color.FromArgb(15, 23, 42);
-        internal static readonly Color C_MSG = Color.FromArgb(100, 116, 139);
-        internal static readonly Color C_TIME = Color.FromArgb(148, 163, 184);
+        internal static readonly Color C_NAME = Color.FromArgb(15, 23, 42); // #0F172A
+        internal static readonly Color C_MSG = Color.FromArgb(100, 116, 139); // #64748B
+        internal static readonly Color C_TIME = Color.FromArgb(148, 163, 184); // #94A3B8
         internal static readonly Color C_PILL_OFF = Color.FromArgb(241, 245, 249);
         internal static readonly Color C_PILL_TXT_OFF = Color.FromArgb(100, 116, 139);
-        internal static readonly Color C_SEP = Color.FromArgb(241, 245, 249);
+        internal static readonly Color C_SEP = Color.FromArgb(241, 245, 249); // #F1F5F9
 
         // ── Layout ───────────────────────────────────────────
         private const int H_HEADER = 64;
         private const int H_SEARCH = 56;
         private const int H_FILTERS = 52;
-        private const int H_ITEM = 76;
-        private const int AVATAR_SZ = 48;
-        private const int ONLINE_SZ = 11;
         private const int BTN_SZ_DEFAULT = 38;
 
         // ── Designer Properties: New Chat Button ─────────────
@@ -90,9 +92,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
         private ButtonShapeStyle _btnShape = ButtonShapeStyle.Circle;
         private string _headerTitleText = "الدردشات";
 
-        // ─────────────────────────────────────────────────────
-        //  [A] أيقونة مخصصة داخل الزر
-        // ─────────────────────────────────────────────────────
         [Category("BChat — New Chat Button")]
         [Description("أيقونة مخصصة داخل زر المحادثة الجديدة. اتركها فارغة لرسم أيقونة القلم الافتراضية.")]
         [DefaultValue(null)]
@@ -102,9 +101,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             set { _headerIcon = value; _btnNewChat?.Invalidate(); }
         }
 
-        // ─────────────────────────────────────────────────────
-        //  [B] لون خلفية الزر
-        // ─────────────────────────────────────────────────────
         [Category("BChat — New Chat Button")]
         [Description("لون خلفية زر المحادثة الجديدة.")]
         public Color ButtonColor
@@ -113,9 +109,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             set { _btnColor = value; _btnNewChat?.Invalidate(); }
         }
 
-        // ─────────────────────────────────────────────────────
-        //  [C] حجم الزر
-        // ─────────────────────────────────────────────────────
         [Category("BChat — New Chat Button")]
         [Description("حجم زر المحادثة الجديدة بالبكسل (مربع، من 24 إلى 64).")]
         [DefaultValue(BTN_SZ_DEFAULT)]
@@ -133,9 +126,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             }
         }
 
-        // ─────────────────────────────────────────────────────
-        //  [D] padding الأيقونة داخل الزر
-        // ─────────────────────────────────────────────────────
         [Category("BChat — New Chat Button")]
         [Description("مسافة الأيقونة عن حواف الزر بالبكسل. كلما زادت كلما صغرت الأيقونة.")]
         [DefaultValue(9)]
@@ -145,9 +135,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             set { _btnIconPadding = Math.Max(2, value); _btnNewChat?.Invalidate(); }
         }
 
-        // ─────────────────────────────────────────────────────
-        //  [E] شكل الزر
-        // ─────────────────────────────────────────────────────
         [Category("BChat — New Chat Button")]
         [Description("شكل الزر: دائرة كاملة، أو مستطيل بحواف مدورة، أو مستطيل حاد.")]
         [DefaultValue(ButtonShapeStyle.Circle)]
@@ -157,9 +144,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             set { _btnShape = value; _btnNewChat?.Invalidate(); }
         }
 
-        // ─────────────────────────────────────────────────────
-        //  [F] عنوان الهيدر
-        // ─────────────────────────────────────────────────────
         [Category("BChat — New Chat Button")]
         [Description("عنوان القسم في الهيدر.")]
         [DefaultValue("الدردشات")]
@@ -179,7 +163,7 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
         private Panel _pnlFilters = null!;
         private Panel _pnlList = null!;
         private VScrollOnlyFLP _flpFilters = null!;
-        private VScrollOnlyFLP _flpList = null!;
+        private VirtualChatList _listCtrl = null!;
         private PillButton _pillAll = null!;
         private PillButton _pillUnread = null!;
         private PillButton _pillGroups = null!;
@@ -268,31 +252,26 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
         public void SetSelectedChat(int contactId)
         {
             _selectedId = contactId;
-            if (_flpList == null) return;
-            foreach (Control c in _flpList.Controls)
-                if (c is ChatItemControl ci)
-                    ci.IsSelected = (ci.Data.ContactId == contactId);
+            _listCtrl?.SetSelected(contactId);
         }
 
         public void RefreshItem(int contactId)
         {
-            if (_flpList == null) return;
-            foreach (Control c in _flpList.Controls)
-                if (c is ChatItemControl ci && ci.Data.ContactId == contactId)
-                { ci.Invalidate(); break; }
+            _listCtrl?.InvalidateItem(contactId);
         }
 
         public void MoveItemToTop(int contactId)
         {
-            if (_flpList == null) return;
-            ChatItemControl? target = null;
-            foreach (Control c in _flpList.Controls)
-                if (c is ChatItemControl ci && ci.Data.ContactId == contactId)
-                { target = ci; break; }
-            if (target == null) return;
-            _flpList.SuspendLayout();
-            _flpList.Controls.SetChildIndex(target, 0);
-            _flpList.ResumeLayout(true);
+            // إعادة الترتيب في القائمة الكاملة عشان يبقى الترتيب ثابت
+            // حتى بعد إعادة التحديث (refresh)
+            int idx = _allChats.FindIndex(c => c.ContactId == contactId);
+            if (idx > 0)
+            {
+                var item = _allChats[idx];
+                _allChats.RemoveAt(idx);
+                _allChats.Insert(0, item);
+            }
+            _listCtrl?.MoveToTop(contactId);
         }
 
         // ─────────────────────────────────────────────────────
@@ -360,26 +339,22 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             };
 
             // ── زر المحادثة الجديدة ───────────────────────────
-            // FIX: BackColor = Transparent حتى لا يظهر مستطيل خلف الدائرة
             _btnNewChat = new Button
             {
                 FlatStyle = FlatStyle.Flat,
-                BackColor = Color.Transparent,   // ← مهم: شفاف
+                BackColor = Color.Transparent,
                 Cursor = Cursors.Hand,
                 TabStop = false,
                 Size = new Size(_btnSize, _btnSize),
             };
             _btnNewChat.FlatAppearance.BorderSize = 0;
-            _btnNewChat.FlatAppearance.MouseOverBackColor = Color.Transparent; // ← يمنع مستطيل hover
-            _btnNewChat.FlatAppearance.MouseDownBackColor = Color.Transparent; // ← يمنع مستطيل click
+            _btnNewChat.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            _btnNewChat.FlatAppearance.MouseDownBackColor = Color.Transparent;
             _btnNewChat.Paint += PaintNewChatButton;
             _btnNewChat.Click += (s, e) => NewChatClicked?.Invoke(this, EventArgs.Empty);
-
-            // hover: نحدّث الـ flag فقط ونعيد الرسم
             _btnNewChat.MouseEnter += (s, e) => { _btnHovered = true; _btnNewChat.Invalidate(); };
             _btnNewChat.MouseLeave += (s, e) => { _btnHovered = false; _btnNewChat.Invalidate(); };
 
-            // Wrap button with margin
             var pnlBtnWrap = new Panel
             {
                 Width = _btnSize + 20,
@@ -444,23 +419,17 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             }
             _pnlFilters.Controls.Add(_flpFilters);
 
-            // ── Chat List ────────────────────────────────────
+            // ── Chat List (Virtual) ──────────────────────────
             _pnlList = new Panel { Dock = DockStyle.Fill, BackColor = C_BG };
 
-            _flpList = new VScrollOnlyFLP
+            _listCtrl = new VirtualChatList(_fontName, _fontMsg, _fontTime)
             {
                 Dock = DockStyle.Fill,
-                FlowDirection = FlowDirection.TopDown,
-                WrapContents = false,
                 BackColor = C_BG,
             };
-            _flpList.HandleCreated += (s, e) =>
-            {
-                if (s is FlowLayoutPanel flp)
-                    flp.AutoScroll = true;
-            };
+            _listCtrl.ChatSelected += OnVirtualChatSelected;
 
-            _pnlList.Controls.Add(_flpList);
+            _pnlList.Controls.Add(_listCtrl);
 
             // ── Assemble ─────────────────────────────────────
             Controls.Add(_pnlList);
@@ -489,7 +458,7 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
         }
 
         // ─────────────────────────────────────────────────────
-        //  PaintNewChatButton — الإصلاح الرئيسي هنا
+        //  PaintNewChatButton
         // ─────────────────────────────────────────────────────
         private void PaintNewChatButton(object? sender, PaintEventArgs e)
         {
@@ -500,12 +469,9 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             g.SmoothingMode = SmoothingMode.AntiAlias;
             g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 
-            // ── FIX: امسح بلون الأب أولاً ──────────────────
-            // هذا يزيل المستطيل الذي يظهر خلف الدائرة
             Color parentBg = btn.Parent?.BackColor ?? C_BG;
             g.Clear(parentBg);
 
-            // ── حساب الـ radius حسب الشكل المختار ──────────
             int radius = _btnShape switch
             {
                 ButtonShapeStyle.Circle => btn.Width / 2,
@@ -516,13 +482,11 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
 
             var rc = new Rectangle(0, 0, btn.Width - 1, btn.Height - 1);
 
-            // Shadow
             var shadowR = new Rectangle(1, 2, btn.Width - 2, btn.Height - 2);
             using (var sp = new SolidBrush(Color.FromArgb(30, _btnColor)))
             using (var spath = RoundRect(shadowR, radius))
                 g.FillPath(sp, spath);
 
-            // Button fill — أفتح قليلاً عند hover
             Color fillColor = _btnHovered
                 ? ControlPaint.Light(_btnColor, 0.15f)
                 : _btnColor;
@@ -531,7 +495,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             using (var br = new SolidBrush(fillColor))
                 g.FillPath(br, path);
 
-            // Highlight sheen
             var innerRc = new Rectangle(1, 1, btn.Width - 3, btn.Height / 2);
             using (var ip = RoundRect(innerRc, radius))
             using (var hb = new LinearGradientBrush(
@@ -539,7 +502,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 Color.FromArgb(60, 255, 255, 255), Color.Transparent))
                 g.FillPath(hb, ip);
 
-            // Icon: صورة مخصصة أو أيقونة القلم الافتراضية
             if (_headerIcon != null)
             {
                 var iconR = new Rectangle(
@@ -598,25 +560,10 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
         // ─────────────────────────────────────────────────────
         private void RefreshList()
         {
-            if (_flpList == null) return;
-            _flpList.SuspendLayout();
-            foreach (Control c in _flpList.Controls) c.Dispose();
-            _flpList.Controls.Clear();
-
+            if (_listCtrl == null) return;
             var visible = FilteredChats();
-            for (int i = 0; i < visible.Count; i++)
-            {
-                var item = new ChatItemControl(visible[i], _fontName, _fontMsg, _fontTime)
-                {
-                    Width = Math.Max(_flpList.ClientSize.Width, 1),
-                    Height = H_ITEM,
-                    IsSelected = visible[i].ContactId == _selectedId,
-                    IsLast = i == visible.Count - 1,
-                };
-                item.ItemClicked += OnChatItemClicked;
-                _flpList.Controls.Add(item);
-            }
-            _flpList.ResumeLayout(true);
+            _listCtrl.SetItems(visible);
+            _listCtrl.SetSelected(_selectedId);
         }
 
         private List<ChatListItemData> FilteredChats()
@@ -635,13 +582,11 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             return q.ToList();
         }
 
-        private void OnChatItemClicked(object? sender, int id)
+        private void OnVirtualChatSelected(object? sender, int id)
         {
             _selectedId = id;
             var chat = _allChats.FirstOrDefault(c => c.ContactId == id);
             if (chat != null) chat.UnreadCount = 0;
-            foreach (Control c in _flpList.Controls)
-                if (c is ChatItemControl ci) ci.IsSelected = ci.Data.ContactId == id;
             ChatSelected?.Invoke(this, id);
         }
 
@@ -659,14 +604,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
             _pillAll.Active = _filter == "all";
             _pillUnread.Active = _filter == "unread";
             _pillGroups.Active = _filter == "groups";
-        }
-
-        protected override void OnSizeChanged(EventArgs e)
-        {
-            base.OnSizeChanged(e);
-            if (_flpList == null) return;
-            foreach (Control c in _flpList.Controls)
-                c.Width = Math.Max(_flpList.ClientSize.Width, 1);
         }
 
         // ─────────────────────────────────────────────────────
@@ -699,7 +636,627 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
         }
 
         // ═════════════════════════════════════════════════════
-        //  Nested: VScrollOnlyFLP
+        //  Nested: VirtualChatList — القلب: virtual scrolling
+        // ═════════════════════════════════════════════════════
+        private sealed class VirtualChatList : Control
+        {
+            // ── Layout constants ─────────────────────────────
+            private const int ITEM_H = 72;
+            private const int AVATAR_SZ = 48;
+            private const int ONLINE_SZ = 10;
+            private const int LEFT_PAD = 8;
+            private const int LEFT_COL_W = 52;   // عمود الوقت + شارة الإشعار
+            private const int AVATAR_R_PAD = 12;   // مسافة الـ avatar من اليمين
+            private const int BUFFER_ITEMS = 10;   // عدد العناصر فوق/تحت viewport للتسليس
+
+            // ── Data ─────────────────────────────────────────
+            private readonly List<ChatListItemData> _items = new();
+            private readonly Dictionary<int, int> _idToIndex = new();
+            private int _selectedId = -1;
+            private int _hoveredIndex = -1;
+            private int _scrollOffset = 0;
+
+            // ── Fonts (مرجع فقط — لا تعمل لها dispose) ───────
+            private readonly Font _fontName;
+            private readonly Font _fontMsg;
+            private readonly Font _fontTime;
+
+            // ── Scrollbar ────────────────────────────────────
+            private readonly VScrollBar _vScroll;
+
+            // ── Mouse-wheel filter (scroll-on-hover) ─────────
+            private MouseWheelFilter? _wheelFilter;
+
+            // ── Events ───────────────────────────────────────
+            public event EventHandler<int>? ChatSelected;
+
+            public VirtualChatList(Font fontName, Font fontMsg, Font fontTime)
+            {
+                _fontName = fontName;
+                _fontMsg = fontMsg;
+                _fontTime = fontTime;
+
+                SetStyle(
+                    ControlStyles.OptimizedDoubleBuffer |
+                    ControlStyles.AllPaintingInWmPaint |
+                    ControlStyles.UserPaint |
+                    ControlStyles.ResizeRedraw |
+                    ControlStyles.Selectable,
+                    true);
+                UpdateStyles();
+
+                BackColor = C_BG;
+                TabStop = false;
+                Cursor = Cursors.Default;
+
+                _vScroll = new VScrollBar
+                {
+                    Dock = DockStyle.Right,
+                    Visible = false,
+                    SmallChange = ITEM_H,
+                };
+                _vScroll.Scroll += OnVScroll;
+                _vScroll.ValueChanged += OnVScrollValueChanged;
+                Controls.Add(_vScroll);
+            }
+
+            // ─────────────────────────────────────────────
+            //  Public API (يُستدعى من ChatSidebar)
+            // ─────────────────────────────────────────────
+            public void SetItems(IList<ChatListItemData> items)
+            {
+                SuspendLayout();
+                _items.Clear();
+                _idToIndex.Clear();
+
+                if (items != null)
+                {
+                    for (int i = 0; i < items.Count; i++)
+                    {
+                        _items.Add(items[i]);
+                        _idToIndex[items[i].ContactId] = i;
+                    }
+                }
+
+                _hoveredIndex = -1;
+                _scrollOffset = 0;
+                UpdateScrollBar();
+                if (_vScroll.Visible) _vScroll.Value = 0;
+                ResumeLayout(false);
+                Invalidate();
+            }
+
+            public void SetSelected(int contactId)
+            {
+                if (_selectedId == contactId) return;
+                int prev = _selectedId;
+                _selectedId = contactId;
+                InvalidateItemById(prev);
+                InvalidateItemById(contactId);
+            }
+
+            public void InvalidateItem(int contactId)
+            {
+                InvalidateItemById(contactId);
+            }
+
+            public void MoveToTop(int contactId)
+            {
+                if (!_idToIndex.TryGetValue(contactId, out int idx)) return;
+                if (idx == 0) return;
+
+                var item = _items[idx];
+                _items.RemoveAt(idx);
+                _items.Insert(0, item);
+
+                // إعادة بناء الفهرس
+                _idToIndex.Clear();
+                for (int i = 0; i < _items.Count; i++)
+                    _idToIndex[_items[i].ContactId] = i;
+
+                _hoveredIndex = -1;
+                Invalidate();
+            }
+
+            // ─────────────────────────────────────────────
+            //  Internal helpers
+            // ─────────────────────────────────────────────
+            private int ContentWidth =>
+                _vScroll.Visible
+                    ? Math.Max(1, Width - _vScroll.Width)
+                    : Math.Max(1, Width);
+
+            private void InvalidateItemById(int contactId)
+            {
+                if (contactId < 0) return;
+                if (!_idToIndex.TryGetValue(contactId, out int idx)) return;
+                InvalidateItemAt(idx);
+            }
+
+            private void InvalidateItemAt(int idx)
+            {
+                if (idx < 0 || idx >= _items.Count) return;
+                int y = idx * ITEM_H - _scrollOffset;
+                if (y + ITEM_H < 0 || y > Height) return;   // off-screen
+                Invalidate(new Rectangle(0, y, ContentWidth, ITEM_H));
+            }
+
+            private int HitTest(Point p)
+            {
+                if (p.X < 0 || p.X >= ContentWidth) return -1;
+                if (p.Y < 0 || p.Y >= Height) return -1;
+                int abs = p.Y + _scrollOffset;
+                int idx = abs / ITEM_H;
+                if (idx < 0 || idx >= _items.Count) return -1;
+                return idx;
+            }
+
+            private void UpdateScrollBar()
+            {
+                int totalH = _items.Count * ITEM_H;
+                int vh = Math.Max(1, Height);
+
+                if (totalH <= vh)
+                {
+                    if (_vScroll.Visible) _vScroll.Visible = false;
+                    _scrollOffset = 0;
+                    return;
+                }
+
+                if (!_vScroll.Visible) _vScroll.Visible = true;
+
+                _vScroll.Minimum = 0;
+                _vScroll.LargeChange = vh;
+                _vScroll.SmallChange = ITEM_H;
+                // الـ Maximum لازم يخلي maxOffset = totalH - vh
+                // VScrollBar formula: maxReachable = Maximum - LargeChange + 1
+                //   ⟹  Maximum = totalH - 1
+                _vScroll.Maximum = totalH - 1;
+
+                int maxOffset = Math.Max(0, totalH - vh);
+                if (_scrollOffset > maxOffset) _scrollOffset = maxOffset;
+                if (_scrollOffset < 0) _scrollOffset = 0;
+
+                int safeVal = Math.Min(_scrollOffset, _vScroll.Maximum - _vScroll.LargeChange + 1);
+                if (safeVal < 0) safeVal = 0;
+                if (_vScroll.Value != safeVal) _vScroll.Value = safeVal;
+            }
+
+            private void OnVScroll(object? sender, ScrollEventArgs e)
+            {
+                _scrollOffset = e.NewValue;
+                UpdateHoverFromCurrentMouse();
+                Invalidate();
+            }
+
+            private void OnVScrollValueChanged(object? sender, EventArgs e)
+            {
+                if (_scrollOffset == _vScroll.Value) return;
+                _scrollOffset = _vScroll.Value;
+                UpdateHoverFromCurrentMouse();
+                Invalidate();
+            }
+
+            private void UpdateHoverFromCurrentMouse()
+            {
+                if (!IsHandleCreated) return;
+                Point p = PointToClient(MousePosition);
+                int idx = ClientRectangle.Contains(p) ? HitTest(p) : -1;
+                if (idx != _hoveredIndex)
+                {
+                    int prev = _hoveredIndex;
+                    _hoveredIndex = idx;
+                    InvalidateItemAt(prev);
+                    InvalidateItemAt(idx);
+                }
+            }
+
+            // ─────────────────────────────────────────────
+            //  Lifecycle: install/remove wheel filter
+            // ─────────────────────────────────────────────
+            protected override void OnHandleCreated(EventArgs e)
+            {
+                base.OnHandleCreated(e);
+                if (_wheelFilter == null)
+                {
+                    _wheelFilter = new MouseWheelFilter(this);
+                    Application.AddMessageFilter(_wheelFilter);
+                }
+            }
+
+            protected override void OnHandleDestroyed(EventArgs e)
+            {
+                if (_wheelFilter != null)
+                {
+                    Application.RemoveMessageFilter(_wheelFilter);
+                    _wheelFilter = null;
+                }
+                base.OnHandleDestroyed(e);
+            }
+
+            // ─────────────────────────────────────────────
+            //  Resize
+            // ─────────────────────────────────────────────
+            protected override void OnSizeChanged(EventArgs e)
+            {
+                base.OnSizeChanged(e);
+                UpdateScrollBar();
+                Invalidate();
+            }
+
+            // ─────────────────────────────────────────────
+            //  Mouse
+            // ─────────────────────────────────────────────
+            protected override void OnMouseMove(MouseEventArgs e)
+            {
+                base.OnMouseMove(e);
+                int idx = HitTest(e.Location);
+                if (idx == _hoveredIndex) return;
+                int prev = _hoveredIndex;
+                _hoveredIndex = idx;
+                InvalidateItemAt(prev);
+                InvalidateItemAt(idx);
+            }
+
+            protected override void OnMouseLeave(EventArgs e)
+            {
+                base.OnMouseLeave(e);
+                if (_hoveredIndex < 0) return;
+                int prev = _hoveredIndex;
+                _hoveredIndex = -1;
+                InvalidateItemAt(prev);
+            }
+
+            protected override void OnMouseClick(MouseEventArgs e)
+            {
+                base.OnMouseClick(e);
+                if (e.Button != MouseButtons.Left) return;
+                int idx = HitTest(e.Location);
+                if (idx < 0) return;
+
+                var item = _items[idx];
+                int prev = _selectedId;
+                _selectedId = item.ContactId;
+
+                // وضعها كمقروءة محلياً عشان الـ badge يختفي فوراً
+                if (item.UnreadCount > 0) item.UnreadCount = 0;
+
+                InvalidateItemById(prev);
+                InvalidateItemAt(idx);
+
+                ChatSelected?.Invoke(this, item.ContactId);
+            }
+
+            protected override void OnMouseWheel(MouseEventArgs e)
+            {
+                base.OnMouseWheel(e);
+                if (!_vScroll.Visible) return;
+
+                // 3 صفوف لكل notch (= 120 delta)
+                int notches = e.Delta / 120;
+                int delta = -notches * ITEM_H * 3;
+
+                int maxVal = Math.Max(0, _vScroll.Maximum - _vScroll.LargeChange + 1);
+                int newVal = _vScroll.Value + delta;
+                if (newVal < _vScroll.Minimum) newVal = _vScroll.Minimum;
+                if (newVal > maxVal) newVal = maxVal;
+
+                if (newVal != _vScroll.Value) _vScroll.Value = newVal;
+            }
+
+            // ─────────────────────────────────────────────
+            //  Keyboard (لو الـ control عنده focus)
+            // ─────────────────────────────────────────────
+            protected override bool IsInputKey(Keys keyData)
+            {
+                return keyData switch
+                {
+                    Keys.Up or Keys.Down or Keys.PageUp or Keys.PageDown
+                    or Keys.Home or Keys.End => true,
+                    _ => base.IsInputKey(keyData),
+                };
+            }
+
+            protected override void OnKeyDown(KeyEventArgs e)
+            {
+                base.OnKeyDown(e);
+                if (!_vScroll.Visible) return;
+
+                int maxVal = Math.Max(0, _vScroll.Maximum - _vScroll.LargeChange + 1);
+                int newVal = _vScroll.Value;
+
+                switch (e.KeyCode)
+                {
+                    case Keys.Up: newVal -= ITEM_H; break;
+                    case Keys.Down: newVal += ITEM_H; break;
+                    case Keys.PageUp: newVal -= _vScroll.LargeChange; break;
+                    case Keys.PageDown: newVal += _vScroll.LargeChange; break;
+                    case Keys.Home: newVal = 0; break;
+                    case Keys.End: newVal = maxVal; break;
+                    default: return;
+                }
+
+                if (newVal < 0) newVal = 0;
+                if (newVal > maxVal) newVal = maxVal;
+                if (newVal != _vScroll.Value) _vScroll.Value = newVal;
+                e.Handled = true;
+            }
+
+            // ─────────────────────────────────────────────
+            //  OnPaint — قلب الـ virtual scrolling
+            // ─────────────────────────────────────────────
+            protected override void OnPaint(PaintEventArgs e)
+            {
+                var g = e.Graphics;
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+
+                // خلفية كاملة
+                using (var bgBr = new SolidBrush(C_BG))
+                    g.FillRectangle(bgBr, 0, 0, Width, Height);
+
+                if (_items.Count == 0) return;
+
+                int contentW = ContentWidth;
+                int vh = Height;
+
+                // حساب نطاق العناصر المرئية + buffer
+                int firstIdx = Math.Max(0, _scrollOffset / ITEM_H - BUFFER_ITEMS);
+                int lastIdx = Math.Min(_items.Count - 1,
+                                        (_scrollOffset + vh) / ITEM_H + BUFFER_ITEMS);
+
+                Rectangle clip = e.ClipRectangle;
+
+                for (int i = firstIdx; i <= lastIdx; i++)
+                {
+                    int y = i * ITEM_H - _scrollOffset;
+                    var rc = new Rectangle(0, y, contentW, ITEM_H);
+
+                    // skip اللي خارج clip rect عشان الأداء
+                    if (rc.Bottom < clip.Top || rc.Top > clip.Bottom) continue;
+
+                    DrawItem(g, rc, _items[i],
+                        isSelected: _items[i].ContactId == _selectedId,
+                        isHovered: i == _hoveredIndex,
+                        isLast: i == _items.Count - 1);
+                }
+            }
+
+            // ─────────────────────────────────────────────
+            //  DrawItem — رسم عنصر واحد في rectangle محدد
+            //  (هذا اللي كان OnPaint بتاع ChatItemControl قديماً)
+            // ─────────────────────────────────────────────
+            private void DrawItem(Graphics g, Rectangle rc, ChatListItemData data,
+                                  bool isSelected, bool isHovered, bool isLast)
+            {
+                // 1) الخلفية
+                Color bg = isSelected ? C_ITEM_SEL
+                         : isHovered ? C_ITEM_HOV
+                                      : C_BG;
+                using (var br = new SolidBrush(bg))
+                    g.FillRectangle(br, rc);
+
+                // 2) مؤشر اختيار (شريط على اليمين + glow على اليسار)
+                if (isSelected)
+                {
+                    var stripe = new Rectangle(rc.Right - 3, rc.Y + 10, 3, rc.Height - 20);
+                    using (var sb = new LinearGradientBrush(
+                        stripe, C_ACCENT, Color.FromArgb(140, C_ACCENT), 90f))
+                        g.FillRectangle(sb, stripe);
+
+                    using (var wb = new LinearGradientBrush(
+                        new Rectangle(rc.X, rc.Y, 60, rc.Height),
+                        Color.FromArgb(12, C_ACCENT), Color.Transparent, 0f))
+                        g.FillRectangle(wb, rc.X, rc.Y, 60, rc.Height);
+                }
+
+                // 3) خط فاصل
+                if (!isLast && !isSelected)
+                {
+                    using var sp = new Pen(C_SEP, 1f);
+                    g.DrawLine(sp, rc.X + 72, rc.Bottom - 1, rc.Right - 16, rc.Bottom - 1);
+                }
+
+                // 4) الـ Avatar (يمين)
+                int avatarRight = rc.Right - AVATAR_R_PAD;
+                int avatarTop = rc.Y + (rc.Height - AVATAR_SZ) / 2;
+                var avatarRc = new Rectangle(avatarRight - AVATAR_SZ, avatarTop, AVATAR_SZ, AVATAR_SZ);
+                DrawAvatar(g, avatarRc, data.Avatar, data.ContactName);
+
+                // 5) النقطة الخضراء (online)
+                if (data.IsOnline)
+                {
+                    int dx = avatarRc.Right - ONLINE_SZ + 1;
+                    int dy = avatarRc.Bottom - ONLINE_SZ + 1;
+                    using (var wb = new SolidBrush(C_BG))
+                        g.FillEllipse(wb, dx - 2, dy - 2, ONLINE_SZ + 4, ONLINE_SZ + 4);
+                    using (var gb = new SolidBrush(C_ONLINE))
+                        g.FillEllipse(gb, dx, dy, ONLINE_SZ, ONLINE_SZ);
+                }
+
+                // 6) العمود الأيسر — الوقت (في أعلى العمود)
+                var timeRect = new Rectangle(rc.X + LEFT_PAD, avatarTop + 4, LEFT_COL_W, 18);
+                using (var timeSf = new StringFormat
+                {
+                    Alignment = StringAlignment.Center,
+                    LineAlignment = StringAlignment.Center,
+                    FormatFlags = StringFormatFlags.NoWrap,
+                    Trimming = StringTrimming.EllipsisCharacter,
+                })
+                using (var tb = new SolidBrush(C_TIME))
+                    g.DrawString(data.Timestamp ?? string.Empty, _fontTime, tb, timeRect, timeSf);
+
+                // 7) شارة الإشعار (تحت الوقت في نفس العمود)
+                if (data.UnreadCount > 0)
+                {
+                    string txt = data.UnreadCount > 99 ? "99+" : data.UnreadCount.ToString();
+                    SizeF txtsz = g.MeasureString(txt, _fontTime);
+                    int bw = (int)Math.Max(txtsz.Width + 12, 22);
+                    int bh = 20;
+                    int bx = rc.X + LEFT_PAD + (LEFT_COL_W - bw) / 2;
+                    int by = avatarTop + AVATAR_SZ - bh - 2;
+
+                    using (var glowPath = RoundRect(new Rectangle(bx - 3, by - 3, bw + 6, bh + 6), 12))
+                    using (var glb = new SolidBrush(Color.FromArgb(35, C_ACCENT)))
+                        g.FillPath(glb, glowPath);
+
+                    using (var badgePath = RoundRect(new Rectangle(bx, by, bw, bh), 10))
+                    using (var bb = new SolidBrush(C_ACCENT))
+                        g.FillPath(bb, badgePath);
+
+                    using var numSf = new StringFormat
+                    {
+                        Alignment = StringAlignment.Center,
+                        LineAlignment = StringAlignment.Center,
+                        FormatFlags = StringFormatFlags.NoWrap,
+                    };
+                    using var wb = new SolidBrush(Color.White);
+                    g.DrawString(txt, _fontTime, wb, new Rectangle(bx, by, bw, bh), numSf);
+                }
+
+                // 8) الوسط — الاسم + آخر رسالة
+                int textRight = avatarRc.Left - 10;
+                int textLeft = rc.X + LEFT_PAD + LEFT_COL_W + 6;
+                int textWidth = textRight - textLeft;
+
+                if (textWidth > 10)
+                {
+                    using var nameSf = new StringFormat
+                    {
+                        Alignment = StringAlignment.Far,
+                        LineAlignment = StringAlignment.Center,
+                        Trimming = StringTrimming.EllipsisCharacter,
+                        FormatFlags = StringFormatFlags.NoWrap,
+                    };
+                    using (var nb = new SolidBrush(C_NAME))
+                        g.DrawString(data.ContactName ?? string.Empty, _fontName, nb,
+                            new Rectangle(textLeft, avatarTop + 4, textWidth, 22), nameSf);
+
+                    string displayMsg = data.IsLastMessageSent
+                        ? "أنت: " + (data.LastMessage ?? string.Empty)
+                        : (data.LastMessage ?? string.Empty);
+
+                    using var msgSf = new StringFormat
+                    {
+                        Alignment = StringAlignment.Far,
+                        LineAlignment = StringAlignment.Center,
+                        Trimming = StringTrimming.EllipsisCharacter,
+                        FormatFlags = StringFormatFlags.NoWrap,
+                    };
+                    using (var mb = new SolidBrush(C_MSG))
+                        g.DrawString(displayMsg, _fontMsg, mb,
+                            new Rectangle(textLeft, avatarTop + 30, textWidth, 20), msgSf);
+                }
+            }
+
+            // ─────────────────────────────────────────────
+            //  DrawAvatar (نفس الكود القديم)
+            // ─────────────────────────────────────────────
+            private static void DrawAvatar(Graphics g, Rectangle r, Image? avatar, string name)
+            {
+                if (r.Width < 2 || r.Height < 2) return;
+                using var path = RoundRect(r, r.Width / 2);
+                Region? saved = g.Clip.Clone();
+                g.SetClip(path);
+
+                if (avatar != null)
+                {
+                    g.DrawImage(avatar, r);
+                }
+                else
+                {
+                    var colors = new[]
+                    {
+                        new[] { Color.FromArgb(124, 111, 247), Color.FromArgb(167,  97, 247) },
+                        new[] { Color.FromArgb( 16, 185, 129), Color.FromArgb( 45, 212, 191) },
+                        new[] { Color.FromArgb(245, 158,  11), Color.FromArgb(251, 191,  36) },
+                        new[] { Color.FromArgb(239,  68,  68), Color.FromArgb(252, 165, 165) },
+                        new[] { Color.FromArgb( 59, 130, 246), Color.FromArgb(147, 197, 253) },
+                        new[] { Color.FromArgb(168,  85, 247), Color.FromArgb(216, 180, 254) },
+                    };
+                    int hash = string.IsNullOrEmpty(name) ? 0 : Math.Abs(name.GetHashCode());
+                    var pair = colors[hash % colors.Length];
+                    using var gr = new LinearGradientBrush(r, pair[0], pair[1], 135f);
+                    g.FillPath(gr, path);
+
+                    string initial = string.IsNullOrEmpty(name) ? "?" : name[0].ToString();
+                    string face = ChatSidebar.IsFontInstalled("Cairo") ? "Cairo" : "Segoe UI";
+                    using var fi = new Font(face, 16f, FontStyle.Bold, GraphicsUnit.Point);
+                    using var ib = new SolidBrush(Color.White);
+                    using var isf = new StringFormat
+                    {
+                        Alignment = StringAlignment.Center,
+                        LineAlignment = StringAlignment.Center,
+                    };
+                    g.DrawString(initial, fi, ib, r, isf);
+                }
+
+                g.Clip = saved ?? new Region();
+                saved?.Dispose();
+
+                using var ring = new Pen(Color.FromArgb(18, 0, 0, 0), 1f);
+                g.DrawEllipse(ring, r.X + 1, r.Y + 1, r.Width - 2, r.Height - 2);
+            }
+
+            // ─────────────────────────────────────────────
+            //  Dispose
+            // ─────────────────────────────────────────────
+            protected override void Dispose(bool disposing)
+            {
+                if (disposing && _wheelFilter != null)
+                {
+                    Application.RemoveMessageFilter(_wheelFilter);
+                    _wheelFilter = null;
+                }
+                base.Dispose(disposing);
+            }
+
+            // ═════════════════════════════════════════════════
+            //  Nested: MouseWheelFilter
+            //  السبب: WM_MOUSEWHEEL في Windows يروح للـ control
+            //  اللي معاه focus، مش اللي تحت الماوس. عشان نسوي
+            //  scroll-on-hover (زي WhatsApp Desktop) نلتقط الرسالة
+            //  من Application.MessageFilter ونرجعها للقائمة لو
+            //  الماوس فوقها.
+            // ═════════════════════════════════════════════════
+            private sealed class MouseWheelFilter : IMessageFilter
+            {
+                private const int WM_MOUSEWHEEL = 0x020A;
+                private readonly VirtualChatList _target;
+
+                public MouseWheelFilter(VirtualChatList target) { _target = target; }
+
+                public bool PreFilterMessage(ref Message m)
+                {
+                    if (m.Msg != WM_MOUSEWHEEL) return false;
+                    if (_target == null || _target.IsDisposed ||
+                        !_target.IsHandleCreated || !_target.Visible)
+                        return false;
+
+                    Point screenPt;
+                    try { screenPt = Cursor.Position; }
+                    catch { return false; }
+
+                    Point localPt;
+                    try { localPt = _target.PointToClient(screenPt); }
+                    catch { return false; }
+
+                    if (!_target.ClientRectangle.Contains(localPt)) return false;
+
+                    // استخراج الـ delta من wParam (HIWORD)
+                    long wp = m.WParam.ToInt64();
+                    short delta = (short)((wp >> 16) & 0xFFFF);
+
+                    var args = new MouseEventArgs(
+                        MouseButtons.None, 0, localPt.X, localPt.Y, delta);
+                    _target.OnMouseWheel(args);
+                    return true; // استهلكنا الرسالة
+                }
+            }
+        }
+
+        // ═════════════════════════════════════════════════════
+        //  Nested: VScrollOnlyFLP (للـ filter pills فقط)
         // ═════════════════════════════════════════════════════
         private sealed class VScrollOnlyFLP : FlowLayoutPanel
         {
@@ -737,7 +1294,7 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
         }
 
         // ═════════════════════════════════════════════════════
-        //  Nested: PillButton
+        //  Nested: PillButton (لم يتغير)
         // ═════════════════════════════════════════════════════
         private sealed class PillButton : Control
         {
@@ -790,7 +1347,7 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
 
                 Color bg = _active ? C_ACCENT
                          : _hovered ? Color.FromArgb(232, 228, 255)
-                         : C_PILL_OFF;
+                                     : C_PILL_OFF;
 
                 using (var br = new SolidBrush(bg)) g.FillPath(br, path);
 
@@ -820,7 +1377,7 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
         }
 
         // ═════════════════════════════════════════════════════
-        //  Nested: SearchBoxPanel
+        //  Nested: SearchBoxPanel (لم يتغير)
         // ═════════════════════════════════════════════════════
         private sealed class SearchBoxPanel : Panel
         {
@@ -885,218 +1442,6 @@ namespace BChat.Custom_Controal.Custom_Bchat.Message_Controls
                 g.DrawEllipse(mp, cx - r, cy - r, r * 2, r * 2);
                 g.DrawLine(mp, cx - r * 0.7f, cy + r * 0.7f, cx - r * 1.8f, cy + r * 1.8f);
             }
-        }
-
-        // ═════════════════════════════════════════════════════
-        //  Nested: ChatItemControl
-        // ═════════════════════════════════════════════════════
-        private sealed class ChatItemControl : Control
-        {
-            private readonly Font _fontName;
-            private readonly Font _fontMsg;
-            private readonly Font _fontTime;
-            private bool _hovered;
-            private bool _selected;
-            private bool _isLast;
-
-            public ChatListItemData Data { get; }
-            public event EventHandler<int>? ItemClicked;
-
-            public bool IsSelected { get => _selected; set { _selected = value; Invalidate(); } }
-            public bool IsLast { get => _isLast; set { _isLast = value; Invalidate(); } }
-
-            public ChatItemControl(ChatListItemData data,
-                                   Font fontName, Font fontMsg, Font fontTime)
-            {
-                Data = data;
-                _fontName = fontName;
-                _fontMsg = fontMsg;
-                _fontTime = fontTime;
-                Height = H_ITEM;
-                Cursor = Cursors.Hand;
-
-                SetStyle(ControlStyles.OptimizedDoubleBuffer |
-                         ControlStyles.AllPaintingInWmPaint |
-                         ControlStyles.UserPaint, true);
-            }
-
-            protected override void OnPaint(PaintEventArgs e)
-            {
-                if (Width < 4 || Height < 4) return;
-                var g = e.Graphics;
-                g.SmoothingMode = SmoothingMode.AntiAlias;
-                g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-
-                Color bg = _selected ? C_ITEM_SEL : _hovered ? C_ITEM_HOV : C_BG;
-                using (var br = new SolidBrush(bg))
-                    g.FillRectangle(br, 0, 0, Width, Height);
-
-                if (_selected)
-                {
-                    using var sb = new LinearGradientBrush(
-                        new Rectangle(Width - 3, 10, 3, Height - 20),
-                        C_ACCENT, Color.FromArgb(140, C_ACCENT), 90f);
-                    g.FillRectangle(sb, Width - 3, 10, 3, Height - 20);
-
-                    using var wb = new LinearGradientBrush(
-                        new Rectangle(0, 0, 60, Height),
-                        Color.FromArgb(12, C_ACCENT), Color.Transparent, 0f);
-                    g.FillRectangle(wb, 0, 0, 60, Height);
-                }
-
-                if (!_isLast && !_selected)
-                {
-                    using var sp = new Pen(C_SEP, 1f);
-                    g.DrawLine(sp, 72, Height - 1, Width - 16, Height - 1);
-                }
-
-                int avatarRight = Width - 12;
-                int avatarTop = (Height - AVATAR_SZ) / 2;
-                var avatarRc = new Rectangle(avatarRight - AVATAR_SZ, avatarTop, AVATAR_SZ, AVATAR_SZ);
-                DrawAvatar(g, avatarRc, Data.Avatar, Data.ContactName);
-
-                if (Data.IsOnline)
-                {
-                    int dx = avatarRc.Right - ONLINE_SZ + 1;
-                    int dy = avatarRc.Bottom - ONLINE_SZ + 1;
-                    using var wb = new SolidBrush(C_BG);
-                    g.FillEllipse(wb, dx - 2, dy - 2, ONLINE_SZ + 4, ONLINE_SZ + 4);
-                    using var gb = new SolidBrush(C_ONLINE);
-                    g.FillEllipse(gb, dx, dy, ONLINE_SZ, ONLINE_SZ);
-                }
-
-                const int LEFT_PAD = 8;
-                const int TIME_EXTRA = 12;
-
-                SizeF timeSz = g.MeasureString(
-                    string.IsNullOrEmpty(Data.Timestamp) ? "12:30 ص" : Data.Timestamp,
-                    _fontTime);
-                int timeW = (int)timeSz.Width + TIME_EXTRA;
-
-                int textRight = avatarRc.Left - 10;
-                int textLeft = LEFT_PAD + timeW + 6;
-                int textWidth = textRight - textLeft;
-
-                if (textWidth > 10)
-                {
-                    using var nameSf = new StringFormat
-                    {
-                        Alignment = StringAlignment.Far,
-                        LineAlignment = StringAlignment.Center,
-                        Trimming = StringTrimming.EllipsisCharacter,
-                        FormatFlags = StringFormatFlags.NoWrap,
-                    };
-                    using (var nb = new SolidBrush(C_NAME))
-                        g.DrawString(Data.ContactName, _fontName, nb,
-                            new Rectangle(textLeft, avatarTop + 4, textWidth, 22), nameSf);
-
-                    string displayMsg = Data.IsLastMessageSent
-                        ? "أنت: " + Data.LastMessage
-                        : Data.LastMessage;
-                    using var msgSf = new StringFormat
-                    {
-                        Alignment = StringAlignment.Far,
-                        LineAlignment = StringAlignment.Center,
-                        Trimming = StringTrimming.EllipsisCharacter,
-                        FormatFlags = StringFormatFlags.NoWrap,
-                    };
-                    using (var mb = new SolidBrush(C_MSG))
-                        g.DrawString(displayMsg, _fontMsg, mb,
-                            new Rectangle(textLeft, avatarTop + 30, textWidth, 20), msgSf);
-                }
-
-                var timeRect = new Rectangle(LEFT_PAD, avatarTop + 4, timeW, 20);
-                using var timeSf = new StringFormat
-                {
-                    Alignment = StringAlignment.Center,
-                    LineAlignment = StringAlignment.Center,
-                    FormatFlags = StringFormatFlags.NoWrap,
-                };
-                using (var tb = new SolidBrush(C_TIME))
-                    g.DrawString(Data.Timestamp, _fontTime, tb, timeRect, timeSf);
-
-                if (Data.UnreadCount > 0)
-                {
-                    string txt = Data.UnreadCount > 99 ? "99+" : Data.UnreadCount.ToString();
-                    SizeF txtsz = g.MeasureString(txt, _fontTime);
-                    int bw = (int)Math.Max(txtsz.Width + 12, 22);
-                    int bh = 20;
-                    int bx = LEFT_PAD + (timeW - bw) / 2;
-                    int by = avatarTop + AVATAR_SZ - bh - 2;
-
-                    using (var glowPath = RoundRect(new Rectangle(bx - 3, by - 3, bw + 6, bh + 6), 12))
-                    using (var glb = new SolidBrush(Color.FromArgb(35, C_ACCENT)))
-                        g.FillPath(glb, glowPath);
-
-                    using (var badgePath = RoundRect(new Rectangle(bx, by, bw, bh), 10))
-                    using (var bb = new SolidBrush(C_ACCENT))
-                        g.FillPath(bb, badgePath);
-
-                    using var numSf = new StringFormat
-                    {
-                        Alignment = StringAlignment.Center,
-                        LineAlignment = StringAlignment.Center,
-                        FormatFlags = StringFormatFlags.NoWrap,
-                    };
-                    using (var wb = new SolidBrush(Color.White))
-                        g.DrawString(txt, _fontTime, wb,
-                            new Rectangle(bx, by, bw, bh), numSf);
-                }
-            }
-
-            private static void DrawAvatar(Graphics g, Rectangle r, Image? avatar, string name)
-            {
-                if (r.Width < 2 || r.Height < 2) return;
-                using var path = RoundRect(r, r.Width / 2);
-                g.SetClip(path);
-
-                if (avatar != null)
-                {
-                    g.DrawImage(avatar, r);
-                }
-                else
-                {
-                    var colors = new[]
-                    {
-                        new[] { Color.FromArgb(124, 111, 247), Color.FromArgb(167,  97, 247) },
-                        new[] { Color.FromArgb( 16, 185, 129), Color.FromArgb( 45, 212, 191) },
-                        new[] { Color.FromArgb(245, 158,  11), Color.FromArgb(251, 191,  36) },
-                        new[] { Color.FromArgb(239,  68,  68), Color.FromArgb(252, 165, 165) },
-                        new[] { Color.FromArgb( 59, 130, 246), Color.FromArgb(147, 197, 253) },
-                        new[] { Color.FromArgb(168,  85, 247), Color.FromArgb(216, 180, 254) },
-                    };
-                    var pair = colors[Math.Abs(name.GetHashCode()) % colors.Length];
-                    using var gr = new LinearGradientBrush(r, pair[0], pair[1], 135f);
-                    g.FillPath(gr, path);
-
-                    string initial = name.Length > 0 ? name[0].ToString() : "?";
-                    string face = IsFontInstalled("Cairo") ? "Cairo" : "Segoe UI";
-                    using var fi = new Font(face, 16f, FontStyle.Bold, GraphicsUnit.Point);
-                    using var ib = new SolidBrush(Color.White);
-                    using var isf = new StringFormat
-                    {
-                        Alignment = StringAlignment.Center,
-                        LineAlignment = StringAlignment.Center,
-                    };
-                    g.DrawString(initial, fi, ib, r, isf);
-                }
-
-                g.ResetClip();
-
-                using var ring = new Pen(Color.FromArgb(18, 0, 0, 0), 1f);
-                g.DrawEllipse(ring, r.X + 1, r.Y + 1, r.Width - 2, r.Height - 2);
-            }
-
-            private static bool IsFontInstalled(string name)
-            {
-                using var fc = new InstalledFontCollection();
-                return fc.Families.Any(f =>
-                    f.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-            }
-
-            protected override void OnMouseEnter(EventArgs e) { _hovered = true; Invalidate(); base.OnMouseEnter(e); }
-            protected override void OnMouseLeave(EventArgs e) { _hovered = false; Invalidate(); base.OnMouseLeave(e); }
-            protected override void OnClick(EventArgs e) { ItemClicked?.Invoke(this, Data.ContactId); base.OnClick(e); }
         }
     }
 }

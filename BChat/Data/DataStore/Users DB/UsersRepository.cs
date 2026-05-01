@@ -75,6 +75,16 @@ namespace BChat.Data.DataStore.Users_DB
             return null;
         }
 
+        //public static bool Add(User user)
+        //{
+        //    using (SqlConnection conn = new SqlConnection(_connectionString))
+        //    {
+        //        conn.Open();
+
+        //        string queryAdd = @"INERT INTO Users
+        //                          ("
+        //    }
+        //}
         public static bool Update(User user)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -92,14 +102,7 @@ namespace BChat.Data.DataStore.Users_DB
 
                 using (SqlCommand cmd = new SqlCommand(queryUpdate, conn))
                 {
-                    cmd.Parameters.AddWithValue("@Id", user.Id);
-                    cmd.Parameters.AddWithValue("@Name", user.Name);
-                    cmd.Parameters.AddWithValue("@Email", user.Email);
-                    cmd.Parameters.AddWithValue("@Password", user.Password);
-                    cmd.Parameters.AddWithValue("@Role", user.Role);
-                    cmd.Parameters.AddWithValue("@BranchId", user.BranchId ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@IsActive", user.IsActive);
-
+                    BindParams(cmd, user);
                     int rowsAffected = cmd.ExecuteNonQuery();
 
                     if (rowsAffected >= 1)
@@ -115,5 +118,28 @@ namespace BChat.Data.DataStore.Users_DB
             }
         }
 
+        private static User Map(SqlDataReader r) => new()
+        {
+            Id        = r.GetInt32(0),
+            Name      = r.GetString(1),
+            Email     = r.GetString(2),
+            Password  = r.GetString(3),
+            Role      = r.GetString(4),
+            BranchId  = r.IsDBNull(5) ? null : r.GetInt32(5),
+            IsActive  = r.GetBoolean(6),
+            CreatedAt = r.GetDateTime(7)
+
+        };
+
+        private static void BindParams(SqlCommand cmd, User u)
+        {
+            cmd.Parameters.AddWithValue("@Id",        u.Id);
+            cmd.Parameters.AddWithValue("@Name",     (object?)u.Name ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@Email",    (object?)u.Email ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@Password", (object?)u.Password ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@Role",     (object?)u.Role);
+            cmd.Parameters.AddWithValue("@BranchId", (object?)u.BranchId ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@IsActive", (object?)u.IsActive ?? (object)DBNull.Value);
+        }
     }
 }

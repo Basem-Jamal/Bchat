@@ -1,4 +1,5 @@
 ﻿using BChat.Data.DataStore;
+using BChat.Data.DataStore.Customers_Repository;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -87,26 +88,26 @@ namespace BChat.Forms
             if (confirm != DialogResult.Yes) return;
 
             // ── 5. إرسال الرسائل ────────────────────────────────
-            var service = new BChat.Services.WhatsAppService();
+            //var service = new BChat.Services.WhatsAppService();
             int success = 0;
             int failed = 0;
 
             btnSendCampaign.Enabled = false;
             btnSendCampaign.Text = "جاري الإرسال...";
 
-            foreach (var customer in customers)
-            {
-                bool sent = await service.SendTemplateMessage(
-                    customer.Phone,
-                    template.Name,
-                    template.Language ?? "ar",
-                    template.HeaderType,
-                    imageUrl
-                );
+            //foreach (var customer in customers)
+            //{
+            //    bool sent = await service.SendTemplateMessage(
+            //        customer.Phone,
+            //        template.Name,
+            //        template.Language ?? "ar",
+            //        template.HeaderType,
+            //        imageUrl
+            //    );
 
-                if (sent) success++;
-                else failed++;
-            }
+            //    if (sent) success++;
+            //    else failed++;
+            //}
 
             // ── 6. النتيجة ─────────────────────────────────────
             MessageBox.Show(

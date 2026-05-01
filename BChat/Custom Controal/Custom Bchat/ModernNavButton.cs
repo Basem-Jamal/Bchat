@@ -14,20 +14,28 @@ namespace BChat.Controls
         private int _cardPadding;
         private bool _activeBarFullHeight = true;
         private int _activeBarPadding = 0;
+
         // ─── Fields ───────────────────────────────
         private Image? _icon;
         private bool _isActive;
         private bool _isHovered;
 
-        // ─── Colors ───────────────────────────────
+        // ─── Background Colors ────────────────────
         private Color _baseBackground = Color.Transparent;
         private Color _hoverBackground = Color.Transparent;
         private Color _activeBackground = Color.Transparent;
 
+        // ─── Text Colors ──────────────────────────
         private Color _normalText = Color.White;
         private Color _hoverText = Color.White;
         private Color _activeText = Color.White;
 
+        // ─── Icon Colors ──────────────────────────
+        private Color _normalIconColor = Color.White;
+        private Color _hoverIconColor = Color.White;
+        private Color _activeIconColor = Color.White;
+
+        // ─── Active Bar ───────────────────────────
         private Color _activeBarColor = Color.Transparent;
 
         // ─── Behavior ─────────────────────────────
@@ -62,6 +70,7 @@ namespace BChat.Controls
             get => _activeBarPadding;
             set { _activeBarPadding = value; Invalidate(); }
         }
+
         [Category("BChat - Data")]
         public Image? Icon
         {
@@ -120,6 +129,29 @@ namespace BChat.Controls
         {
             get => _activeText;
             set { _activeText = value; Invalidate(); }
+        }
+
+        // ─── Icon Colors ─────────────────────────
+
+        [Category("BChat - Colors")]
+        public Color NormalIconColor
+        {
+            get => _normalIconColor;
+            set { _normalIconColor = value; Invalidate(); }
+        }
+
+        [Category("BChat - Colors")]
+        public Color HoverIconColor
+        {
+            get => _hoverIconColor;
+            set { _hoverIconColor = value; Invalidate(); }
+        }
+
+        [Category("BChat - Colors")]
+        public Color ActiveIconColor
+        {
+            get => _activeIconColor;
+            set { _activeIconColor = value; Invalidate(); }
         }
 
         // ─── Active Bar ─────────────────────────
@@ -231,7 +263,7 @@ namespace BChat.Controls
             if (_isActive && _useActiveEffect)
                 DrawBackground(g, rect, _activeBackground);
 
-            // ✅ Active Bar (FULL HEIGHT)
+            // Active Bar
             if (_isActive && _activeBarWidth > 0)
             {
                 int y = _activeBarFullHeight ? 0 : _activeBarPadding;
@@ -242,21 +274,26 @@ namespace BChat.Controls
                     y,
                     _activeBarWidth,
                     h);
-                using var brush = new SolidBrush(_activeBarColor);
 
-                // رسم مستقيم بدون حواف (احترافي أكثر)
+                using var brush = new SolidBrush(_activeBarColor);
                 g.FillRectangle(brush, barRect);
             }
 
-            // Text Color
+            // ─── Text Color ───────────────────────
             Color textColor = _normalText;
-
             if (_isActive && _useActiveEffect)
                 textColor = _activeText;
             else if (_isHovered && _useHoverEffect)
                 textColor = _hoverText;
 
-            // Icon
+            // ─── Icon Color (مستقل عن النص) ───────
+            Color iconColor = _normalIconColor;
+            if (_isActive && _useActiveEffect)
+                iconColor = _activeIconColor;
+            else if (_isHovered && _useHoverEffect)
+                iconColor = _hoverIconColor;
+
+            // ─── Draw Icon ────────────────────────
             if (_icon != null)
             {
                 int x = Width - _contentPadding - _iconSize;
@@ -264,10 +301,10 @@ namespace BChat.Controls
 
                 DrawTintedImage(g, _icon,
                     new Rectangle(x, y, _iconSize, _iconSize),
-                    textColor);
+                    iconColor);
             }
 
-            // Text
+            // ─── Draw Text ────────────────────────
             using var textBrush = new SolidBrush(textColor);
 
             var textRect = new RectangleF(
@@ -314,9 +351,9 @@ namespace BChat.Controls
         {
             var cm = new System.Drawing.Imaging.ColorMatrix(new float[][]
             {
-                new[] { tint.R/255f, 0, 0, 0, 0 },
-                new[] { 0f, tint.G/255f, 0, 0, 0 },
-                new[] { 0f, 0, tint.B/255f, 0, 0 },
+                new[] { tint.R / 255f, 0, 0, 0, 0 },
+                new[] { 0f, tint.G / 255f, 0, 0, 0 },
+                new[] { 0f, 0, tint.B / 255f, 0, 0 },
                 new[] { 0f, 0, 0, 1f, 0 },
                 new[] { 0f, 0, 0, 0, 1f }
             });
