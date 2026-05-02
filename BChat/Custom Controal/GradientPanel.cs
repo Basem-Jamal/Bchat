@@ -1,10 +1,10 @@
 // =====================================================================
-//  GradientPanel.cs — v9 (True BorderRadius via Region)
+//  GradientPanel.cs — v10 (Smooth Anti-Aliased Corners)
 //
-//  ✅ [NEW] UpdateRegion() — يطبّق Region حقيقي على الكنترول
-//  ✅ [NEW] OnResize يُحدّث الـ Region تلقائياً
-//  ✅ الأبناء الآن محصورون داخل الزوايا الدائرية
-//  ✅ كل إصلاحات v8 محفوظة
+//  🔧 إصلاح: حذف Region نهائياً — كان يسبب تشريش (pixelation) في الحواف
+//  ✅ الحواف الآن ناعمة تماماً مثل CustomPanel
+//  ✅ نرسم خلفية الـ Parent يدوياً لإخفاء الزوايا
+//  ✅ كل ميزات v9 محفوظة (Shadow, Shimmer, Hover Glow, Glass Border)
 // =====================================================================
 
 using System;
@@ -55,7 +55,7 @@ namespace BChat
         private const int WM_ERASEBKGND = 0x0014;
 
         // ─────────────────────────────────────────
-        //  CreateParams
+        //  CreateParams — إزالة كل حدود Windows
         // ─────────────────────────────────────────
         protected override CreateParams CreateParams
         {
@@ -63,9 +63,9 @@ namespace BChat
             {
                 CreateParams cp = base.CreateParams;
                 cp.Style &= ~0x00800000;   // WS_BORDER
-                cp.ExStyle &= ~0x00000200; // WS_EX_CLIENTEDGE
-                cp.ExStyle &= ~0x00020000; // WS_EX_STATICEDGE
-                cp.ExStyle &= ~0x00000001; // WS_EX_DLGMODALFRAME
+                cp.ExStyle &= ~0x00000200;   // WS_EX_CLIENTEDGE
+                cp.ExStyle &= ~0x00020000;   // WS_EX_STATICEDGE
+                cp.ExStyle &= ~0x00000001;   // WS_EX_DLGMODALFRAME
                 return cp;
             }
         }
@@ -98,31 +98,17 @@ namespace BChat
             BorderStyle = BorderStyle.None;
             Size = new Size(300, 200);
 
+            // ✅ لا Region هنا — حذفنا UpdateRegion() نهائياً
             UpdatePadding();
-            UpdateRegion(); // ✅ تطبيق الـ Region من البداية
         }
 
         // ─────────────────────────────────────────
-        //  ✅ UpdateRegion — القلب الجديد
-        //  يُطبّق Region حقيقي على الكنترول بناءً على CardRect و CornerRadius
-        //  بدونه: الزوايا مرسومة مدوّرة لكن الكنترول لا يزال مستطيلاً فعلياً
-        // ─────────────────────────────────────────
-        private void UpdateRegion()
-        {
-            Rectangle rc = GetCardRect();
-            if (rc.Width <= 0 || rc.Height <= 0) return;
-
-            using var path = RoundedRect(rc, _cornerRadius);
-            Region = new Region(path);
-        }
-
-        // ─────────────────────────────────────────
-        //  OnResize — تحديث الـ Region عند تغيير الحجم
+        //  OnResize
         // ─────────────────────────────────────────
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
-            UpdateRegion();
+            // ✅ لا Region.Update — فقط إعادة رسم
             Invalidate();
         }
 
@@ -143,30 +129,15 @@ namespace BChat
         }
 
         // ─────────────────────────────────────────
-        //  OnPaintBackground
+        //  OnPaintBackground — نُبطل الرسم الافتراضي
         // ─────────────────────────────────────────
         protected override void OnPaintBackground(PaintEventArgs e)
         {
-            var g = e.Graphics;
-            g.SmoothingMode = SmoothingMode.AntiAlias;
-
-            Color outerBg = GetSolidAncestorColor();
-            using (var brush = new SolidBrush(outerBg))
-                g.FillRectangle(brush, ClientRectangle);
-
-            Rectangle rc = GetCardRect();
-            if (rc.Width <= 0 || rc.Height <= 0) return;
-
-            using (var path = RoundedRect(rc, _cornerRadius))
-            {
-                g.SetClip(path);
-                PaintGradient(g, rc);
-                g.ResetClip();
-            }
+            // لا نستدعي base — كل شيء يُرسم في OnPaint
         }
 
         // ─────────────────────────────────────────
-        //  OnPaint
+        //  OnPaint — القلب الجديد الناعم
         // ─────────────────────────────────────────
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -178,20 +149,25 @@ namespace BChat
             Rectangle rc = GetCardRect();
             if (rc.Width <= 0 || rc.Height <= 0) { base.OnPaint(e); return; }
 
-            Color outerBg = GetSolidAncestorColor();
-            using (var brush = new SolidBrush(outerBg))
-                g.FillRectangle(brush, ClientRectangle);
+            // ── Step 1: امسح الكنترول كله بلون الـ Parent ──────────────
+            // هذا يخفي الزوايا تلقائياً بدون Region
+            Color bgColor = GetSolidAncestorColor();
+            using (SolidBrush bgBrush = new SolidBrush(bgColor))
+                g.FillRectangle(bgBrush, ClientRectangle);
 
+            // ── Step 2: ارسم الظل أو Glow ──────────────────────────────
             if (_showShadow)
             {
-                bool hov = _isHovered && _hoverGlow && !DesignMode;
-                Color glowC = hov ? _hoverGlowColor : _shadowColor;
-                int glowR = hov ? _hoverGlowRadius : _shadowRadius;
+                bool isHov = _isHovered && _hoverGlow && !DesignMode;
+                Color glowC = isHov ? _hoverGlowColor : _shadowColor;
+                int glowR = isHov ? _hoverGlowRadius : _shadowRadius;
                 PaintShadow(g, rc, glowC, DesignMode ? 4 : glowR);
             }
 
-            using (var path = RoundedRect(rc, _cornerRadius))
+            // ── Step 3: ارسم البطاقة داخل RoundedPath ──────────────────
+            using (GraphicsPath path = RoundedRect(rc, _cornerRadius))
             {
+                // الـ Gradient داخل الـ clip فقط — الحواف ناعمة 100%
                 g.SetClip(path);
                 PaintGradient(g, rc);
 
@@ -200,11 +176,13 @@ namespace BChat
 
                 g.ResetClip();
 
+                // ── Step 4: Glass border فوق كل شيء ───────────────────
                 if (_showGlassBorder && _glassBorderAlpha > 0)
-                    using (var pen = new Pen(Color.FromArgb(_glassBorderAlpha, 255, 255, 255), 1.2f))
+                    using (Pen pen = new Pen(Color.FromArgb(_glassBorderAlpha, 255, 255, 255), 1.2f))
                         g.DrawPath(pen, path);
             }
 
+            // ── Step 5: ارسم أبناء الكنترول ────────────────────────────
             base.OnPaint(e);
         }
 
@@ -272,7 +250,7 @@ namespace BChat
         }
 
         // ─────────────────────────────────────────
-        //  Shadow
+        //  Shadow / Glow
         // ─────────────────────────────────────────
         private void PaintShadow(Graphics g, Rectangle card, Color clr, int radius)
         {
@@ -293,8 +271,8 @@ namespace BChat
 
                 int cr = Math.Min(_cornerRadius + i, Math.Min(sr.Width, sr.Height) / 2);
 
-                using (var sp = RoundedRect(sr, cr))
-                using (var sb = new SolidBrush(Color.FromArgb(Math.Min(255, alpha), clr.R, clr.G, clr.B)))
+                using (GraphicsPath sp = RoundedRect(sr, cr))
+                using (SolidBrush sb = new SolidBrush(Color.FromArgb(Math.Min(255, alpha), clr.R, clr.G, clr.B)))
                     g.FillPath(sb, sp);
             }
         }
@@ -320,7 +298,7 @@ namespace BChat
         }
 
         // ─────────────────────────────────────────
-        //  OnControlAdded
+        //  OnControlAdded — شفافية الأبناء
         // ─────────────────────────────────────────
         protected override void OnControlAdded(ControlEventArgs e)
         {
@@ -357,6 +335,7 @@ namespace BChat
             if (!DesignMode) { _isHovered = true; Invalidate(); }
             base.OnMouseEnter(e);
         }
+
         protected override void OnMouseLeave(EventArgs e)
         {
             if (!DesignMode && !ClientRectangle.Contains(PointToClient(MousePosition)))
@@ -381,7 +360,7 @@ namespace BChat
 
         [Category("✦ Gradient")]
         [DefaultValue(false)]
-        [Description("ثلاثة ألوان")]
+        [Description("استخدام ثلاثة ألوان")]
         public bool UseThreeColors { get => _useThreeColors; set { _useThreeColors = value; Invalidate(); } }
 
         [Category("✦ Gradient")]
@@ -395,12 +374,8 @@ namespace BChat
         public int CornerRadius
         {
             get => _cornerRadius;
-            set
-            {
-                _cornerRadius = Math.Max(0, value);
-                UpdateRegion(); // ✅ تحديث الـ Region فور تغيير القيمة
-                Invalidate();
-            }
+            set { _cornerRadius = Math.Max(0, value); Invalidate(); }
+            // ✅ حذفنا UpdateRegion() من هنا
         }
 
         [Category("✦ Shadow")]
@@ -409,7 +384,7 @@ namespace BChat
         public bool ShowShadow
         {
             get => _showShadow;
-            set { _showShadow = value; UpdatePadding(); UpdateRegion(); Invalidate(); }
+            set { _showShadow = value; UpdatePadding(); Invalidate(); }
         }
 
         [Category("✦ Shadow")]
@@ -422,7 +397,7 @@ namespace BChat
         public int ShadowRadius
         {
             get => _shadowRadius;
-            set { _shadowRadius = Math.Max(0, value); UpdatePadding(); UpdateRegion(); Invalidate(); }
+            set { _shadowRadius = Math.Max(0, value); UpdatePadding(); Invalidate(); }
         }
 
         [Category("✦ Shadow")]
@@ -431,7 +406,7 @@ namespace BChat
         public int ShadowOffsetX
         {
             get => _shadowOffsetX;
-            set { _shadowOffsetX = value; UpdatePadding(); UpdateRegion(); Invalidate(); }
+            set { _shadowOffsetX = value; UpdatePadding(); Invalidate(); }
         }
 
         [Category("✦ Shadow")]
@@ -440,7 +415,7 @@ namespace BChat
         public int ShadowOffsetY
         {
             get => _shadowOffsetY;
-            set { _shadowOffsetY = value; UpdatePadding(); UpdateRegion(); Invalidate(); }
+            set { _shadowOffsetY = value; UpdatePadding(); Invalidate(); }
         }
 
         [Category("✦ Shadow")]
@@ -523,7 +498,8 @@ namespace BChat
             try
             {
                 var m = typeof(Control).GetMethod("SetStyle",
-                    System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                    System.Reflection.BindingFlags.Instance |
+                    System.Reflection.BindingFlags.NonPublic);
                 m?.Invoke(ctrl, new object[] { flag, value });
             }
             catch { }

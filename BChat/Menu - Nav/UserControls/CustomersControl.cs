@@ -52,7 +52,7 @@ namespace BChat.UserControls
         }
         private void LoadCustomers()
         {
-            AppCache.Customers = CustomerRepository.GetAll();
+            //AppCache.Customers = CustomerRepository.GetAll();
             var customers = AppCache.Customers;
 
             stcdCoustomers.Value = customers.Count.ToString("N0")+"K";

@@ -76,10 +76,15 @@ namespace BChat.WhatsApp
                         SentAt = m.Received_At,
                     };
 
-                    System.Diagnostics.Debug.WriteLine($"📩 Polled: {msg.SenderName} - {msg.Text}");
-                    MessageReceived?.Invoke(msg);
-                    // ✅ علّم الرسالة كمعالجة
-                    await _httpClient.PostAsync($"{_webhookServerUrl}/api/messages/processed/{m.Id}", null);
+                    try
+                    {
+                        MessageReceived?.Invoke(msg);
+                        await _httpClient.PostAsync($"{_webhookServerUrl}/api/messages/processed/{m.Id}", null);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"❌ Invoke Error: {ex.Message}");
+                    }
 
                 }
             }

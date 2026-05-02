@@ -19,9 +19,9 @@ using System.Windows.Forms;
 
 namespace BChat.UserControls
 {
-    public partial class GroupsControl : UserControl
+    public partial class ucGroupsControl : UserControl
     {
-        public GroupsControl()
+        public ucGroupsControl()
         {
             InitializeComponent();
             groupsWrapPanel.RightToLeft = RightToLeft.Yes;
@@ -103,7 +103,7 @@ namespace BChat.UserControls
 
             parent.Controls.Clear();
 
-            var membersControl = new GroupMembersControl(groupId);
+            var membersControl = new ucGroupMembersControl(groupId);
             membersControl.Dock = DockStyle.Fill;
             parent.Controls.Add(membersControl);
 

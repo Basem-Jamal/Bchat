@@ -3,6 +3,7 @@ using BChat.Controls;
 using BChat.Events;
 using BChat.Global;
 using BChat.Menu___Nav.Nav___Marketing;
+using BChat.Menu___Nav.UserControls.Today_s_Summary_Report_UC;
 using BChat.Salla;
 using BChat.UserControls;
 using FontAwesome.Sharp;
@@ -39,6 +40,7 @@ namespace BChat
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer |
                           ControlStyles.AllPaintingInWmPaint |
                           ControlStyles.UserPaint, true);
+            this.DoubleBuffered = true;
 
             AppEvents.AppUsers.OnRefershUsers += RefreshUserUI;
 
@@ -47,6 +49,7 @@ namespace BChat
 
         private async void Home_Load(object sender, EventArgs e)
         {
+            MonthlySummaryReport_Page();
         }
 
         public void RefreshUserUI()
@@ -70,6 +73,7 @@ namespace BChat
                 c.Visible = false;
 
 
+            MonthlySummaryReport_Page();
         }
 
         private void btnCustomers_Click(object sender, EventArgs e)
@@ -80,6 +84,35 @@ namespace BChat
             foreach (Control c in pnlContent.Controls)
                 c.Visible = false;
 
+            Customers_Page();
+        }
+        private void btnMessages_Click(object sender, EventArgs e)
+        {
+            ResetButtons();
+            btnNavMessages.IsActive = true;
+
+
+            foreach (Control c in pnlContent.Controls)
+                c.Visible = false;
+
+            Messages_Page();
+        }
+
+        private void MonthlySummaryReport_Page()
+        {
+            if (!pnlContent.Controls.ContainsKey("MonthlyReports_View"))
+            {
+                ucMonthlySummary ucMonthlySummary = new ucMonthlySummary();
+                ucMonthlySummary.Name = "MonthlyReports_View";
+                ucMonthlySummary.Dock = DockStyle.Fill;
+                pnlContent.Controls.Add(ucMonthlySummary);
+            }
+            pnlContent.Controls["MonthlyReports_View"].Visible = true;
+            pnlContent.Controls["MonthlyReports_View"].BringToFront();
+
+        }
+        private void Customers_Page()
+        {
             if (!pnlContent.Controls.ContainsKey("Customers_View"))
             {
                 CustomersControl customersPage = new CustomersControl();
@@ -91,18 +124,12 @@ namespace BChat
             pnlContent.Controls["Customers_View"].BringToFront();
 
         }
-        private void btnMessages_Click(object sender, EventArgs e)
+
+        private void Messages_Page()
         {
-            ResetButtons();
-            btnNavMessages.IsActive = true;
-
-
-            foreach (Control c in pnlContent.Controls)
-                c.Visible = false;
-
             if (!pnlContent.Controls.ContainsKey("Messages_View"))
             {
-                MessageControl messagesPage = new MessageControl();
+                ucMessageControl messagesPage = new ucMessageControl();
                 messagesPage.Name = "Messages_View";
                 messagesPage.Dock = DockStyle.Fill;
                 pnlContent.Controls.Add(messagesPage);
@@ -112,62 +139,60 @@ namespace BChat
             pnlContent.Controls["Messages_View"].BringToFront();
 
         }
+        //private void btnOrders_Click(object sender, EventArgs e)
+        //{
+        //    ResetButtons();
+        //    btnOrders.IconColor = Color.WhiteSmoke;
+
+        //    MessageBox.Show("الصفحة غير متوفرة, ولن تتوفر حتى يتم الربط مع سلة!", "Salla", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        //    //if (!pnlContent.Controls.ContainsKey("Messages_View"))
+        //    //{
+        //    //    MessagesControl messagesPage = new MessagesControl();
+        //    //    messagesPage.Name = "Messages_View";
+        //    //    messagesPage.Dock = DockStyle.Fill;
+        //    //    pnlContent.Controls.Add(messagesPage);
+        //    //}
+
+        //    //pnlContent.Controls["Messages_View"].BringToFront();
+
+        //}
 
 
-        private void btnOrders_Click(object sender, EventArgs e)
-        {
-            ResetButtons();
-            btnOrders.IconColor = Color.WhiteSmoke;
-
-            MessageBox.Show("الصفحة غير متوفرة, ولن تتوفر حتى يتم الربط مع سلة!", "Salla", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            //if (!pnlContent.Controls.ContainsKey("Messages_View"))
-            //{
-            //    MessagesControl messagesPage = new MessagesControl();
-            //    messagesPage.Name = "Messages_View";
-            //    messagesPage.Dock = DockStyle.Fill;
-            //    pnlContent.Controls.Add(messagesPage);
-            //}
-
-            //pnlContent.Controls["Messages_View"].BringToFront();
-
-        }
+        //private void btnScheduledMessages_Click(object sender, EventArgs e)
+        //{
+        //    ResetButtons();
+        //    //btnScheduledMessages.IconColor = Color.WhiteSmoke;
 
 
-        private void btnScheduledMessages_Click(object sender, EventArgs e)
-        {
-            ResetButtons();
-            btnScheduledMessages.IconColor = Color.WhiteSmoke;
+        //    if (!pnlContent.Controls.ContainsKey("ScheduledMessages_View"))
+        //    {
+
+        //        ScheduledControl scheduledPage = new ScheduledControl();
+        //        scheduledPage.Name = "ScheduledMessages_View";
+        //        scheduledPage.Dock = DockStyle.Fill;
+        //        pnlContent.Controls.Add(scheduledPage);
+        //    }
+
+        //    pnlContent.Controls["ScheduledMessages_View"].BringToFront();
+
+        //}
+        //private void btnTemplates_Click(object sender, EventArgs e)
+        //{
+        //    ResetButtons();
+        //    btnTemplates.IconColor = Color.WhiteSmoke;
 
 
-            if (!pnlContent.Controls.ContainsKey("ScheduledMessages_View"))
-            {
+        //    if (!pnlContent.Controls.ContainsKey("Templates_View"))
+        //    {
+        //        ucTemplatesControl templatesPage = new ucTemplatesControl();
+        //        templatesPage.Name = "Templates_View";
+        //        templatesPage.Dock = DockStyle.Fill;
+        //        pnlContent.Controls.Add(templatesPage);
+        //    }
 
-                ScheduledControl scheduledPage = new ScheduledControl();
-                scheduledPage.Name = "ScheduledMessages_View";
-                scheduledPage.Dock = DockStyle.Fill;
-                pnlContent.Controls.Add(scheduledPage);
-            }
+        //    pnlContent.Controls["Templates_View"].BringToFront();
 
-            pnlContent.Controls["ScheduledMessages_View"].BringToFront();
-
-        }
-        private void btnTemplates_Click(object sender, EventArgs e)
-        {
-            ResetButtons();
-            btnTemplates.IconColor = Color.WhiteSmoke;
-
-
-            if (!pnlContent.Controls.ContainsKey("Templates_View"))
-            {
-                TemplatesControl templatesPage = new TemplatesControl();
-                templatesPage.Name = "Templates_View";
-                templatesPage.Dock = DockStyle.Fill;
-                pnlContent.Controls.Add(templatesPage);
-            }
-
-            pnlContent.Controls["Templates_View"].BringToFront();
-
-        }
+        //}
         private void ResetButtons()
         {
             foreach (Control ctrl in pnlMenuSidebar.Controls)
@@ -209,7 +234,7 @@ namespace BChat
 
             if (!pnlContent.Controls.ContainsKey("CustomerGroups_View"))
             {
-                GroupsControl customerGroupsPage = new GroupsControl();
+                ucGroupsControl customerGroupsPage = new ucGroupsControl();
                 customerGroupsPage.Name = "CustomerGroups_View";
                 customerGroupsPage.Dock = DockStyle.Fill;
                 pnlContent.Controls.Add(customerGroupsPage);
@@ -253,6 +278,11 @@ namespace BChat
             AppCache.CurrentUser = null;
             this.Close(); // يرجع للـ Program ويعيد فتح Login
         }
-    
+
+        private void btnFormMinimized_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+
+        }
     }
 }

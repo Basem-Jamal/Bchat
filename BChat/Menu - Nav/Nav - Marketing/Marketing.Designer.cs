@@ -29,9 +29,6 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(components);
-            pnlHeader = new Car_Rental_System.CustomControls.CustomPanel();
-            picClose = new PictureBox();
             btnSettings = new FontAwesome.Sharp.IconButton();
             btnNavCreateCampaign = new BChat.Controls.ModernNavButton();
             btnNavAPIs = new BChat.Controls.ModernNavButton();
@@ -44,49 +41,16 @@
             gradientPanel2 = new GradientPanel();
             gradientPanel4 = new GradientPanel();
             gradientPanel5 = new GradientPanel();
-            pnlHeader.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)picClose).BeginInit();
+            btnFormMinimized = new PictureBox();
+            picClose = new PictureBox();
+            guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(components);
+            gradientPanel6 = new GradientPanel();
             pnlBigContent.SuspendLayout();
             pnlMenuSidebar.SuspendLayout();
+            gradientPanel5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)btnFormMinimized).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)picClose).BeginInit();
             SuspendLayout();
-            // 
-            // guna2BorderlessForm1
-            // 
-            guna2BorderlessForm1.AnimateWindow = true;
-            guna2BorderlessForm1.BorderRadius = 45;
-            guna2BorderlessForm1.ContainerControl = this;
-            guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6D;
-            guna2BorderlessForm1.TransparentWhileDrag = true;
-            // 
-            // pnlHeader
-            // 
-            pnlHeader.BackColor = Color.White;
-            pnlHeader.BackColorEx = Color.White;
-            pnlHeader.BorderColor = Color.LightGray;
-            pnlHeader.BorderRadius = 10;
-            pnlHeader.BorderThickness = 1;
-            pnlHeader.Controls.Add(picClose);
-            pnlHeader.Font = new Font("Segoe UI", 10F);
-            pnlHeader.ForeColor = Color.Black;
-            pnlHeader.Location = new Point(190, 3);
-            pnlHeader.Name = "pnlHeader";
-            pnlHeader.ShadowColor = Color.FromArgb(80, 0, 0, 0);
-            pnlHeader.ShadowSize = 6;
-            pnlHeader.Size = new Size(1301, 63);
-            pnlHeader.TabIndex = 4;
-            pnlHeader.UseShadow = true;
-            // 
-            // picClose
-            // 
-            picClose.Cursor = Cursors.Hand;
-            picClose.Image = Properties.Resources.close;
-            picClose.Location = new Point(1225, 3);
-            picClose.Name = "picClose";
-            picClose.Size = new Size(56, 46);
-            picClose.SizeMode = PictureBoxSizeMode.Zoom;
-            picClose.TabIndex = 2;
-            picClose.TabStop = false;
-            picClose.Click += picClose_Click;
             // 
             // btnSettings
             // 
@@ -221,11 +185,11 @@
             pnlBigContent.Controls.Add(pnlSubContent);
             pnlBigContent.Font = new Font("Segoe UI", 10F);
             pnlBigContent.ForeColor = Color.Black;
-            pnlBigContent.Location = new Point(47, 117);
+            pnlBigContent.Location = new Point(47, 51);
             pnlBigContent.Name = "pnlBigContent";
             pnlBigContent.ShadowColor = Color.FromArgb(80, 0, 0, 0);
             pnlBigContent.ShadowSize = 6;
-            pnlBigContent.Size = new Size(1550, 820);
+            pnlBigContent.Size = new Size(1550, 831);
             pnlBigContent.TabIndex = 7;
             pnlBigContent.UseShadow = true;
             // 
@@ -237,11 +201,11 @@
             pnlSubContent.BorderThickness = 0;
             pnlSubContent.Font = new Font("Segoe UI", 10F);
             pnlSubContent.ForeColor = Color.Black;
-            pnlSubContent.Location = new Point(15, 17);
+            pnlSubContent.Location = new Point(11, 14);
             pnlSubContent.Name = "pnlSubContent";
             pnlSubContent.ShadowColor = Color.Transparent;
             pnlSubContent.ShadowSize = 0;
-            pnlSubContent.Size = new Size(1510, 785);
+            pnlSubContent.Size = new Size(1522, 802);
             pnlSubContent.TabIndex = 8;
             pnlSubContent.UseShadow = true;
             // 
@@ -257,7 +221,7 @@
             pnlMenuSidebar.GradientStartColor = Color.Black;
             pnlMenuSidebar.HoverGlowColor = Color.Transparent;
             pnlMenuSidebar.HoverGlowRadius = 0;
-            pnlMenuSidebar.Location = new Point(1692, 117);
+            pnlMenuSidebar.Location = new Point(1617, 93);
             pnlMenuSidebar.Name = "pnlMenuSidebar";
             pnlMenuSidebar.Padding = new Padding(6, 6, 6, 8);
             pnlMenuSidebar.ShadowColor = Color.Transparent;
@@ -277,7 +241,7 @@
             gradientPanel3.GradientStartColor = Color.Black;
             gradientPanel3.HoverGlowColor = Color.Transparent;
             gradientPanel3.HoverGlowRadius = 0;
-            gradientPanel3.Location = new Point(-115, 3);
+            gradientPanel3.Location = new Point(-115, 34);
             gradientPanel3.Name = "gradientPanel3";
             gradientPanel3.Padding = new Padding(6);
             gradientPanel3.ShadowColor = Color.Transparent;
@@ -286,7 +250,7 @@
             gradientPanel3.ShowGlassBorder = false;
             gradientPanel3.ShowShadow = false;
             gradientPanel3.ShowShimmer = false;
-            gradientPanel3.Size = new Size(142, 450);
+            gradientPanel3.Size = new Size(142, 392);
             gradientPanel3.TabIndex = 28;
             // 
             // gradientPanel1
@@ -298,7 +262,7 @@
             gradientPanel1.GradientStartColor = Color.Black;
             gradientPanel1.HoverGlowColor = Color.Transparent;
             gradientPanel1.HoverGlowRadius = 0;
-            gradientPanel1.Location = new Point(-36, 511);
+            gradientPanel1.Location = new Point(-36, 483);
             gradientPanel1.Name = "gradientPanel1";
             gradientPanel1.Padding = new Padding(6);
             gradientPanel1.ShadowColor = Color.Transparent;
@@ -307,7 +271,7 @@
             gradientPanel1.ShowGlassBorder = false;
             gradientPanel1.ShowShadow = false;
             gradientPanel1.ShowShimmer = false;
-            gradientPanel1.Size = new Size(63, 475);
+            gradientPanel1.Size = new Size(63, 417);
             gradientPanel1.TabIndex = 29;
             // 
             // gradientPanel2
@@ -319,7 +283,7 @@
             gradientPanel2.GradientStartColor = Color.Purple;
             gradientPanel2.HoverGlowColor = Color.Transparent;
             gradientPanel2.HoverGlowRadius = 0;
-            gradientPanel2.Location = new Point(-4, 459);
+            gradientPanel2.Location = new Point(-3, 432);
             gradientPanel2.Name = "gradientPanel2";
             gradientPanel2.Padding = new Padding(6);
             gradientPanel2.ShadowColor = Color.Transparent;
@@ -340,7 +304,7 @@
             gradientPanel4.GradientStartColor = Color.Black;
             gradientPanel4.HoverGlowColor = Color.Transparent;
             gradientPanel4.HoverGlowRadius = 0;
-            gradientPanel4.Location = new Point(107, 975);
+            gradientPanel4.Location = new Point(89, 911);
             gradientPanel4.Name = "gradientPanel4";
             gradientPanel4.Padding = new Padding(6);
             gradientPanel4.ShadowColor = Color.Transparent;
@@ -355,13 +319,15 @@
             // gradientPanel5
             // 
             gradientPanel5.BackColor = Color.Transparent;
+            gradientPanel5.Controls.Add(btnFormMinimized);
+            gradientPanel5.Controls.Add(picClose);
             gradientPanel5.CornerRadius = 30;
-            gradientPanel5.GradientEndColor = Color.Purple;
+            gradientPanel5.GradientEndColor = Color.Black;
             gradientPanel5.GradientMidColor = Color.Violet;
             gradientPanel5.GradientStartColor = Color.Black;
             gradientPanel5.HoverGlowColor = Color.Transparent;
             gradientPanel5.HoverGlowRadius = 0;
-            gradientPanel5.Location = new Point(1692, -22);
+            gradientPanel5.Location = new Point(1617, -35);
             gradientPanel5.Name = "gradientPanel5";
             gradientPanel5.Padding = new Padding(6);
             gradientPanel5.ShadowColor = Color.Transparent;
@@ -370,15 +336,71 @@
             gradientPanel5.ShowGlassBorder = false;
             gradientPanel5.ShowShadow = false;
             gradientPanel5.ShowShimmer = false;
-            gradientPanel5.Size = new Size(269, 52);
+            gradientPanel5.Size = new Size(243, 93);
             gradientPanel5.TabIndex = 30;
+            // 
+            // btnFormMinimized
+            // 
+            btnFormMinimized.BackColor = Color.Transparent;
+            btnFormMinimized.Cursor = Cursors.Hand;
+            btnFormMinimized.Image = Properties.Resources.closed_eyes;
+            btnFormMinimized.Location = new Point(48, 38);
+            btnFormMinimized.Name = "btnFormMinimized";
+            btnFormMinimized.Size = new Size(45, 36);
+            btnFormMinimized.SizeMode = PictureBoxSizeMode.Zoom;
+            btnFormMinimized.TabIndex = 4;
+            btnFormMinimized.TabStop = false;
+            btnFormMinimized.Click += btnFormMinimized_Click;
+            // 
+            // picClose
+            // 
+            picClose.BackColor = Color.Transparent;
+            picClose.Cursor = Cursors.Hand;
+            picClose.Image = Properties.Resources.close__1_;
+            picClose.Location = new Point(138, 38);
+            picClose.Name = "picClose";
+            picClose.Size = new Size(45, 36);
+            picClose.SizeMode = PictureBoxSizeMode.Zoom;
+            picClose.TabIndex = 3;
+            picClose.TabStop = false;
+            picClose.Click += picClose_Click;
+            // 
+            // guna2BorderlessForm1
+            // 
+            guna2BorderlessForm1.AnimateWindow = true;
+            guna2BorderlessForm1.BorderRadius = 45;
+            guna2BorderlessForm1.ContainerControl = this;
+            guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6D;
+            guna2BorderlessForm1.TransparentWhileDrag = true;
+            // 
+            // gradientPanel6
+            // 
+            gradientPanel6.BackColor = Color.Transparent;
+            gradientPanel6.CornerRadius = 30;
+            gradientPanel6.GradientEndColor = Color.Purple;
+            gradientPanel6.GradientMidColor = Color.Violet;
+            gradientPanel6.GradientStartColor = Color.Black;
+            gradientPanel6.HoverGlowColor = Color.Transparent;
+            gradientPanel6.HoverGlowRadius = 0;
+            gradientPanel6.Location = new Point(89, -48);
+            gradientPanel6.Name = "gradientPanel6";
+            gradientPanel6.Padding = new Padding(6);
+            gradientPanel6.ShadowColor = Color.Transparent;
+            gradientPanel6.ShadowOffsetY = 0;
+            gradientPanel6.ShadowRadius = 0;
+            gradientPanel6.ShowGlassBorder = false;
+            gradientPanel6.ShowShadow = false;
+            gradientPanel6.ShowShimmer = false;
+            gradientPanel6.Size = new Size(1465, 63);
+            gradientPanel6.TabIndex = 31;
             // 
             // Marketing
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(1905, 998);
+            ClientSize = new Size(1844, 927);
+            Controls.Add(gradientPanel6);
             Controls.Add(gradientPanel5);
             Controls.Add(gradientPanel4);
             Controls.Add(gradientPanel2);
@@ -386,24 +408,20 @@
             Controls.Add(gradientPanel3);
             Controls.Add(pnlMenuSidebar);
             Controls.Add(pnlBigContent);
-            Controls.Add(pnlHeader);
             FormBorderStyle = FormBorderStyle.None;
             Name = "Marketing";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Marketing";
             Load += Marketing_Load;
-            pnlHeader.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)picClose).EndInit();
             pnlBigContent.ResumeLayout(false);
             pnlMenuSidebar.ResumeLayout(false);
+            gradientPanel5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)btnFormMinimized).EndInit();
+            ((System.ComponentModel.ISupportInitialize)picClose).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
-
-        private Guna.UI2.WinForms.Guna2BorderlessForm guna2BorderlessForm1;
-        private Car_Rental_System.CustomControls.CustomPanel pnlHeader;
-        private PictureBox picClose;
         private FontAwesome.Sharp.IconButton btnSettings;
         private Controls.ModernNavButton btnNavCreateCampaign;
         private Controls.ModernNavButton btnNavTemplates;
@@ -416,5 +434,9 @@
         private GradientPanel gradientPanel5;
         private GradientPanel gradientPanel4;
         private GradientPanel gradientPanel2;
+        private Guna.UI2.WinForms.Guna2BorderlessForm guna2BorderlessForm1;
+        private GradientPanel gradientPanel6;
+        private PictureBox btnFormMinimized;
+        private PictureBox picClose;
     }
 }

@@ -13,11 +13,11 @@ using System.Windows.Forms;
 
 namespace BChat.Menu___Nav.UserControls.Show_Group_Members_Control
 {
-    public partial class GroupMembersControl : UserControl
+    public partial class ucGroupMembersControl : UserControl
     {
         private SlickTable _table;
         Customer _customer;
-        public GroupMembersControl(int groupId)
+        public ucGroupMembersControl(int groupId)
         {
             InitializeComponent();
             InitTable();
@@ -102,7 +102,7 @@ namespace BChat.Menu___Nav.UserControls.Show_Group_Members_Control
 
             parent.Controls.Clear();
 
-            var groupsControl = new GroupsControl();
+            var groupsControl = new ucGroupsControl();
             groupsControl.Dock = DockStyle.Fill;
             parent.Controls.Add(groupsControl);
         }

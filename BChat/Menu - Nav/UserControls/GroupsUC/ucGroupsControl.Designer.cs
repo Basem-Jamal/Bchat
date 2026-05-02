@@ -1,6 +1,6 @@
 ﻿namespace BChat.UserControls
 {
-    partial class GroupsControl
+    partial class ucGroupsControl
     {
         /// <summary> 
         /// Required designer variable.

@@ -45,7 +45,7 @@ namespace BChat.Menu___Nav.Nav___Marketing
 
             if (!pnlSubContent.Controls.ContainsKey("Templates_View"))
             {
-                TemplatesControl templatesPage = new TemplatesControl();
+                ucTemplatesControl templatesPage = new ucTemplatesControl();
                 templatesPage.Name = "Templates_View";
                 templatesPage.Dock = DockStyle.Fill;
                 pnlSubContent.Controls.Add(templatesPage);
@@ -106,6 +106,12 @@ namespace BChat.Menu___Nav.Nav___Marketing
         private void Marketing_Load(object sender, EventArgs e)
         {
 
+        }
+
+
+        private void btnFormMinimized_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
         }
     }
 }

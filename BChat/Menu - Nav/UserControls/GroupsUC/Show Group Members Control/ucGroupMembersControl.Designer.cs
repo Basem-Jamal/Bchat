@@ -1,6 +1,6 @@
 ﻿namespace BChat.Menu___Nav.UserControls.Show_Group_Members_Control
 {
-    partial class GroupMembersControl
+    partial class ucGroupMembersControl
     {
         /// <summary> 
         /// Required designer variable.

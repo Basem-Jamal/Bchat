@@ -17,11 +17,11 @@ using System.Windows.Forms;
 
 namespace BChat.UserControls
 {
-    public partial class TemplatesControl : UserControl
+    public partial class ucTemplatesControl : UserControl
     {
         private SlickTable _table;
 
-        public TemplatesControl()
+        public ucTemplatesControl()
         {
             InitializeComponent();
 

@@ -1,6 +1,6 @@
 ﻿namespace BChat.UserControls
 {
-    partial class CampaignsControl
+    partial class ucCampaignsControl
     {
         /// <summary> 
         /// Required designer variable.

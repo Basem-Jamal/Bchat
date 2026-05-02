@@ -1,6 +1,6 @@
 ﻿namespace BChat.UserControls
 {
-    partial class TemplatesControl
+    partial class ucTemplatesControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -48,10 +48,10 @@
             pnlContent.FillColor2 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor3 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor4 = Color.FromArgb(248, 247, 255);
-            pnlContent.Location = new Point(20, 153);
+            pnlContent.Location = new Point(0, 95);
             pnlContent.Name = "pnlContent";
             pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            pnlContent.Size = new Size(1472, 520);
+            pnlContent.Size = new Size(1522, 605);
             pnlContent.TabIndex = 13;
             // 
             // btnAddTemplate
@@ -60,10 +60,10 @@
             btnAddTemplate.BorderRadius = 20;
             btnAddTemplate.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
             btnAddTemplate.Icon = Properties.Resources.plus;
-            btnAddTemplate.Location = new Point(1283, 37);
+            btnAddTemplate.Location = new Point(1298, 8);
             btnAddTemplate.Name = "btnAddTemplate";
             btnAddTemplate.RightToLeft = RightToLeft.Yes;
-            btnAddTemplate.Size = new Size(209, 70);
+            btnAddTemplate.Size = new Size(209, 71);
             btnAddTemplate.TabIndex = 14;
             btnAddTemplate.Text = "اضافة قالب";
             btnAddTemplate.Click += btnAddTemplate_Click;
@@ -72,9 +72,9 @@
             // 
             picTemplates.Cursor = Cursors.Hand;
             picTemplates.Image = Properties.Resources.templates;
-            picTemplates.Location = new Point(20, 22);
+            picTemplates.Location = new Point(0, 0);
             picTemplates.Name = "picTemplates";
-            picTemplates.Size = new Size(135, 98);
+            picTemplates.Size = new Size(127, 83);
             picTemplates.SizeMode = PictureBoxSizeMode.Zoom;
             picTemplates.TabIndex = 16;
             picTemplates.TabStop = false;
@@ -85,7 +85,7 @@
             btnSyncTemplates.BorderRadius = 20;
             btnSyncTemplates.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
             btnSyncTemplates.Icon = Properties.Resources.refersh;
-            btnSyncTemplates.Location = new Point(202, 37);
+            btnSyncTemplates.Location = new Point(39, 719);
             btnSyncTemplates.Name = "btnSyncTemplates";
             btnSyncTemplates.RightToLeft = RightToLeft.Yes;
             btnSyncTemplates.Size = new Size(157, 70);
@@ -108,10 +108,10 @@
             stcdTemplates.CardColor = Color.White;
             stcdTemplates.IconBgColor = Color.FromArgb(220, 245, 235);
             stcdTemplates.IconColor = Color.FromArgb(32, 201, 151);
-            stcdTemplates.Location = new Point(1173, 676);
+            stcdTemplates.Location = new Point(1182, 706);
             stcdTemplates.Name = "stcdTemplates";
             stcdTemplates.ShadowColor = Color.FromArgb(30, 0, 0, 0);
-            stcdTemplates.Size = new Size(307, 109);
+            stcdTemplates.Size = new Size(309, 93);
             stcdTemplates.TabIndex = 15;
             stcdTemplates.Text = "statCard1";
             stcdTemplates.Title = "القوالب النشطة";
@@ -125,13 +125,13 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
+            Controls.Add(stcdTemplates);
             Controls.Add(btnSyncTemplates);
             Controls.Add(picTemplates);
-            Controls.Add(stcdTemplates);
             Controls.Add(btnAddTemplate);
             Controls.Add(pnlContent);
             Name = "TemplatesControl";
-            Size = new Size(1510, 785);
+            Size = new Size(1522, 802);
             Load += TemplatesControl_Load;
             ((System.ComponentModel.ISupportInitialize)picTemplates).EndInit();
             ResumeLayout(false);

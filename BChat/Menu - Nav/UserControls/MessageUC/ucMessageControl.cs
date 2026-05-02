@@ -10,17 +10,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using System.Windows.Interop;
 
 namespace BChat.UserControls
 {
-    public partial class MessageControl : UserControl
+    public partial class ucMessageControl : UserControl
     {
         // ─── State ────────────────────────────────────────────────────────────
         private Dictionary<int, ChatListItemData> _contactsMap = new();
         private int _activeContactId = -1;
 
         // ─── Constructor ──────────────────────────────────────────────────────
-        public MessageControl()
+        public ucMessageControl()
         {
             InitializeComponent();
             LoadFromCache();
@@ -54,7 +55,7 @@ namespace BChat.UserControls
                 visibleCustomers = AppCache.Customers
                     .Where(c => assignedIds.Contains(c.Id));
             }
-            
+
 
             foreach (var customer in visibleCustomers)
             {
@@ -84,7 +85,7 @@ namespace BChat.UserControls
             // ترتيب: الأحدث رسالة أولاً
             chats = chats
                 .OrderByDescending(c => c.LastMessageAt)
-                                            
+
                 .ToList();
 
             chatSidebar1.LoadChats(chats);
@@ -126,13 +127,11 @@ namespace BChat.UserControls
                     LastMessageAt = DateTime.MinValue
                 };
                 _contactsMap[customer.Id] = newItem;
-
-                var chats = _contactsMap.Values
-                    .OrderByDescending(c => c.LastMessageAt)
-                    .ToList();
+                var chats = _contactsMap.Values.OrderByDescending(c => c.LastMessageAt).ToList();
                 chatSidebar1.LoadChats(chats);
             }));
         }
+        
         // تحديث قائمة الرسائل بعد حذف العميل
         private void OnCustomerDeleted(int customerId)
         {
@@ -218,9 +217,9 @@ namespace BChat.UserControls
                     var newCustomer = new Customer()
                     {
                         Name = msg.SenderName,
-                        Phone= msg.Phone,
+                        Phone = msg.Phone,
                     };
-                    newCustomer.Id =CustomerRepository.Add(newCustomer);
+                    newCustomer.Id = CustomerRepository.Add(newCustomer);
                     AppCache.Customers.Add(newCustomer);
                     customer = newCustomer;
 
@@ -271,7 +270,15 @@ namespace BChat.UserControls
                 AppCache.ChatMessages.Add(dbMessage);
 
                 // ④ تحديث الـ UI على UI Thread
-                if (!IsHandleCreated) return;
+                // ④ تحديث الـ UI على UI Thread
+                if (!IsHandleCreated)
+                {
+                    this.HandleCreated += (s, e) => UpdateUI(customer, msg, dbMessage);
+                    return;
+                }
+
+
+                UpdateUI(customer, msg, dbMessage);
 
                 this.Invoke((Action)(() =>
                 {
@@ -313,7 +320,33 @@ namespace BChat.UserControls
             }
         }
 
+        private void UpdateUI(Customer customer, IncomingWhatsAppMessage msg, ChatMessage dbMessage)
+        {
+            this.Invoke((Action)(() =>
+            {
+                try
+                {
+                    if (!_contactsMap.TryGetValue(customer.Id, out var contact)) return;
 
+                    contact.LastMessage = msg.Text;
+                    contact.Timestamp = FormatTimestamp(msg.SentAt);
+                    contact.IsLastMessageSent = false;
+                    contact.LastMessageAt = msg.SentAt;
+
+                    if (_activeContactId == customer.Id)
+                        chatConversation2.AppendMessage(MapToUiMessage(dbMessage));
+                    else
+                        contact.UnreadCount++;
+
+                    chatSidebar1.MoveItemToTop(customer.Id);
+                    chatSidebar1.RefreshItem(customer.Id);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"❌ UI Error: {ex.Message}");
+                }
+            }));
+        }
 
         // ─── الخطوة 2: اختيار محادثة ─────────────────────────────────────────
         private void OnChatSelected(object sender, int contactId)
