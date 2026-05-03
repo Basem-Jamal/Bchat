@@ -141,7 +141,7 @@
             // 
             // txbTemplateName
             // 
-            txbTemplateName.BackColor = Color.Transparent;
+            txbTemplateName.BackColor = Color.White;
             txbTemplateName.BackColorEx = Color.FromArgb(237, 235, 255);
             txbTemplateName.BorderRadius = 14;
             txbTemplateName.FocusBorderColor = Color.FromArgb(124, 111, 247);

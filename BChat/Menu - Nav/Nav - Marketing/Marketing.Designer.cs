@@ -30,7 +30,7 @@
         {
             components = new System.ComponentModel.Container();
             btnSettings = new FontAwesome.Sharp.IconButton();
-            btnNavCreateCampaign = new BChat.Controls.ModernNavButton();
+            btnNavCampaignsTabel = new BChat.Controls.ModernNavButton();
             btnNavAPIs = new BChat.Controls.ModernNavButton();
             btnNavTemplates = new BChat.Controls.ModernNavButton();
             pnlBigContent = new Car_Rental_System.CustomControls.CustomPanel();
@@ -73,39 +73,39 @@
             btnSettings.UseVisualStyleBackColor = false;
             btnSettings.Click += btnSettings_Click;
             // 
-            // btnNavCreateCampaign
+            // btnNavCampaignsTabel
             // 
-            btnNavCreateCampaign.ActiveBackground = Color.White;
-            btnNavCreateCampaign.ActiveBarColor = Color.FromArgb(124, 111, 247);
-            btnNavCreateCampaign.ActiveBarFullHeight = false;
-            btnNavCreateCampaign.ActiveBarPadding = 2;
-            btnNavCreateCampaign.ActiveBarWidth = 5;
-            btnNavCreateCampaign.ActiveIconColor = Color.White;
-            btnNavCreateCampaign.ActiveTextColor = Color.FromArgb(124, 111, 247);
-            btnNavCreateCampaign.BackColor = Color.Transparent;
-            btnNavCreateCampaign.BaseBackground = Color.Transparent;
-            btnNavCreateCampaign.BorderRadius = 8;
-            btnNavCreateCampaign.CardPadding = 0;
-            btnNavCreateCampaign.ContentPadding = 12;
-            btnNavCreateCampaign.Font = new Font("IBM Plex Sans Arabic", 13.25F, FontStyle.Bold);
-            btnNavCreateCampaign.ForeColor = Color.Transparent;
-            btnNavCreateCampaign.HoverBackground = Color.Transparent;
-            btnNavCreateCampaign.HoverIconColor = Color.Transparent;
-            btnNavCreateCampaign.HoverTextColor = Color.FromArgb(124, 111, 247);
-            btnNavCreateCampaign.Icon = Properties.Resources.ad_campaign;
-            btnNavCreateCampaign.IconSize = 40;
-            btnNavCreateCampaign.IsActive = false;
-            btnNavCreateCampaign.Location = new Point(21, 272);
-            btnNavCreateCampaign.Name = "btnNavCreateCampaign";
-            btnNavCreateCampaign.NormalIconColor = Color.Transparent;
-            btnNavCreateCampaign.NormalTextColor = Color.White;
-            btnNavCreateCampaign.RightToLeft = RightToLeft.Yes;
-            btnNavCreateCampaign.Size = new Size(180, 65);
-            btnNavCreateCampaign.TabIndex = 8;
-            btnNavCreateCampaign.Text = "انشاء حملة";
-            btnNavCreateCampaign.UseActiveEffect = true;
-            btnNavCreateCampaign.UseHoverEffect = true;
-            btnNavCreateCampaign.Click += btnNavCreateCampaign_Click;
+            btnNavCampaignsTabel.ActiveBackground = Color.White;
+            btnNavCampaignsTabel.ActiveBarColor = Color.FromArgb(124, 111, 247);
+            btnNavCampaignsTabel.ActiveBarFullHeight = false;
+            btnNavCampaignsTabel.ActiveBarPadding = 2;
+            btnNavCampaignsTabel.ActiveBarWidth = 5;
+            btnNavCampaignsTabel.ActiveIconColor = Color.White;
+            btnNavCampaignsTabel.ActiveTextColor = Color.FromArgb(124, 111, 247);
+            btnNavCampaignsTabel.BackColor = Color.Transparent;
+            btnNavCampaignsTabel.BaseBackground = Color.Transparent;
+            btnNavCampaignsTabel.BorderRadius = 8;
+            btnNavCampaignsTabel.CardPadding = 0;
+            btnNavCampaignsTabel.ContentPadding = 12;
+            btnNavCampaignsTabel.Font = new Font("IBM Plex Sans Arabic", 13.25F, FontStyle.Bold);
+            btnNavCampaignsTabel.ForeColor = Color.Transparent;
+            btnNavCampaignsTabel.HoverBackground = Color.Transparent;
+            btnNavCampaignsTabel.HoverIconColor = Color.Transparent;
+            btnNavCampaignsTabel.HoverTextColor = Color.FromArgb(124, 111, 247);
+            btnNavCampaignsTabel.Icon = Properties.Resources.ad_campaign;
+            btnNavCampaignsTabel.IconSize = 40;
+            btnNavCampaignsTabel.IsActive = false;
+            btnNavCampaignsTabel.Location = new Point(21, 272);
+            btnNavCampaignsTabel.Name = "btnNavCampaignsTabel";
+            btnNavCampaignsTabel.NormalIconColor = Color.Transparent;
+            btnNavCampaignsTabel.NormalTextColor = Color.White;
+            btnNavCampaignsTabel.RightToLeft = RightToLeft.Yes;
+            btnNavCampaignsTabel.Size = new Size(180, 65);
+            btnNavCampaignsTabel.TabIndex = 8;
+            btnNavCampaignsTabel.Text = "انشاء حملة";
+            btnNavCampaignsTabel.UseActiveEffect = true;
+            btnNavCampaignsTabel.UseHoverEffect = true;
+            btnNavCampaignsTabel.Click += btnNavCampaignsTabel_Click;
             // 
             // btnNavAPIs
             // 
@@ -215,7 +215,7 @@
             pnlMenuSidebar.Controls.Add(btnNavAPIs);
             pnlMenuSidebar.Controls.Add(btnSettings);
             pnlMenuSidebar.Controls.Add(btnNavTemplates);
-            pnlMenuSidebar.Controls.Add(btnNavCreateCampaign);
+            pnlMenuSidebar.Controls.Add(btnNavCampaignsTabel);
             pnlMenuSidebar.GradientEndColor = Color.Purple;
             pnlMenuSidebar.GradientMidColor = Color.Transparent;
             pnlMenuSidebar.GradientStartColor = Color.Black;
@@ -423,7 +423,7 @@
 
         #endregion
         private FontAwesome.Sharp.IconButton btnSettings;
-        private Controls.ModernNavButton btnNavCreateCampaign;
+        private Controls.ModernNavButton btnNavCampaignsTabel;
         private Controls.ModernNavButton btnNavTemplates;
         private Car_Rental_System.CustomControls.CustomPanel pnlBigContent;
         private Car_Rental_System.CustomControls.CustomPanel pnlSubContent;

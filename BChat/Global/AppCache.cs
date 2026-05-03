@@ -29,6 +29,7 @@ namespace BChat.Global
         // ── GroupMember Helpers ───────────────
         public static List<int> GetGroupIdsByCustomer(int customerId)
         {
+
             return GroupMembers.Where(gm=> gm.CustomerId == customerId).Select(gm => gm.GroupId).ToList();
         }
 

@@ -29,20 +29,61 @@ namespace BChat.Menu___Nav.Nav___Marketing
             this.Close();
         }
 
-        private void btnNavCreateCampaign_Click(object sender, EventArgs e)
+      
+
+
+        private void btnFormMinimized_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void btnNavCampaignsTabel_Click(object sender, EventArgs e)
         {
             ResetButtons();
 
-            btnNavCreateCampaign.IsActive = true;
+            btnNavCampaignsTabel.IsActive = true;
+
+            foreach (Control c in pnlSubContent.Controls)
+                c.Visible = false;
+
+            CampaignsView();
+        }
+        private void Marketing_Load(object sender, EventArgs e)
+        {
 
         }
+
         private void btnNavTemplates_Click(object sender, EventArgs e)
         {
             ResetButtons();
 
             btnNavTemplates.IsActive = true;
 
+            foreach (Control c in pnlSubContent.Controls)
+                c.Visible = false;
 
+
+            TemplatesView();
+        }
+
+
+        private void CampaignsView()
+        {
+            if (!pnlSubContent.Controls.ContainsKey("CampaignsTabel_View"))
+            {
+                ucCampaignsControl ucCampaignsControl = new ucCampaignsControl();
+                ucCampaignsControl.Name = "CampaignsTabel_View";
+                ucCampaignsControl.Dock = DockStyle.Fill;
+                pnlSubContent.Controls.Add(ucCampaignsControl);
+            }
+
+            pnlSubContent.Controls["CampaignsTabel_View"].Visible = true;
+            pnlSubContent.Controls["CampaignsTabel_View"].BringToFront();
+
+        }
+
+        private void TemplatesView()
+        {
             if (!pnlSubContent.Controls.ContainsKey("Templates_View"))
             {
                 ucTemplatesControl templatesPage = new ucTemplatesControl();
@@ -52,6 +93,7 @@ namespace BChat.Menu___Nav.Nav___Marketing
 
             }
 
+            pnlSubContent.Controls["Templates_View"].Visible = true;
             pnlSubContent.Controls["Templates_View"].BringToFront();
 
         }
@@ -103,15 +145,6 @@ namespace BChat.Menu___Nav.Nav___Marketing
 
         }
 
-        private void Marketing_Load(object sender, EventArgs e)
-        {
 
-        }
-
-
-        private void btnFormMinimized_Click(object sender, EventArgs e)
-        {
-            this.WindowState = FormWindowState.Minimized;
-        }
     }
 }

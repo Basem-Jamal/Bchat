@@ -1,4 +1,4 @@
-﻿using BChat.Models.CustomerProfiles_Module;
+﻿using BChat.Models.Customer_Module.CustomerProfiles_Module;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;

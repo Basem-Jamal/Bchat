@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BChat.Models.CustomerProfiles_Module
+namespace BChat.Models.Customer_Module.CustomerProfiles_Module
 {
     public class CustomerProfile
     {

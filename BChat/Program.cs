@@ -34,20 +34,6 @@ namespace BChat
             CalculateMembersCount();
 
             AppCache.WhatsAppListener = new BChat.WhatsApp.WhatsAppWebhookListener();
-            AppCache.WhatsAppListener.Start();
-
-            //try
-            //{
-            //    AppCache.WhatsAppListener = new BChat.WhatsApp.WhatsAppWebhookListener();
-            //    AppCache.WhatsAppListener.Start();
-            //}
-            //catch { /* تجاهل لو Port مشغول */ }
-            //try
-            //{
-            //    AppCache.WhatsAppListener = new BChat.WhatsApp.WhatsAppWebhookListener();
-            //    AppCache.WhatsAppListener.Start();
-            //}
-            //catch { /* تجاهل لو Port مشغول */ }
 
             while (true)
             {
@@ -57,7 +43,9 @@ namespace BChat
                         break;
                 }
                 var home = new Home();
+                home.Shown += (s, e) => AppCache.WhatsAppListener.Start(); // ← ابدأ بعد تحميل الـ UI
                 Application.Run(home);
+                AppCache.WhatsAppListener.Stop();
 
             }
         }

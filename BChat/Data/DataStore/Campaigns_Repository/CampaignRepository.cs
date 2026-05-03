@@ -2,7 +2,7 @@
 using BChat.Models;
 using BChat.Events;
 
-namespace BChat.Data.DataStore
+namespace BChat.Data.DataStore.Campaigns_Repository
 {
     //public static class MessageRepository
     //{

@@ -36,7 +36,7 @@ namespace BChat.UserControls
 
             _table.SetColumns(new List<GridColumn>
             {
-                new GridColumn { Header = "العميل",       Field = "CustomerName", Width = 200, CellType = GridCellType.Avatar },
+                new GridColumn { Header = "العميل",       Field =  "CustomerName", Width = 200, CellType = GridCellType.Avatar },
                 new GridColumn { Header = "القالب",       Field = "TemplateName", Width = 150 },
                 new GridColumn { Header = "نوع الإرسال",   Field = "TriggerType",  Width = 130, CellType = GridCellType.Badge },
                 new GridColumn { Header = "الحالة",       Field = "Status",       Width = 100, CellType = GridCellType.Badge },
