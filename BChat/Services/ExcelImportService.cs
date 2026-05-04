@@ -1,7 +1,7 @@
 ﻿using BChat.Data.DataStore.CustomerProfile_Repository;
 using BChat.Data.DataStore.Customers_Repository;
 using BChat.Models;
-using BChat.Models.CustomerProfiles_Module;
+using BChat.Models.Customer_Module.CustomerProfiles_Module;
 using ExcelDataReader;
 using System;
 using System.Collections.Generic;

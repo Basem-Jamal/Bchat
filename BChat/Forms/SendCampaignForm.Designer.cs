@@ -140,7 +140,7 @@
             cmbTemplate.UsePlaceholder = true;
             // 
             // txbTemplateName
-            // 
+            // b
             txbTemplateName.BackColor = Color.White;
             txbTemplateName.BackColorEx = Color.FromArgb(237, 235, 255);
             txbTemplateName.BorderRadius = 14;
