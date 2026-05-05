@@ -36,11 +36,10 @@ namespace BChat.UserControls
 
             _table.SetColumns(new List<GridColumn>
             {
-                new GridColumn { Header = "العميل",       Field =  "CustomerName", Width = 200, CellType = GridCellType.Avatar },
-                new GridColumn { Header = "القالب",       Field = "TemplateName", Width = 150 },
-                new GridColumn { Header = "نوع الإرسال",   Field = "TriggerType",  Width = 130, CellType = GridCellType.Badge },
-                new GridColumn { Header = "الحالة",       Field = "Status",       Width = 100, CellType = GridCellType.Badge },
+                new GridColumn { Header = "اسم القالب",       Field =  "TemplateName", Width = 200, CellType = GridCellType.Avatar },
+                new GridColumn { Header = "المجموعة",       Field = "Group", Width = 150 },
                 new GridColumn { Header = "التاريخ",      Field = "SentAt",       Width = 130 },
+                new GridColumn { Header = "الحالة",       Field = "Status",       Width = 100, CellType = GridCellType.Badge },
                 new GridColumn { Header = "إجراءات",      Field = "Actions",      Width = 100, CellType = GridCellType.Actions },
             });
 
@@ -52,7 +51,6 @@ namespace BChat.UserControls
 
         private void LoadMessages()
         {
-            ////var messages = MessageRepository.GetAllWithDetails();
 
             //stcdCountCampaign.Value = messages.Count.ToString();
 
@@ -62,13 +60,11 @@ namespace BChat.UserControls
             //{
             //    rows.Add(new Dictionary<string, object>
             //    {
-            //        { "Id",           m.Id },
-            //        { "CustomerName", m.CustomerName },
-            //        { "CustomerPhone",m.CustomerPhone },
-            //        { "TemplateName", m.TemplateName },
-            //        { "TriggerType",  m.TriggerType },
-            //        { "Status",       m.Status },
-            //        { "SentAt",       m.SentAt.ToString("yyyy/MM/dd HH:mm") }
+            //        { "TemplateName",           m.Id },
+            //        { "Group", m.CustomerName },
+            //        { "SentAt",m.CustomerPhone },
+            //        { "Status", m.TemplateName },
+            //        { "Actions",  m.TriggerType },
             //    });
             //}
 
@@ -81,9 +77,8 @@ namespace BChat.UserControls
             if (row == null) return;
 
             MessageBox.Show(
-                $"العميل: {row["CustomerName"]}\n" +
-                $"الهاتف: {row["CustomerPhone"]}\n" +
-                $"القالب: {row["TemplateName"]}\n" +
+                $"اسم القالب: {row["TemplateName"]}\n" +
+                $"المجموعة: {row["Group"]}\n" +
                 $"الحالة: {row["Status"]}\n" +
                 $"التاريخ: {row["SentAt"]}",
                 "تفاصيل الرسالة",
