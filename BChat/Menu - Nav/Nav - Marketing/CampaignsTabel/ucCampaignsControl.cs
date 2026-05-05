@@ -1,7 +1,9 @@
 ﻿using BChat.Controls;
 using BChat.Data.DataStore;
+using BChat.Data.DataStore.Campaigns_Repository;
 using BChat.Events;
 using BChat.Forms;
+using BChat.Global;
 using BChat.Models;
 
 namespace BChat.UserControls
@@ -51,24 +53,27 @@ namespace BChat.UserControls
 
         private void LoadMessages()
         {
+            var messages = CampaignRepository.GetAll();
+            stcdCountCampaign.Value = messages.Count().ToString();
 
-            //stcdCountCampaign.Value = messages.Count.ToString();
 
-            //var rows = new List<Dictionary<string, object>>();
+            var rows = new List<Dictionary<string, object>>();
 
-            //foreach (var m in messages)
-            //{
-            //    rows.Add(new Dictionary<string, object>
-            //    {
-            //        { "TemplateName",           m.Id },
-            //        { "Group", m.CustomerName },
-            //        { "SentAt",m.CustomerPhone },
-            //        { "Status", m.TemplateName },
-            //        { "Actions",  m.TriggerType },
-            //    });
-            //}
+            foreach (var m in messages)
+            {
+                var groupName = AppCache.Groups.FirstOrDefault(g => g.Id == m.GroupId)?.Name;
+                var tempalteName = AppCache.WhatsAppTemplates.FirstOrDefault(t => t.Id == m.TemplateId)?.Name;
 
-            //_table.SetData(rows);
+                rows.Add(new Dictionary<string, object>
+                {
+                    { "TemplateName", tempalteName},
+                    { "Group", groupName },
+                    { "SentAt",m.SentAt },
+                    { "Status", m.Status },
+                });
+            }
+
+            _table.SetData(rows);
         }
 
         private void Table_ViewClicked(object sender, int rowIndex)

@@ -1,5 +1,7 @@
 ﻿using BChat.Data.DataStore;
 using BChat.Data.DataStore.Customers_Repository;
+using BChat.Global;
+using BChat.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,9 +26,14 @@ namespace BChat.Forms
             var customers = CustomerRepository.GetAll();
             segmented.UpdateSubtitle(0, $"{customers.Count} عميل");
 
-            var templates = TemplateRepository.GetAll();
+            var templates = AppCache.WhatsAppTemplates;
             cmbTemplate.ClearItems();
-            //cmbTemplate.شيي(templates.Select(t => t.Name));
+
+            foreach (var template in templates)
+            {
+                cmbTemplate.AddItem(template.Name);
+            }
+            //cmbTemplate.AddItems(templates.Select(t => t.Name));
         }
 
         private void picClose_Click(object sender, EventArgs e)
@@ -52,13 +59,17 @@ namespace BChat.Forms
             // ── 2. جيب القالب والعملاء ─────────────────────────
             var templates = TemplateRepository.GetAll();
             var template = templates[cmbTemplate.SelectedIndex];
-            var customers = CustomerRepository.GetAll();
-
-            if (customers.Count == 0)
+            //var customers = CustomerRepository.GetAll();
+            Customer customer = new Customer()
             {
-                MessageBox.Show("لا يوجد عملاء!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                Name = "Basem",
+                Phone = "+966534926949"
+            };
+            //if (customer.Count == 0)
+            //{
+            //    MessageBox.Show("لا يوجد عملاء!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //    return;
+            //}
 
             // ── 3. إذا القالب فيه صورة — اطلب رابطها ──────────
             string imageUrl = "";
@@ -76,10 +87,10 @@ namespace BChat.Forms
                     return;
                 }
             }
-
+            //{ customers.Count}
             // ── 4. تأكيد الإرسال ───────────────────────────────
             var confirm = MessageBox.Show(
-                $"سيتم إرسال القالب [{template.Name}] لـ {customers.Count} عميل\nهل أنت متأكد؟",
+                $"سيتم إرسال القالب [{template.Name}] لـ  عميل\nهل أنت متأكد؟",
                 "تأكيد الإرسال",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question
@@ -95,19 +106,19 @@ namespace BChat.Forms
             btnSendCampaign.Enabled = false;
             btnSendCampaign.Text = "جاري الإرسال...";
 
-            //foreach (var customer in customers)
-            //{
-            //    bool sent = await service.SendTemplateMessage(
-            //        customer.Phone,
-            //        template.Name,
-            //        template.Language ?? "ar",
-            //        template.HeaderType,
-            //        imageUrl
-            //    );
+            foreach (var customer in customers)
+            {
+                //bool sent = await Services.Meta___Services.MetaTemplateService..SendTemplateMessage(
+                    customer.Phone,
+                    template.Name,
+                    template.Language ?? "ar",
+                    template.HeaderType,
+                    imageUrl
+                );
 
-            //    if (sent) success++;
-            //    else failed++;
-            //}
+                if (sent) success++;
+                else failed++;
+            }
 
             // ── 6. النتيجة ─────────────────────────────────────
             MessageBox.Show(

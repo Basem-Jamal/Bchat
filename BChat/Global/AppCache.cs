@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BChat.Models;
 using System.Collections.Generic;
 using BChat.Models.Users;
+using BChat.Models.Meta_Business;
 
 
 namespace BChat.Global
@@ -13,7 +14,6 @@ namespace BChat.Global
     public static class AppCache
     {
         //----------Users------------
-        
         public static User? CurrentUser { get; set; }
         public static List<User> Users { get; set; } = new List<User>();
         //----------------------
@@ -22,7 +22,7 @@ namespace BChat.Global
         public static List<Customer> Customers { get; set; } = new List<Customer>();
         public static List<GroupMember> GroupMembers { get; set; } = new List<GroupMember>();
         public static List<ChatMessage> ChatMessages { get; set; } = new List<ChatMessage>();
-
+        public static List<WhatsAppTemplate> WhatsAppTemplates { get; set; } = new List<WhatsAppTemplate>();
         public static BChat.WhatsApp.WhatsAppWebhookListener? WhatsAppListener { get; set; }
 
 

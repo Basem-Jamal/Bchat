@@ -5,6 +5,7 @@ using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BChat.Controls
 {
@@ -31,6 +32,7 @@ namespace BChat.Controls
         private int _borderRadius = 14;
         private int _labelHeight = 24;
         private int _itemHeight = 34;
+        private const int MaxVisible = 8;
 
         private readonly Collection<string> _items = new();
         private Form? _dropdownForm;
@@ -88,7 +90,6 @@ namespace BChat.Controls
                     return;
 
                 _selectedIndex = value;
-
                 Invalidate();
 
                 SelectionChanged?.Invoke(this, EventArgs.Empty);
@@ -104,15 +105,9 @@ namespace BChat.Controls
 
             set
             {
-                if (value == null)
-                {
-                    SelectedIndex = -1;
-                    return;
-                }
-
+                if (value == null) { SelectedIndex = -1; return; }
                 int index = _items.IndexOf(value);
-                if (index >= 0)
-                    SelectedIndex = index;
+                if (index >= 0) SelectedIndex = index;
             }
         }
 
@@ -168,21 +163,14 @@ namespace BChat.Controls
         public void AddItem(string text)
         {
             _items.Add(text);
-
-            if (_selectedIndex == -1)
-                _selectedIndex = 0;
-
+            if (_selectedIndex == -1) _selectedIndex = 0;
             Invalidate();
         }
 
         public void AddItems(IEnumerable<string> items)
         {
-            foreach (var item in items)
-                _items.Add(item);
-
-            if (_selectedIndex == -1 && _items.Count > 0)
-                _selectedIndex = 0;
-
+            foreach (var item in items) _items.Add(item);
+            if (_selectedIndex == -1 && _items.Count > 0) _selectedIndex = 0;
             Invalidate();
         }
 
@@ -197,11 +185,8 @@ namespace BChat.Controls
         protected override void OnMouseDown(MouseEventArgs e)
         {
             Focus();
-
-            if (_isOpen)
-                CloseDropdown();
-            else
-                OpenDropdown();
+            if (_isOpen) CloseDropdown();
+            else OpenDropdown();
         }
 
         // ─── Dropdown ─────────────────────────────────────────
@@ -211,7 +196,7 @@ namespace BChat.Controls
 
             _isOpen = true;
 
-            int dropH = _items.Count * _itemHeight + 8;
+            int dropH = Math.Min(_items.Count, MaxVisible) * _itemHeight + 8;
 
             _dropdownForm = new Form
             {
@@ -223,11 +208,18 @@ namespace BChat.Controls
                 TopMost = true
             };
 
-            _dropdownForm.Location = PointToScreen(new Point(0, Height));
+            // يطلع للأعلى
+            _dropdownForm.Location = PointToScreen(new Point(0, -dropH));
+
+            // عكس الايتمز - الأول يكون في الأعلى (الأقرب للكنترول)
+            var reversedItems = _items.Reverse().ToList();
+            int reversedSelectedIndex = _selectedIndex >= 0
+                ? (_items.Count - 1 - _selectedIndex)
+                : -1;
 
             var panel = new DropdownPanel(
-                _items,
-                _selectedIndex,
+                reversedItems,
+                reversedSelectedIndex,
                 _itemHeight,
                 Font,
                 _textColor,
@@ -237,7 +229,8 @@ namespace BChat.Controls
 
             panel.ItemSelected += (idx) =>
             {
-                SelectedIndex = idx;
+                // نرجع الـ index الأصلي
+                SelectedIndex = _items.Count - 1 - idx;
                 CloseDropdown();
             };
 
@@ -290,7 +283,6 @@ namespace BChat.Controls
 
             var state = g.Save();
             g.TranslateTransform(x, y);
-
             if (_isOpen) g.RotateTransform(180);
 
             using var pen = new Pen(_arrowColor, 2);
@@ -304,13 +296,11 @@ namespace BChat.Controls
         {
             var path = new GraphicsPath();
             int d = radius * 2;
-
             path.AddArc(r.X, r.Y, d, d, 180, 90);
             path.AddArc(r.Right - d, r.Y, d, d, 270, 90);
             path.AddArc(r.Right - d, r.Bottom - d, d, d, 0, 90);
             path.AddArc(r.X, r.Bottom - d, d, d, 90, 90);
             path.CloseFigure();
-
             return path;
         }
     }
@@ -327,6 +317,9 @@ namespace BChat.Controls
 
         private int _hovered = -1;
         private int _selectedIndex;
+        private int _scrollOffset = 0;
+
+        private readonly VScrollBar _scrollBar;
 
         public event Action<int>? ItemSelected;
 
@@ -354,9 +347,44 @@ namespace BChat.Controls
             Dock = DockStyle.Fill;
             BackColor = Color.White;
 
+            // ─── ScrollBar ───
+            int maxScroll = Math.Max(0, _items.Count - 8);
+
+            _scrollBar = new VScrollBar
+            {
+                Dock = DockStyle.Right,
+                Minimum = 0,
+                Maximum = Math.Max(0, _items.Count - 1),
+                SmallChange = 1,
+                LargeChange = 1,
+                Visible = _items.Count > 8
+            };
+
+            _scrollBar.ValueChanged += (s, e) =>
+            {
+                _scrollOffset = _scrollBar.Value;
+                Invalidate();
+            };
+
+            Controls.Add(_scrollBar);
+
+            // ─── Mouse Wheel ───
+            MouseWheel += (s, e) =>
+            {
+                int max = Math.Max(0, _items.Count - 8);
+                int newVal = _scrollOffset - (e.Delta > 0 ? 1 : -1);
+                _scrollOffset = Math.Max(0, Math.Min(newVal, max));
+
+                if (_scrollBar.Visible)
+                    _scrollBar.Value = Math.Max(_scrollBar.Minimum,
+                        Math.Min(_scrollOffset, _scrollBar.Maximum - _scrollBar.LargeChange + 1));
+
+                Invalidate();
+            };
+
             MouseMove += (s, e) =>
             {
-                int idx = (e.Y - 4) / _itemH;
+                int idx = (e.Y - 4) / _itemH + _scrollOffset;
                 _hovered = (idx >= 0 && idx < _items.Count) ? idx : -1;
                 Invalidate();
             };
@@ -369,7 +397,7 @@ namespace BChat.Controls
 
             MouseClick += (s, e) =>
             {
-                int idx = (e.Y - 4) / _itemH;
+                int idx = (e.Y - 4) / _itemH + _scrollOffset;
                 if (idx >= 0 && idx < _items.Count)
                     ItemSelected?.Invoke(idx);
             };
@@ -380,6 +408,7 @@ namespace BChat.Controls
             var g = e.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
+            int panelW = _scrollBar.Visible ? Width - _scrollBar.Width : Width;
             var rect = new Rectangle(0, 0, Width - 1, Height - 1);
 
             using var path = RoundedRect(rect, _radius);
@@ -391,11 +420,16 @@ namespace BChat.Controls
 
             this.Region = new Region(path);
 
-            for (int i = 0; i < _items.Count; i++)
-            {
-                var itemRect = new Rectangle(6, 4 + i * _itemH, Width - 12, _itemH - 4);
+            int visibleCount = (Height - 8) / _itemH;
 
-                if (i == _hovered || i == _selectedIndex)
+            for (int i = 0; i < visibleCount; i++)
+            {
+                int dataIdx = i + _scrollOffset;
+                if (dataIdx >= _items.Count) break;
+
+                var itemRect = new Rectangle(6, 4 + i * _itemH, panelW - 12, _itemH - 4);
+
+                if (dataIdx == _hovered || dataIdx == _selectedIndex)
                 {
                     using var hPath = RoundedRect(itemRect, 8);
                     using var hBrush = new SolidBrush(_hoverColor);
@@ -403,10 +437,10 @@ namespace BChat.Controls
                 }
 
                 float textY = itemRect.Top + (itemRect.Height - _font.Height) / 2f;
-                float textX = Width - g.MeasureString(_items[i], _font).Width - 16;
+                float textX = panelW - g.MeasureString(_items[dataIdx], _font).Width - 16;
 
                 using var tBrush = new SolidBrush(_textColor);
-                g.DrawString(_items[i], _font, tBrush, new PointF(textX, textY));
+                g.DrawString(_items[dataIdx], _font, tBrush, new PointF(textX, textY));
             }
         }
 
@@ -414,13 +448,11 @@ namespace BChat.Controls
         {
             var path = new GraphicsPath();
             int d = radius * 2;
-
             path.AddArc(r.X, r.Y, d, d, 180, 90);
             path.AddArc(r.Right - d, r.Y, d, d, 270, 90);
             path.AddArc(r.Right - d, r.Bottom - d, d, d, 0, 90);
             path.AddArc(r.X, r.Bottom - d, d, d, 90, 90);
             path.CloseFigure();
-
             return path;
         }
     }

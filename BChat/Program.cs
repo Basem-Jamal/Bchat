@@ -25,12 +25,23 @@ namespace BChat
             //Users
             AppCache.Users = UsersRepository.GetAll();
             //---------
-            AppCache.Customers = CustomerRepository.GetAll();
+            //Customers
+            AppCache.Customers = CustomerRepository.GetAll();      
+            //---------
+            //Groups
             AppCache.Groups = GroupRepository.GetAll();
+            //---------
+            //GroupMembers
             AppCache.GroupMembers = GroupMemberRepository.GetAll();
+            //---------
+            //ChatMessages
             AppCache.ChatMessages = ChatMessageRepository.GetAll(); // ← هذا فقط
+            //---------
+            //Templates
+            AppCache.WhatsAppTemplates = TemplateRepository.GetAll();
+            //---------
 
-
+           
             CalculateMembersCount();
 
             AppCache.WhatsAppListener = new BChat.WhatsApp.WhatsAppWebhookListener();
