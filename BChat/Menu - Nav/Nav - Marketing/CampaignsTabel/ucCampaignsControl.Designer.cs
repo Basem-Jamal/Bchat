@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             picTemplates = new PictureBox();
             stcdCountCampaign = new BChat.Controls.StatCard();
             btnCreateACampaign = new BChat.Controls.ModernButton();
@@ -41,7 +41,7 @@
             // 
             picTemplates.Cursor = Cursors.Hand;
             picTemplates.Image = Properties.Resources.Sent;
-            picTemplates.Location = new Point(84, 22);
+            picTemplates.Location = new Point(3, 16);
             picTemplates.Name = "picTemplates";
             picTemplates.Size = new Size(135, 98);
             picTemplates.SizeMode = PictureBoxSizeMode.Zoom;
@@ -55,7 +55,7 @@
             stcdCountCampaign.CardColor = Color.White;
             stcdCountCampaign.IconBgColor = Color.FromArgb(220, 245, 235);
             stcdCountCampaign.IconColor = Color.FromArgb(32, 201, 151);
-            stcdCountCampaign.Location = new Point(868, 667);
+            stcdCountCampaign.Location = new Point(1068, 667);
             stcdCountCampaign.Name = "stcdCountCampaign";
             stcdCountCampaign.ShadowColor = Color.FromArgb(30, 0, 0, 0);
             stcdCountCampaign.Size = new Size(425, 135);
@@ -72,7 +72,7 @@
             btnCreateACampaign.BorderRadius = 20;
             btnCreateACampaign.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
             btnCreateACampaign.Icon = Properties.Resources.plus;
-            btnCreateACampaign.Location = new Point(1068, 50);
+            btnCreateACampaign.Location = new Point(1273, 34);
             btnCreateACampaign.Name = "btnCreateACampaign";
             btnCreateACampaign.RightToLeft = RightToLeft.Yes;
             btnCreateACampaign.Size = new Size(209, 70);
@@ -83,18 +83,18 @@
             // pnlContent
             // 
             pnlContent.BackColor = Color.FromArgb(248, 247, 255);
-            pnlContent.CustomizableEdges = customizableEdges5;
+            pnlContent.CustomizableEdges = customizableEdges1;
             pnlContent.FillColor = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor2 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor3 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor4 = Color.FromArgb(248, 247, 255);
-            pnlContent.Location = new Point(0, 190);
+            pnlContent.Location = new Point(0, 157);
             pnlContent.Name = "pnlContent";
-            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges6;
-            pnlContent.Size = new Size(1306, 461);
+            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            pnlContent.Size = new Size(1522, 494);
             pnlContent.TabIndex = 17;
             // 
-            // CampaignsControl
+            // ucCampaignsControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -103,8 +103,8 @@
             Controls.Add(stcdCountCampaign);
             Controls.Add(btnCreateACampaign);
             Controls.Add(pnlContent);
-            Name = "CampaignsControl";
-            Size = new Size(1318, 816);
+            Name = "ucCampaignsControl";
+            Size = new Size(1522, 802);
             ((System.ComponentModel.ISupportInitialize)picTemplates).EndInit();
             ResumeLayout(false);
         }

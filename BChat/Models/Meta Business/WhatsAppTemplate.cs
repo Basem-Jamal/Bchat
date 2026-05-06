@@ -28,7 +28,7 @@ namespace BChat.Models.Meta_Business
         // Model
         public string HeaderType { get; set; } // "IMAGE", "TEXT", "NONE"
         public string HeaderText { get; set; }
-
+        public string? MediaId { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 

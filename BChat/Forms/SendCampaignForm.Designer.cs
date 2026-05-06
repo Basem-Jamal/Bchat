@@ -116,6 +116,7 @@
             segmented.UnselectedBorder = Color.FromArgb(220, 220, 235);
             segmented.UnselectedSubtitleColor = Color.FromArgb(140, 140, 160);
             segmented.UnselectedTextColor = Color.FromArgb(200, 200, 220);
+            segmented.Visible = false;
             // 
             // cmbTemplate
             // 
@@ -140,10 +141,12 @@
             cmbTemplate.UsePlaceholder = true;
             // 
             // txbTemplateName
-            // b
+            // 
             txbTemplateName.BackColor = Color.White;
             txbTemplateName.BackColorEx = Color.FromArgb(237, 235, 255);
+            txbTemplateName.BorderColor = Color.FromArgb(220, 215, 250);
             txbTemplateName.BorderRadius = 14;
+            txbTemplateName.Direction = BChat.Controls.TextDirection.Auto;
             txbTemplateName.FocusBorderColor = Color.FromArgb(124, 111, 247);
             txbTemplateName.Font = new Font("IBM Plex Sans Arabic", 12F);
             txbTemplateName.LabelText = "";
@@ -154,6 +157,8 @@
             txbTemplateName.RightToLeft = RightToLeft.Yes;
             txbTemplateName.Size = new Size(664, 58);
             txbTemplateName.TabIndex = 1;
+            txbTemplateName.TextPadding = 14;
+            txbTemplateName.UsePasswordChar = false;
             // 
             // lblCustomerName
             // 

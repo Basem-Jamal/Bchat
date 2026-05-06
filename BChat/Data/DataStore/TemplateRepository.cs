@@ -9,7 +9,6 @@ namespace BChat.Data.DataStore
     {
         private static string _connectionString = DatabaseConfig.ConnectionString;
 
-        // ── جلب كل القوالب ───────────────────────────────────────────────────
         public static List<WhatsAppTemplate> GetAll()
         {
             var templates = new List<WhatsAppTemplate>();
@@ -18,7 +17,7 @@ namespace BChat.Data.DataStore
             {
                 conn.Open();
                 string query = @"SELECT Id, Name, Content, Category, CreatedAt, 
-                                        Language, HeaderType, HeaderText, ComponentsJson, MetaTemplateId
+                                        Language, HeaderType, HeaderText, ComponentsJson, MetaTemplateId, MediaId
                                  FROM Templates";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -32,14 +31,13 @@ namespace BChat.Data.DataStore
             return templates;
         }
 
-        // ── جلب قالب بالـ ID ─────────────────────────────────────────────────
         public static WhatsAppTemplate GetById(int id)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
                 string query = @"SELECT Id, Name, Content, Category, CreatedAt, 
-                                        Language, HeaderType, HeaderText, ComponentsJson, MetaTemplateId
+                                        Language, HeaderType, HeaderText, ComponentsJson, MetaTemplateId, MediaId
                                  FROM Templates WHERE Id = @Id";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -55,7 +53,6 @@ namespace BChat.Data.DataStore
             return null;
         }
 
-        // ── مزامنة من Meta (يضيف أو يحدث) ───────────────────────────────────
         public static void Upsert(WhatsAppTemplate t)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -70,13 +67,14 @@ namespace BChat.Data.DataStore
                             ComponentsJson = @ComponentsJson,
                             HeaderType     = @HeaderType,
                             HeaderText     = @HeaderText,
-                            MetaTemplateId = @MetaTemplateId
+                            MetaTemplateId = @MetaTemplateId,
+                            MediaId        = @MediaId
                         WHERE Name = @Name
                     ELSE
                         INSERT INTO Templates 
-                            (Name, [Content], Category, Language, ComponentsJson, HeaderType, HeaderText, MetaTemplateId, CreatedAt)
+                            (Name, [Content], Category, Language, ComponentsJson, HeaderType, HeaderText, MetaTemplateId, MediaId, CreatedAt)
                         VALUES 
-                            (@Name, @Content, @Category, @Language, @ComponentsJson, @HeaderType, @HeaderText, @MetaTemplateId, GETDATE())";
+                            (@Name, @Content, @Category, @Language, @ComponentsJson, @HeaderType, @HeaderText, @MetaTemplateId, @MediaId, GETDATE())";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -86,7 +84,6 @@ namespace BChat.Data.DataStore
             }
         }
 
-        // ── حذف ──────────────────────────────────────────────────────────────
         public static bool Delete(int id)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -104,7 +101,6 @@ namespace BChat.Data.DataStore
             }
         }
 
-        // ── Helpers ───────────────────────────────────────────────────────────
         private static WhatsAppTemplate Map(SqlDataReader r) => new WhatsAppTemplate
         {
             Id = r.GetInt32(0),
@@ -117,6 +113,7 @@ namespace BChat.Data.DataStore
             HeaderText = r.IsDBNull(7) ? "" : r.GetString(7),
             ComponentsJson = r.IsDBNull(8) ? "[]" : r.GetString(8),
             MetaTemplateId = r.IsDBNull(9) ? "" : r.GetString(9),
+            MediaId = r.IsDBNull(10) ? null : r.GetString(10),
         };
 
         private static void BindParams(SqlCommand cmd, WhatsAppTemplate t)
@@ -129,6 +126,7 @@ namespace BChat.Data.DataStore
             cmd.Parameters.AddWithValue("@HeaderType", t.HeaderType ?? "NONE");
             cmd.Parameters.AddWithValue("@HeaderText", t.HeaderText ?? "");
             cmd.Parameters.AddWithValue("@MetaTemplateId", (object)t.MetaTemplateId ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@MediaId", (object)t.MediaId ?? DBNull.Value);
         }
     }
-} 
+}
