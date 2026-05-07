@@ -36,6 +36,7 @@
             btnAddCustomer = new BChat.Controls.ModernButton();
             btnRefreshData = new BChat.Controls.ModernButton();
             btnImportExcel = new BChat.Controls.ModernButton();
+            progressBar1 = new ProgressBar();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -120,11 +121,19 @@
             btnImportExcel.Text = "رفع ملف عملاء";
             btnImportExcel.Click += btnImportExcel_Click;
             // 
+            // progressBar1
+            // 
+            progressBar1.Location = new Point(658, 77);
+            progressBar1.Name = "progressBar1";
+            progressBar1.Size = new Size(284, 43);
+            progressBar1.TabIndex = 14;
+            // 
             // CustomersControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(248, 247, 255);
+            Controls.Add(progressBar1);
             Controls.Add(btnImportExcel);
             Controls.Add(btnRefreshData);
             Controls.Add(btnAddCustomer);
@@ -145,5 +154,6 @@
         private Controls.ModernButton btnAddCustomer;
         private Controls.ModernButton btnRefreshData;
         private Controls.ModernButton btnImportExcel;
+        private ProgressBar progressBar1;
     }
 }

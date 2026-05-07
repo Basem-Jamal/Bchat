@@ -76,6 +76,23 @@ namespace BChat.Data.DataStore
 
         }
 
+        public static void AddIfNotExists(int groupId, int customerId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                string query = @"IF NOT EXISTS (SELECT 1 FROM CustomerGroupMembers 
+                         WHERE GroupId = @GroupId AND CustomerId = @CustomerId)
+                         INSERT INTO CustomerGroupMembers (GroupId, CustomerId)
+                         VALUES (@GroupId, @CustomerId)";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@GroupId", groupId);
+                    cmd.Parameters.AddWithValue("@CustomerId", customerId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
         public static void DeleteAllByCustomerId(int customerId)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))

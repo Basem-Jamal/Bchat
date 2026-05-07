@@ -185,7 +185,7 @@ namespace BChat.UserControls
             LoadCustomers();
         }
 
-        private void btnImportExcel_Click(object sender, EventArgs e)
+        private async void btnImportExcel_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog dialog = new OpenFileDialog())
             {
@@ -194,7 +194,23 @@ namespace BChat.UserControls
 
                 if (dialog.ShowDialog() != DialogResult.OK) return;
 
-                var (added, skipped) = ExcelImportService.ImportCustomers(dialog.FileName);
+
+                progressBar1.Visible = true;
+                btnImportExcel.Enabled = false;
+
+                var progress = new Progress<(int current, int total)>(p =>
+                {
+                    progressBar1.Maximum = p.total;
+                    progressBar1.Value = p.current;
+                });
+
+
+                var (added, skipped) = await Task.Run(() =>
+                    ExcelImportService.ImportCustomersAsync(dialog.FileName, progress));
+
+                progressBar1.Visible = false;
+                btnImportExcel.Enabled = true;
+
 
                 MessageBox.Show(
                              $"✅ تم إضافة {added} عميل\n⚠️ تم تخطّي {skipped} صف",
