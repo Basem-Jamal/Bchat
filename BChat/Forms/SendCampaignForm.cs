@@ -1,7 +1,10 @@
 ﻿using BChat.Data.DataStore;
+using BChat.Data.DataStore.Campaigns_Repository;
 using BChat.Data.DataStore.Customers_Repository;
 using BChat.Global;
 using BChat.Models;
+using BChat.Models.Campaign_Module;
+using BChat.Models.Campaign_Modules;
 using BChat.WhatsApp;
 using System;
 using System.Collections.Generic;
@@ -76,9 +79,31 @@ namespace BChat.Forms
                 }
             }
 
-            // ── 4. تأكيد الإرسال ───────────────────────────────
+            // ── 4. جيب عملاء المجموعة ─────────────────────────
+            int groupId = 5;
+            var groupMemberIds = AppCache.GroupMembers
+                .Where(m => m.GroupId == groupId)
+                .Select(m => m.CustomerId)
+                .ToList();
+
+            // ← الإرسال الذكي: استثني من وصلتهم رسالة خلال 7 أيام
+            var recentlySentIds = CampaignMessageRepository.GetRecentlySentCustomerIds();
+
+            var customers = AppCache.Customers
+                .Where(c => groupMemberIds.Contains(c.Id))
+                .Where(c => !recentlySentIds.Contains(c.Id))
+                .Take(3000)
+                .ToList();
+
+            if (customers.Count == 0)
+            {
+                MessageBox.Show("لا يوجد عملاء جدد في المجموعة!\nجميعهم وصلتهم رسالة خلال 7 أيام.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // ── 5. تأكيد الإرسال ───────────────────────────────
             var confirm = MessageBox.Show(
-                $"سيتم إرسال القالب [{template.Name}]\nهل أنت متأكد؟",
+                $"سيتم إرسال القالب [{template.Name}] لـ {customers.Count} عميل\nهل أنت متأكد؟",
                 "تأكيد الإرسال",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question
@@ -86,26 +111,81 @@ namespace BChat.Forms
 
             if (confirm != DialogResult.Yes) return;
 
-            // ── 5. إرسال الرسائل ────────────────────────────────
+            // ── 6. أنشئ الحملة في DB ───────────────────────────
+            var campaign = new Campaign
+            {
+                Name = txbCampaignName.Text.Trim(),
+                GroupId = groupId,
+                TemplateId = template.Id,
+                SentAt = DateTime.Now,
+                Status = CampaignStatus.Sending,
+                TotalCount = customers.Count,
+                SuccessCount = 0,
+                FailedCount = 0,
+            };
+            campaign.Id = CampaignRepository.Add(campaign);
+
+            // ── 7. إرسال الرسائل ────────────────────────────────
             int success = 0;
             int failed = 0;
 
             btnSendCampaign.Enabled = false;
             btnSendCampaign.Text = "جاري الإرسال...";
 
-            bool sent = await MetaSender.SendTemplateAsync(
-                "+966534926949",
-                template.Name,
-                template.Language ?? "ar",
-                template.HeaderType,
-                template.MediaId ?? "",
-                mediaUrl
-            );
+            foreach (var customer in customers)
+            {
+                bool sent = await MetaSender.SendTemplateAsync(
+                    customer.Phone,
+                    template.Name,
+                    template.Language ?? "ar",
+                    template.HeaderType,
+                    template.MediaId ?? "",
+                    mediaUrl
+                );
 
-            if (sent) success++;
-            else failed++;
+                // ── حفظ في CampaignMessages ──────────────────
+                var campaignMsg = new CampaignMessage
+                {
+                    CampaignId = campaign.Id,
+                    CustomerId = customer.Id,
+                    Status = sent ? CampaignMessageStatus.Completed : CampaignMessageStatus.Failed,
+                    SentAt = DateTime.Now
+                };
+                CampaignMessageRepository.Add(campaignMsg);
 
-            // ── 6. النتيجة ─────────────────────────────────────
+                // ── حفظ في ChatMessages ───────────────────────
+                if (sent)
+                {
+                    var chatMsg = new ChatMessage
+                    {
+                        CustomerId = customer.Id,
+                        Text = template.BodyText ?? template.Name,
+                        SentAt = DateTime.Now,
+                        IsSent = true,
+                        IsRead = false,
+                        HasAttachment = false,
+                        Status = "sent"
+                    };
+                    chatMsg.Id = ChatMessageRepository.Add(chatMsg);
+                    AppCache.ChatMessages.Add(chatMsg);
+                    success++;
+                }
+                else
+                {
+                    failed++;
+                }
+
+                // تأخير بين الرسائل لتجنب Rate Limiting
+                await Task.Delay(300);
+            }
+
+            // ── 8. حدّث الحملة ────────────────────────────────
+            campaign.SuccessCount = success;
+            campaign.FailedCount = failed;
+            campaign.Status = CampaignStatus.Completed;
+            CampaignRepository.Update(campaign);
+
+            // ── 9. النتيجة ─────────────────────────────────────
             MessageBox.Show(
                 $"✅ تم الإرسال: {success}\n❌ فشل: {failed}",
                 "نتيجة الحملة",

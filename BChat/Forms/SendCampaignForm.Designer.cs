@@ -29,15 +29,15 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             picClose = new PictureBox();
             guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(components);
             btnSendCampaign = new BChat.Controls.ModernButton();
             guna2CustomGradientPanel1 = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             segmented = new SegmentedControl();
             cmbTemplate = new BChat.Controls.ModernComboBox();
-            txbTemplateName = new BChat.Controls.ModernTextBox();
+            txbCampaignName = new BChat.Controls.ModernTextBox();
             lblCustomerName = new ReaLTaiizor.Controls.BigLabel();
             bigLabel2 = new ReaLTaiizor.Controls.BigLabel();
             bigLabel1 = new ReaLTaiizor.Controls.BigLabel();
@@ -83,14 +83,14 @@
             // 
             guna2CustomGradientPanel1.Controls.Add(segmented);
             guna2CustomGradientPanel1.Controls.Add(cmbTemplate);
-            guna2CustomGradientPanel1.Controls.Add(txbTemplateName);
+            guna2CustomGradientPanel1.Controls.Add(txbCampaignName);
             guna2CustomGradientPanel1.Controls.Add(lblCustomerName);
             guna2CustomGradientPanel1.Controls.Add(bigLabel2);
             guna2CustomGradientPanel1.Controls.Add(bigLabel1);
-            guna2CustomGradientPanel1.CustomizableEdges = customizableEdges1;
+            guna2CustomGradientPanel1.CustomizableEdges = customizableEdges3;
             guna2CustomGradientPanel1.Location = new Point(66, 83);
             guna2CustomGradientPanel1.Name = "guna2CustomGradientPanel1";
-            guna2CustomGradientPanel1.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            guna2CustomGradientPanel1.ShadowDecoration.CustomizableEdges = customizableEdges4;
             guna2CustomGradientPanel1.Size = new Size(812, 712);
             guna2CustomGradientPanel1.TabIndex = 5;
             // 
@@ -140,25 +140,25 @@
             cmbTemplate.TextColor = Color.FromArgb(40, 40, 70);
             cmbTemplate.UsePlaceholder = true;
             // 
-            // txbTemplateName
+            // txbCampaignName
             // 
-            txbTemplateName.BackColor = Color.White;
-            txbTemplateName.BackColorEx = Color.FromArgb(237, 235, 255);
-            txbTemplateName.BorderColor = Color.FromArgb(220, 215, 250);
-            txbTemplateName.BorderRadius = 14;
-            txbTemplateName.Direction = BChat.Controls.TextDirection.Auto;
-            txbTemplateName.FocusBorderColor = Color.FromArgb(124, 111, 247);
-            txbTemplateName.Font = new Font("IBM Plex Sans Arabic", 12F);
-            txbTemplateName.LabelText = "";
-            txbTemplateName.Location = new Point(92, 128);
-            txbTemplateName.MaxLength = 32767;
-            txbTemplateName.Name = "txbTemplateName";
-            txbTemplateName.PlaceholderText = "";
-            txbTemplateName.RightToLeft = RightToLeft.Yes;
-            txbTemplateName.Size = new Size(664, 58);
-            txbTemplateName.TabIndex = 1;
-            txbTemplateName.TextPadding = 14;
-            txbTemplateName.UsePasswordChar = false;
+            txbCampaignName.BackColor = Color.White;
+            txbCampaignName.BackColorEx = Color.FromArgb(237, 235, 255);
+            txbCampaignName.BorderColor = Color.FromArgb(220, 215, 250);
+            txbCampaignName.BorderRadius = 14;
+            txbCampaignName.Direction = BChat.Controls.TextDirection.Auto;
+            txbCampaignName.FocusBorderColor = Color.FromArgb(124, 111, 247);
+            txbCampaignName.Font = new Font("IBM Plex Sans Arabic", 12F);
+            txbCampaignName.LabelText = "";
+            txbCampaignName.Location = new Point(92, 128);
+            txbCampaignName.MaxLength = 32767;
+            txbCampaignName.Name = "txbCampaignName";
+            txbCampaignName.PlaceholderText = "";
+            txbCampaignName.RightToLeft = RightToLeft.Yes;
+            txbCampaignName.Size = new Size(664, 58);
+            txbCampaignName.TabIndex = 1;
+            txbCampaignName.TextPadding = 14;
+            txbCampaignName.UsePasswordChar = false;
             // 
             // lblCustomerName
             // 
@@ -240,7 +240,7 @@
         private Guna.UI2.WinForms.Guna2CustomGradientPanel guna2CustomGradientPanel1;
         private Controls.ModernRichEditor rtbxContent;
         private Controls.ModernComboBox cmbTemplate;
-        private Controls.ModernTextBox txbTemplateName;
+        private Controls.ModernTextBox txbCampaignName;
         private ReaLTaiizor.Controls.BigLabel lblCustomerName;
         private ReaLTaiizor.Controls.BigLabel bigLabel2;
         private ReaLTaiizor.Controls.BigLabel bigLabel1;
