@@ -19,6 +19,8 @@ namespace BChat.Models
 
         public CustomerStatus status { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        public bool IsBlocked { get; set; } = false;
     }
 }
 // Recuiyrmcens

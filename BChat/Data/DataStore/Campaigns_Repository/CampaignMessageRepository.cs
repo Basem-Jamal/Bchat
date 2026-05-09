@@ -100,7 +100,7 @@ namespace BChat.Data.DataStore.Campaigns_Repository
             cmd.Parameters.AddWithValue("@CustomerId", message.CustomerId);
             cmd.Parameters.AddWithValue("@CampaignId", message.CampaignId);
             cmd.Parameters.AddWithValue("@SentAt", message.SentAt);
-            cmd.Parameters.AddWithValue("@Status", message.Status);
+            cmd.Parameters.AddWithValue("@Status", message.Status.ToString());
         }
     }
 }

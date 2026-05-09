@@ -32,17 +32,40 @@ namespace BChat.WhatsApp
         public void Start()
         {
             _cts = new CancellationTokenSource();
-            //_listener.Start();
-            //Task.Run(() => ListenLoop(_cts.Token));
 
-            //ابدأ الـ polling كل 3 ثواني
-           _pollTimer = new Timer(
-               async _ => await PollMessagesAsync(),
-               null,
-               TimeSpan.FromSeconds(3),
-               TimeSpan.FromSeconds(3));
+            // ← علّم كل الرسائل القديمة كـ processed بدون معالجة
+            Task.Run(async () => await MarkOldMessagesAsProcessedAsync()).Wait();
+
+            _pollTimer = new Timer(
+                async _ => await PollMessagesAsync(),
+                null,
+                TimeSpan.FromSeconds(3),
+                TimeSpan.FromSeconds(3));
 
             System.Diagnostics.Debug.WriteLine("✅ Polling started");
+        }
+
+        private async Task MarkOldMessagesAsProcessedAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetStringAsync(
+                    $"{_webhookServerUrl}/api/messages/pending");
+
+                var messages = JsonSerializer.Deserialize<PendingMessage[]>(response,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                if (messages == null || messages.Length == 0) return;
+
+                foreach (var m in messages)
+                {
+                    await _httpClient.PostAsync(
+                        $"{_webhookServerUrl}/api/messages/processed/{m.Id}", null);
+                }
+
+                System.Diagnostics.Debug.WriteLine($"✅ تم تجاهل {messages.Length} رسالة قديمة");
+            }
+            catch { }
         }
 
         public void Stop()

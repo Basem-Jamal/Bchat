@@ -25,7 +25,28 @@ namespace BChat.UserControls
         {
             InitializeComponent();
             LoadFromCache();
+            chatContactInfo1.BlockClicked += OnBlockClicked;
+
         }
+
+        //زر حضر العميل
+
+        private void OnBlockClicked(object sender, EventArgs e)
+        {
+            if (_activeContactId < 0) return;
+
+            var customer = AppCache.Customers.FirstOrDefault(c => c.Id == _activeContactId);
+            if (customer == null) return;
+
+            bool newStatus = !customer.IsBlocked;
+
+            CustomerRepository.Block(_activeContactId, newStatus);
+            customer.IsBlocked = newStatus;
+
+            string msg = newStatus ? "تم حجب العميل ✅" : "تم رفع الحجب ✅";
+            MessageBox.Show(msg, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
 
         // ─── الخطوة 1: تحميل البيانات الحقيقية من AppCache ───────────────────
         private void LoadFromCache()
@@ -33,6 +54,7 @@ namespace BChat.UserControls
             AppEvents.CustomerAdded += OnCustomerAdded;
 
             AppEvents.CustomerDeleted += OnCustomerDeleted;
+
 
             var agentName = AppCache.Users
                 .Where(u => u.Id != AppCache.CurrentUser?.Id)
@@ -261,6 +283,16 @@ namespace BChat.UserControls
                     WhatsAppMessageId = msg.WhatsAppMessageId,
                     Status = "received",
                 };
+
+                // ← تحقق من التكرار
+                bool alreadyExists = AppCache.ChatMessages
+                    .Any(m => m.WhatsAppMessageId == msg.WhatsAppMessageId
+                           && !string.IsNullOrEmpty(msg.WhatsAppMessageId));
+
+                if (alreadyExists)
+                    return; // ← الـ PostAsync يصير في PollMessagesAsync بعد Invoke
+
+
 
                 // ② حفظ في DB
                 dbMessage.Id = ChatMessageRepository.Add(dbMessage);

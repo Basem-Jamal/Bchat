@@ -38,6 +38,7 @@ namespace BChat.UserControls
 
             _table.SetColumns(new List<GridColumn>
             {
+                new GridColumn { Header = "اسم الحملة",       Field =  "CampaignName", Width = 200, CellType = GridCellType.Avatar },
                 new GridColumn { Header = "اسم القالب",       Field =  "TemplateName", Width = 200, CellType = GridCellType.Avatar },
                 new GridColumn { Header = "المجموعة",       Field = "Group", Width = 150 },
                 new GridColumn { Header = "التاريخ",      Field = "SentAt",       Width = 130 },
@@ -66,6 +67,7 @@ namespace BChat.UserControls
 
                 rows.Add(new Dictionary<string, object>
                 {
+                    { "CampaignName", m.Name },
                     { "TemplateName", tempalteName},
                     { "Group", groupName },
                     { "SentAt",m.SentAt },
@@ -82,6 +84,7 @@ namespace BChat.UserControls
             if (row == null) return;
 
             MessageBox.Show(
+                $"اسم الحملة: {row["CampaignName"]}\n" +
                 $"اسم القالب: {row["TemplateName"]}\n" +
                 $"المجموعة: {row["Group"]}\n" +
                 $"الحالة: {row["Status"]}\n" +

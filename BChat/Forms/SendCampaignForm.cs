@@ -13,6 +13,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -34,20 +35,11 @@ namespace BChat.Forms
             cmbTemplate.ClearItems();
 
             foreach (var template in templates)
-            {
                 cmbTemplate.AddItem(template.Name);
-            }
         }
 
-        private void picClose_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        private void modernButton3_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+        private void picClose_Click(object sender, EventArgs e) => this.Close();
+        private void modernButton3_Click(object sender, EventArgs e) => this.Close();
 
         private async void btnSendCampaign_Click(object sender, EventArgs e)
         {
@@ -86,18 +78,30 @@ namespace BChat.Forms
                 .Select(m => m.CustomerId)
                 .ToList();
 
-            // ← الإرسال الذكي: استثني من وصلتهم رسالة خلال 7 أيام
             var recentlySentIds = CampaignMessageRepository.GetRecentlySentCustomerIds();
 
+            //var customers = AppCache.Customers
+            //    .Where(c => groupMemberIds.Contains(c.Id))
+            //    .Where(c => !recentlySentIds.Contains(c.Id))
+            //    .Where(c => !c.IsBlocked) // ← استثني المحجوبين
+            //    .Take(3000)
+            //    .ToList();
+
+
             var customers = AppCache.Customers
-                .Where(c => groupMemberIds.Contains(c.Id))
-                .Where(c => !recentlySentIds.Contains(c.Id))
-                .Take(3000)
+                //.Where(c => groupMemberIds.Contains(c.Id))
+                //.Where(c => !recentlySentIds.Contains(c.Id))
+                .Where(c => c.Phone == "966534926949") // ← رقمك فقط
+                .Where(c => !c.IsBlocked) // ← الفلتر الجديد
+
                 .ToList();
+
+
+
 
             if (customers.Count == 0)
             {
-                MessageBox.Show("لا يوجد عملاء جدد في المجموعة!\nجميعهم وصلتهم رسالة خلال 7 أيام.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("لا يوجد عملاء جدد!\nجميعهم وصلتهم رسالة خلال 7 أيام.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -132,52 +136,60 @@ namespace BChat.Forms
             btnSendCampaign.Enabled = false;
             btnSendCampaign.Text = "جاري الإرسال...";
 
-            foreach (var customer in customers)
+            var semaphore = new SemaphoreSlim(10);
+            var lockObj = new object();
+
+            var tasks = customers.Select(async customer =>
             {
-                bool sent = await MetaSender.SendTemplateAsync(
-                    customer.Phone,
-                    template.Name,
-                    template.Language ?? "ar",
-                    template.HeaderType,
-                    template.MediaId ?? "",
-                    mediaUrl
-                );
-
-                // ── حفظ في CampaignMessages ──────────────────
-                var campaignMsg = new CampaignMessage
+                await semaphore.WaitAsync();
+                try
                 {
-                    CampaignId = campaign.Id,
-                    CustomerId = customer.Id,
-                    Status = sent ? CampaignMessageStatus.Completed : CampaignMessageStatus.Failed,
-                    SentAt = DateTime.Now
-                };
-                CampaignMessageRepository.Add(campaignMsg);
+                    bool sent = await MetaSender.SendTemplateAsync(
+                        customer.Phone,
+                        template.Name,
+                        template.Language ?? "ar",
+                        template.HeaderType,
+                        template.MediaId ?? "",
+                        mediaUrl
+                    );
 
-                // ── حفظ في ChatMessages ───────────────────────
-                if (sent)
-                {
-                    var chatMsg = new ChatMessage
+                    var campaignMsg = new CampaignMessage
                     {
+                        CampaignId = campaign.Id,
                         CustomerId = customer.Id,
-                        Text = template.BodyText ?? template.Name,
-                        SentAt = DateTime.Now,
-                        IsSent = true,
-                        IsRead = false,
-                        HasAttachment = false,
-                        Status = "sent"
+                        Status = sent ? CampaignMessageStatus.Completed : CampaignMessageStatus.Failed,
+                        SentAt = DateTime.Now
                     };
-                    chatMsg.Id = ChatMessageRepository.Add(chatMsg);
-                    AppCache.ChatMessages.Add(chatMsg);
-                    success++;
-                }
-                else
-                {
-                    failed++;
-                }
+                    CampaignMessageRepository.Add(campaignMsg);
 
-                // تأخير بين الرسائل لتجنب Rate Limiting
-                await Task.Delay(300);
-            }
+                    if (sent)
+                    {
+                        var chatMsg = new ChatMessage
+                        {
+                            CustomerId = customer.Id,
+                            Text = template.BodyText ?? template.Name,
+                            SentAt = DateTime.Now,
+                            IsSent = true,
+                            IsRead = false,
+                            HasAttachment = false,
+                            Status = "sent"
+                        };
+                        chatMsg.Id = ChatMessageRepository.Add(chatMsg);
+                        AppCache.ChatMessages.Add(chatMsg);
+                        lock (lockObj) { success++; }
+                    }
+                    else
+                    {
+                        lock (lockObj) { failed++; }
+                    }
+                }
+                finally
+                {
+                    semaphore.Release();
+                }
+            });
+
+            await Task.WhenAll(tasks);
 
             // ── 8. حدّث الحملة ────────────────────────────────
             campaign.SuccessCount = success;
