@@ -29,7 +29,7 @@ namespace BChat.Menu___Nav.Nav___Marketing
             this.Close();
         }
 
-      
+
 
 
         private void btnFormMinimized_Click(object sender, EventArgs e)

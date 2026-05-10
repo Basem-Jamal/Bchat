@@ -99,7 +99,7 @@ namespace BChat.WhatsApp
                         SenderName = m.Sender_Name ?? "",
                         Text = m.Message_Text ?? "",
                         WhatsAppMessageId = m.Whatsapp_Message_Id ?? "",
-                        SentAt = m.Received_At.AddHours(3),
+                        SentAt = m.Received_At,
                     };
 
                     try

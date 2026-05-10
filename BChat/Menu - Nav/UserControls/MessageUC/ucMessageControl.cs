@@ -313,38 +313,38 @@ namespace BChat.UserControls
 
                 UpdateUI(customer, msg, dbMessage);
 
-                this.Invoke((Action)(() =>
-                {
-                    try
-                    {
-                        if (!_contactsMap.TryGetValue(customer.Id, out var contact)) return;
+                //this.Invoke((Action)(() =>
+                //{
+                //    try
+                //    {
+                //        if (!_contactsMap.TryGetValue(customer.Id, out var contact)) return;
 
-                        contact.LastMessage = msg.Text;
-                        contact.Timestamp = FormatTimestamp(msg.SentAt);
-                        contact.IsLastMessageSent = false;
-                        contact.LastMessageAt = msg.SentAt;
+                //        contact.LastMessage = msg.Text;
+                //        contact.Timestamp = FormatTimestamp(msg.SentAt);
+                //        contact.IsLastMessageSent = false;
+                //        contact.LastMessageAt = msg.SentAt;
 
-                        // إذا المحادثة مفتوحة → أضف الفقاعة
-                        if (_activeContactId == customer.Id)
-                        {
-                            chatConversation2.AppendMessage(MapToUiMessage(dbMessage));
-                        }
-                        else
-                        {
-                            // إذا مغلقة → زد العداد
-                            contact.UnreadCount++;
-                        }
+                //        // إذا المحادثة مفتوحة → أضف الفقاعة
+                //        if (_activeContactId == customer.Id)
+                //        {
+                //            chatConversation2.AppendMessage(MapToUiMessage(dbMessage));
+                //        }
+                //        else
+                //        {
+                //            // إذا مغلقة → زد العداد
+                //            contact.UnreadCount++;
+                //        }
 
-                        chatSidebar1.MoveItemToTop(customer.Id);
-                        chatSidebar1.RefreshItem(customer.Id);
+                //        chatSidebar1.MoveItemToTop(customer.Id);
+                //        chatSidebar1.RefreshItem(customer.Id);
 
-                        System.Diagnostics.Debug.WriteLine($"✅ UI محدّث");
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"❌ UI Error: {ex.Message}");
-                    }
-                }));
+                //        System.Diagnostics.Debug.WriteLine($"✅ UI محدّث");
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        System.Diagnostics.Debug.WriteLine($"❌ UI Error: {ex.Message}");
+                //    }
+                //}));
             }
             catch (Exception ex)
             {

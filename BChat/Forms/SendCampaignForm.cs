@@ -80,21 +80,21 @@ namespace BChat.Forms
 
             var recentlySentIds = CampaignMessageRepository.GetRecentlySentCustomerIds();
 
-            //var customers = AppCache.Customers
-            //    .Where(c => groupMemberIds.Contains(c.Id))
-            //    .Where(c => !recentlySentIds.Contains(c.Id))
-            //    .Where(c => !c.IsBlocked) // ← استثني المحجوبين
-            //    .Take(3000)
-            //    .ToList();
-
-
             var customers = AppCache.Customers
-                //.Where(c => groupMemberIds.Contains(c.Id))
-                //.Where(c => !recentlySentIds.Contains(c.Id))
-                .Where(c => c.Phone == "966534926949") // ← رقمك فقط
-                .Where(c => !c.IsBlocked) // ← الفلتر الجديد
-
+                .Where(c => groupMemberIds.Contains(c.Id))
+                .Where(c => !recentlySentIds.Contains(c.Id))
+                .Where(c => !c.IsBlocked) // ← استثني المحجوبين
+                .Take(3000)
                 .ToList();
+
+
+            //var customers = AppCache.Customers
+            //    //.Where(c => groupMemberIds.Contains(c.Id))
+            //    //.Where(c => !recentlySentIds.Contains(c.Id))
+            //    .Where(c => c.Phone == "966534926949") // ← رقمك فقط
+            //    .Where(c => !c.IsBlocked) // ← الفلتر الجديد
+
+            //    .ToList();
 
 
 
@@ -136,66 +136,76 @@ namespace BChat.Forms
             btnSendCampaign.Enabled = false;
             btnSendCampaign.Text = "جاري الإرسال...";
 
-            var semaphore = new SemaphoreSlim(10);
-            var lockObj = new object();
-
-            var tasks = customers.Select(async customer =>
+            _ = Task.Run(async () =>
             {
-                await semaphore.WaitAsync();
-                try
+                var semaphore = new SemaphoreSlim(10);
+                var lockObj = new object();
+
+                var tasks = customers.Select(async customer =>
                 {
-                    bool sent = await MetaSender.SendTemplateAsync(
-                        customer.Phone,
-                        template.Name,
-                        template.Language ?? "ar",
-                        template.HeaderType,
-                        template.MediaId ?? "",
-                        mediaUrl
-                    );
-
-                    var campaignMsg = new CampaignMessage
+                    await semaphore.WaitAsync();
+                    try
                     {
-                        CampaignId = campaign.Id,
-                        CustomerId = customer.Id,
-                        Status = sent ? CampaignMessageStatus.Completed : CampaignMessageStatus.Failed,
-                        SentAt = DateTime.Now
-                    };
-                    CampaignMessageRepository.Add(campaignMsg);
+                        bool sent = await MetaSender.SendTemplateAsync(
+                            customer.Phone,
+                            template.Name,
+                            template.Language ?? "ar",
+                            template.HeaderType,
+                            template.MediaId ?? "",
+                            mediaUrl
+                        );
 
-                    if (sent)
-                    {
-                        var chatMsg = new ChatMessage
+                        var campaignMsg = new CampaignMessage
                         {
+                            CampaignId = campaign.Id,
                             CustomerId = customer.Id,
-                            Text = template.BodyText ?? template.Name,
-                            SentAt = DateTime.Now,
-                            IsSent = true,
-                            IsRead = false,
-                            HasAttachment = false,
-                            Status = "sent"
+                            Status = sent ? CampaignMessageStatus.Completed : CampaignMessageStatus.Failed,
+                            SentAt = DateTime.Now
                         };
-                        chatMsg.Id = ChatMessageRepository.Add(chatMsg);
-                        AppCache.ChatMessages.Add(chatMsg);
-                        lock (lockObj) { success++; }
+                        CampaignMessageRepository.Add(campaignMsg);
+
+                        if (sent)
+                        {
+                            var chatMsg = new ChatMessage
+                            {
+                                CustomerId = customer.Id,
+                                Text = template.BodyText ?? template.Name,
+                                SentAt = DateTime.Now,
+                                IsSent = true,
+                                IsRead = false,
+                                HasAttachment = false,
+                                Status = "sent"
+                            };
+                            chatMsg.Id = ChatMessageRepository.Add(chatMsg);
+                            AppCache.ChatMessages.Add(chatMsg);
+                            lock (lockObj) { success++; }
+                        }
+                        else
+                        {
+                            lock (lockObj) { failed++; }
+                        }
                     }
-                    else
+                    finally
                     {
-                        lock (lockObj) { failed++; }
+                        semaphore.Release();
                     }
-                }
-                finally
-                {
-                    semaphore.Release();
-                }
+                });
+
+                await Task.WhenAll(tasks);
+
+                // ── 8. حدّث الحملة ────────────────────────────────
+                campaign.SuccessCount = success;
+                campaign.FailedCount = failed;
+                campaign.Status = CampaignStatus.Completed;
+                CampaignRepository.Update(campaign);
+
+                // ← أغلق الفورم فوراً بدون انتظار
+                MessageBox.Show("بدأ الإرسال في الخلفية ✅", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                btnSendCampaign.Enabled = true;
+                btnSendCampaign.Text = "إرسال الحملة";
+                this.Close();
+
             });
-
-            await Task.WhenAll(tasks);
-
-            // ── 8. حدّث الحملة ────────────────────────────────
-            campaign.SuccessCount = success;
-            campaign.FailedCount = failed;
-            campaign.Status = CampaignStatus.Completed;
-            CampaignRepository.Update(campaign);
 
             // ── 9. النتيجة ─────────────────────────────────────
             MessageBox.Show(
