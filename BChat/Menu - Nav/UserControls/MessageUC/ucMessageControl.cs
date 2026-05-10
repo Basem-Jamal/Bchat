@@ -284,14 +284,15 @@ namespace BChat.UserControls
                     Status = "received",
                 };
 
+
                 // ← تحقق من التكرار
                 bool alreadyExists = AppCache.ChatMessages
                     .Any(m => m.WhatsAppMessageId == msg.WhatsAppMessageId
-                           && !string.IsNullOrEmpty(msg.WhatsAppMessageId));
+                           && !string.IsNullOrEmpty(msg.WhatsAppMessageId))
+                    || ChatMessageRepository.ExistsByWhatsAppId(msg.WhatsAppMessageId);
 
                 if (alreadyExists)
-                    return; // ← الـ PostAsync يصير في PollMessagesAsync بعد Invoke
-
+                    return;
 
 
                 // ② حفظ في DB

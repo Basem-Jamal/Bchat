@@ -33,8 +33,8 @@ namespace BChat.WhatsApp
         {
             _cts = new CancellationTokenSource();
 
-            // ← علّم كل الرسائل القديمة كـ processed بدون معالجة
-            Task.Run(async () => await MarkOldMessagesAsProcessedAsync()).Wait();
+            //// ← علّم كل الرسائل القديمة كـ processed بدون معالجة
+            //Task.Run(async () => await MarkOldMessagesAsProcessedAsync()).Wait();
 
             _pollTimer = new Timer(
                 async _ => await PollMessagesAsync(),
@@ -45,28 +45,28 @@ namespace BChat.WhatsApp
             System.Diagnostics.Debug.WriteLine("✅ Polling started");
         }
 
-        private async Task MarkOldMessagesAsProcessedAsync()
-        {
-            try
-            {
-                var response = await _httpClient.GetStringAsync(
-                    $"{_webhookServerUrl}/api/messages/pending");
+        //private async Task MarkOldMessagesAsProcessedAsync()
+        //{
+        //    try
+        //    {
+        //        var response = await _httpClient.GetStringAsync(
+        //            $"{_webhookServerUrl}/api/messages/pending");
 
-                var messages = JsonSerializer.Deserialize<PendingMessage[]>(response,
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        //        var messages = JsonSerializer.Deserialize<PendingMessage[]>(response,
+        //            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                if (messages == null || messages.Length == 0) return;
+        //        if (messages == null || messages.Length == 0) return;
 
-                foreach (var m in messages)
-                {
-                    await _httpClient.PostAsync(
-                        $"{_webhookServerUrl}/api/messages/processed/{m.Id}", null);
-                }
+        //        foreach (var m in messages)
+        //        {
+        //            await _httpClient.PostAsync(
+        //                $"{_webhookServerUrl}/api/messages/processed/{m.Id}", null);
+        //        }
 
-                System.Diagnostics.Debug.WriteLine($"✅ تم تجاهل {messages.Length} رسالة قديمة");
-            }
-            catch { }
-        }
+        //        System.Diagnostics.Debug.WriteLine($"✅ تم تجاهل {messages.Length} رسالة قديمة");
+        //    }
+        //    catch { }
+        //}
 
         public void Stop()
         {
@@ -90,6 +90,9 @@ namespace BChat.WhatsApp
 
                 foreach (var m in messages)
                 {
+
+                    await _httpClient.PostAsync($"{_webhookServerUrl}/api/messages/processed/{m.Id}", null);
+
                     var msg = new IncomingWhatsAppMessage
                     {
                         Phone = m.Phone ?? "",
@@ -102,7 +105,6 @@ namespace BChat.WhatsApp
                     try
                     {
                         MessageReceived?.Invoke(msg);
-                        await _httpClient.PostAsync($"{_webhookServerUrl}/api/messages/processed/{m.Id}", null);
                     }
                     catch (Exception ex)
                     {

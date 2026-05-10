@@ -73,6 +73,9 @@ namespace BChat.Data.DataStore
             return listMessage;
         }
 
+
+        
+
         // ── إضافة رسالة وإرجاع ID الجديد ─────────────────────────
 
         public static int Add(ChatMessage msg)
@@ -141,6 +144,22 @@ namespace BChat.Data.DataStore
         }
 
         
+        public static bool ExistsByWhatsAppId(string whatsAppMessageId)
+        {
+            if (string.IsNullOrEmpty(whatsAppMessageId)) return false;
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                string query = "SELECT COUNT(1) FROM ChatMessage WHERE WhatsAppMessageId = @Id";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Id", whatsAppMessageId);
+                    return (int)cmd.ExecuteScalar() > 0;
+                }
+            }
+        }
 
         // ── Helpers ───────────────────────────────────────────────
         private static ChatMessage Map(SqlDataReader r)
