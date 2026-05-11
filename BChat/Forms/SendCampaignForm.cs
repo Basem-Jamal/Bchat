@@ -129,15 +129,18 @@ namespace BChat.Forms
             };
             campaign.Id = CampaignRepository.Add(campaign);
 
-            // ── 7. إرسال الرسائل ────────────────────────────────
-            int success = 0;
-            int failed = 0;
 
             btnSendCampaign.Enabled = false;
             btnSendCampaign.Text = "جاري الإرسال...";
 
+            // ── 7. أخبر المستخدم وأغلق الفورم ──────────────────
+            MessageBox.Show($"بدأ إرسال {customers.Count} رسالة في الخلفية ✅", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            this.Close();
+
             _ = Task.Run(async () =>
             {
+                int success = 0;
+                int failed = 0;
                 var semaphore = new SemaphoreSlim(10);
                 var lockObj = new object();
 
@@ -199,24 +202,19 @@ namespace BChat.Forms
                 campaign.Status = CampaignStatus.Completed;
                 CampaignRepository.Update(campaign);
 
-                // ← أغلق الفورم فوراً بدون انتظار
-                MessageBox.Show("بدأ الإرسال في الخلفية ✅", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                btnSendCampaign.Enabled = true;
-                btnSendCampaign.Text = "إرسال الحملة";
-                this.Close();
+                //btnSendCampaign.Enabled = true;
+                //btnSendCampaign.Text = "إرسال الحملة";
+                //this.Close();
 
             });
 
-            // ── 9. النتيجة ─────────────────────────────────────
-            MessageBox.Show(
-                $"✅ تم الإرسال: {success}\n❌ فشل: {failed}",
-                "نتيجة الحملة",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information
-            );
-
-            btnSendCampaign.Enabled = true;
-            btnSendCampaign.Text = "إرسال الحملة";
+            //// ── 9. النتيجة ─────────────────────────────────────
+            //MessageBox.Show(
+            //    $"✅ تم الإرسال: {success}\n❌ فشل: {failed}",
+            //    "نتيجة الحملة",
+            //    MessageBoxButtons.OK,
+            //    MessageBoxIcon.Information
+            //);
         }
     }
 }
