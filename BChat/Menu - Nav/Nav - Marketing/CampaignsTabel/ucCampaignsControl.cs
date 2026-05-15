@@ -38,9 +38,10 @@ namespace BChat.UserControls
 
             _table.SetColumns(new List<GridColumn>
             {
-                new GridColumn { Header = "اسم الحملة",       Field =  "CampaignName", Width = 200, CellType = GridCellType.Avatar },
-                new GridColumn { Header = "اسم القالب",       Field =  "TemplateName", Width = 200, CellType = GridCellType.Avatar },
-                new GridColumn { Header = "المجموعة",       Field = "Group", Width = 150 },
+                new GridColumn { Header = "#",            Field =  "Sir", Width = 30 },
+                new GridColumn { Header = "اسم الحملة",   Field =  "CampaignName", Width = 200, CellType = GridCellType.Avatar },
+                new GridColumn { Header = "اسم القالب",   Field =  "TemplateName", Width = 200, CellType = GridCellType.Avatar },
+                new GridColumn { Header = "المجموعة",     Field = "Group", Width = 150 },
                 new GridColumn { Header = "التاريخ",      Field = "SentAt",       Width = 130 },
                 new GridColumn { Header = "الحالة",       Field = "Status",       Width = 100, CellType = GridCellType.Badge },
                 new GridColumn { Header = "إجراءات",      Field = "Actions",      Width = 100, CellType = GridCellType.Actions },
@@ -59,14 +60,16 @@ namespace BChat.UserControls
 
 
             var rows = new List<Dictionary<string, object>>();
+            int rowCount = 0;
 
             foreach (var m in messages)
             {
                 var groupName = AppCache.Groups.FirstOrDefault(g => g.Id == m.GroupId)?.Name;
                 var tempalteName = AppCache.WhatsAppTemplates.FirstOrDefault(t => t.Id == m.TemplateId)?.Name;
-
+                int count;
                 rows.Add(new Dictionary<string, object>
                 {
+                    { "Sir", rowCount++ },
                     { "CampaignName", m.Name },
                     { "TemplateName", tempalteName},
                     { "Group", groupName },

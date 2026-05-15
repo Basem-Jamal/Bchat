@@ -103,7 +103,7 @@ namespace BChat.Data.DataStore.Campaigns_Repository
             cmd.Parameters.AddWithValue("@GroupId", campaign.GroupId);
             cmd.Parameters.AddWithValue("@TemplateId", campaign.TemplateId);
             cmd.Parameters.AddWithValue("@SentAt", campaign.SentAt);
-            cmd.Parameters.AddWithValue("@Status", campaign.Status);
+            cmd.Parameters.AddWithValue("@Status", campaign.Status.ToString());
             cmd.Parameters.AddWithValue("@TotalCount", campaign.TotalCount);
             cmd.Parameters.AddWithValue("@SuccessCount", campaign.SuccessCount);
             cmd.Parameters.AddWithValue("@FailedCount", campaign.FailedCount);

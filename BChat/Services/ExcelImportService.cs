@@ -77,7 +77,7 @@ namespace BChat.Services
                         continue;
                     }
 
-                    GroupMemberRepository.AddIfNotExists(6, customerId);
+                    GroupMemberRepository.AddIfNotExists(7, customerId);
 
                     var profile = new CustomerProfile
                     {

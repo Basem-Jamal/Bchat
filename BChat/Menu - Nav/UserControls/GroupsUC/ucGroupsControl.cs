@@ -37,16 +37,32 @@ namespace BChat.UserControls
         }
         private void LoadCustomerGroups()
         {
-
-
-
             groupsWrapPanel.LoadGroups(AppCache.Groups, GeneralFunctions.Base64ToImage);
 
 
         }
 
+        private void UpdateData()
+        {
+            AppCache.GroupMembers = GroupMemberRepository.GetAll();
+            AppCache.Groups = GroupRepository.GetAll();
+
+            foreach (var group in AppCache.Groups)
+            {
+                int membersCount = AppCache.GroupMembers
+                    .Count(m => m.GroupId == group.Id);
+
+                group.StatOneValue = membersCount.ToString();
+
+            }
+
+            MessageBox.Show("تم مزامنة جميع البيانات", "BChat", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+        }
         private void btnRefreshData_Click(object sender, EventArgs e)
         {
+            UpdateData();
+
             LoadCustomerGroups();
         }
 
