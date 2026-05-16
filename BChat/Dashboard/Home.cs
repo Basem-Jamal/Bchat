@@ -109,7 +109,7 @@ namespace BChat
                 pnlContent.Controls.Add(ucMonthlySummary);
             }
             //pnlContent.Controls["MonthlyReports_View"].Visible = true;
-            
+
             pnlContent.Controls["MonthlyReports_View"].BringToFront();
 
         }

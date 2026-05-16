@@ -8,7 +8,7 @@ namespace BChat
 {
     [ToolboxItem(true)]
     [DefaultProperty("BackColor")]
-    public class ModernPanel : Panel
+    public class AdvancedPanel : Panel
     {
         #region 🔹 Fields
         private Color _backColor = Color.White;
@@ -24,6 +24,7 @@ namespace BChat
         private int _shadowOffsetX = 3;
         private int _shadowOffsetY = 3;
         private bool _shrinkContentWithShadow = true;
+        private int _shadowSize = 10;
 
         // 🌈 Gradient
         private bool _useGradient = true;
@@ -39,22 +40,21 @@ namespace BChat
 
         // Hover
         private bool _isHovered = false;
-        private int _hoverDepthBoost = 4;
         #endregion
 
         #region 🔹 Constructor
-        public ModernPanel()
+        public AdvancedPanel()
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint |
                      ControlStyles.OptimizedDoubleBuffer |
                      ControlStyles.ResizeRedraw |
                      ControlStyles.UserPaint |
-                     ControlStyles.SupportsTransparentBackColor, true);
+                     ControlStyles.SupportsTransparentBackColor, true); // ✅ دعم الشفافية
 
             DoubleBuffered = true;
             Size = new Size(300, 180);
             Font = new Font("Segoe UI", 9f);
-            BackColor = Color.Transparent;
+            BackColor = Color.Transparent; // ✅ شفاف افتراضياً
             ForeColor = Color.Black;
 
             MouseEnter += (s, e) => { _isHovered = true; Invalidate(); };
@@ -141,6 +141,13 @@ namespace BChat
             set { _shrinkContentWithShadow = value; Invalidate(); }
         }
 
+        [Category("Shadow")]
+        public int ShadowSize
+        {
+            get => _shadowSize;
+            set { _shadowSize = Math.Max(0, value); Invalidate(); }
+        }
+
         [Category("Gradient")]
         public bool UseGradient
         {
@@ -204,22 +211,29 @@ namespace BChat
         protected override void OnPaint(PaintEventArgs e)
         {
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            e.Graphics.Clear(Parent?.BackColor ?? Color.White);
+
+            // ✅ رسم خلفية الأب بدل Clear
+            PaintTransparentBackground(e.Graphics, ClientRectangle);
 
             if (_useShadow) DrawInsetShadow(e.Graphics);
-
             DrawPanelBackground(e.Graphics);
             if (_useGlass) DrawGlassEffect(e.Graphics);
             if (_useGlow) DrawGlowEffect(e.Graphics);
         }
 
-        private int _shadowSize = 10;
-
-        [Category("Shadow")]
-        public int ShadowSize
+        // ✅ الدالة الجديدة لرسم خلفية الأب
+        private void PaintTransparentBackground(Graphics g, Rectangle rect)
         {
-            get => _shadowSize;
-            set { _shadowSize = Math.Max(0, value); Invalidate(); }
+            if (Parent == null) return;
+
+            var pe = new PaintEventArgs(g, rect);
+            var state = g.Save();
+
+            g.TranslateTransform(-Left, -Top);
+            InvokePaintBackground(Parent, pe);
+            InvokePaint(Parent, pe);
+
+            g.Restore(state);
         }
 
         private void DrawInsetShadow(Graphics g)
@@ -230,7 +244,6 @@ namespace BChat
             int offsetX = _shadowOffsetX;
             int offsetY = _shadowOffsetY;
 
-            // ✅ نحسب مستطيل البانل الداخلي
             Rectangle shadowRect = new Rectangle(
                 shrink + offsetX,
                 shrink + offsetY,
@@ -238,7 +251,6 @@ namespace BChat
                 Height - (shrink * 2) - 1
             );
 
-            // ✅ منطقة الظل — عمقه يحدد بـ ShadowSize
             int shadowHeight = Math.Max(2, _shadowSize);
             Rectangle shadowArea = new Rectangle(
                 shadowRect.X,
@@ -250,11 +262,10 @@ namespace BChat
             using (GraphicsPath shadowPath = CreateRoundedPath(shadowRect, _borderRadius))
             using (LinearGradientBrush shadowBrush = new LinearGradientBrush(
                 shadowArea,
-                Color.FromArgb(_shadowColor.A, _shadowColor), // داكن في الأسفل
-                Color.FromArgb(0, _shadowColor),               // يتلاشى للأعلى
+                Color.FromArgb(_shadowColor.A, _shadowColor),
+                Color.FromArgb(0, _shadowColor),
                 LinearGradientMode.Vertical))
             {
-                // نملأ فقط الجزء السفلي لإظهار الظل بأسلوب أنيق وحديث
                 Region oldClip = g.Clip;
                 g.SetClip(shadowArea);
                 g.FillPath(shadowBrush, shadowPath);
@@ -275,7 +286,6 @@ namespace BChat
 
             using (GraphicsPath path = CreateRoundedPath(rect, _borderRadius))
             {
-                // الخلفية
                 if (_useGradient)
                 {
                     using (LinearGradientBrush brush = new LinearGradientBrush(rect, _gradientColor1, _gradientColor2, _gradientMode))
@@ -287,7 +297,6 @@ namespace BChat
                         g.FillPath(brush, path);
                 }
 
-                // الحد
                 if (_borderThickness > 0)
                 {
                     using (Pen borderPen = new Pen(_borderColor, _borderThickness))

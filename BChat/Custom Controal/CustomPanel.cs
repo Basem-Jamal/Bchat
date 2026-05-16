@@ -21,18 +21,17 @@ namespace Car_Rental_System.CustomControls
 
         public CustomPanel()
         {
-            SetStyle(ControlStyles.UserPaint, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint |
+                     ControlStyles.OptimizedDoubleBuffer |
+                     ControlStyles.ResizeRedraw |
+                     ControlStyles.UserPaint |
+                     ControlStyles.SupportsTransparentBackColor, true); // ✅ إضافة دعم الشفافية
 
             DoubleBuffered = true;
             Size = new Size(200, 120);
             Font = new Font("Segoe UI", 10f);
             ForeColor = Color.Black;
-
-            // ✅ اجعل التحكم يرسم نفسه بدل الخلفية الافتراضية
-            SetStyle(ControlStyles.AllPaintingInWmPaint |
-                     ControlStyles.OptimizedDoubleBuffer |
-                     ControlStyles.ResizeRedraw |
-                     ControlStyles.UserPaint, true);
+            BackColor = Color.Transparent; // ✅ جعل الخلفية شفافة
         }
 
         [Category("Appearance")]
@@ -88,7 +87,9 @@ namespace Car_Rental_System.CustomControls
         {
             base.OnPaint(e);
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            e.Graphics.Clear(Parent?.BackColor ?? Color.White);
+
+            // ✅ رسم خلفية الأب بدل Clear
+            PaintTransparentBackground(e.Graphics, ClientRectangle);
 
             int shadow = _useShadow ? _shadowSize : 0;
 
@@ -120,6 +121,21 @@ namespace Car_Rental_System.CustomControls
             }
         }
 
+        // ✅ الدالة الجديدة لرسم خلفية الأب
+        private void PaintTransparentBackground(Graphics g, Rectangle rect)
+        {
+            if (Parent == null) return;
+
+            var pe = new PaintEventArgs(g, rect);
+            var state = g.Save();
+
+            g.TranslateTransform(-Left, -Top);
+            InvokePaintBackground(Parent, pe);
+            InvokePaint(Parent, pe);
+
+            g.Restore(state);
+        }
+
         private GraphicsPath GetRoundedPath(Rectangle rect, int radius)
         {
             GraphicsPath path = new GraphicsPath();
@@ -130,17 +146,6 @@ namespace Car_Rental_System.CustomControls
             path.AddArc(rect.X, rect.Bottom - d, d, d, 90, 90);
             path.CloseFigure();
             return path;
-        }
-
-        private void InitializeComponent()
-        {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CustomPanel));
-            this.SuspendLayout();
-            // 
-            // siticoneDataTable1
-            // 
-            this.ResumeLayout(false);
-
         }
     }
 }

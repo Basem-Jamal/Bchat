@@ -30,12 +30,12 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Home));
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pictureBox3 = new PictureBox();
             btnNavMarketingAPI = new BChat.Controls.ModernNavButton();
             lblUserCurrentName = new Guna.UI2.WinForms.Guna2HtmlLabel();
@@ -443,10 +443,10 @@
             pnlTop.BackColor = Color.White;
             pnlTop.BorderThickness = 4;
             pnlTop.Controls.Add(pnlHeader);
-            pnlTop.CustomizableEdges = customizableEdges1;
+            pnlTop.CustomizableEdges = customizableEdges7;
             pnlTop.Location = new Point(-17, 0);
             pnlTop.Name = "pnlTop";
-            pnlTop.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            pnlTop.ShadowDecoration.CustomizableEdges = customizableEdges8;
             pnlTop.Size = new Size(1332, 70);
             pnlTop.TabIndex = 8;
             // 
@@ -514,7 +514,7 @@
             pnlContent.BorderColor = Color.Gainsboro;
             pnlContent.BorderRadius = 30;
             pnlContent.BorderThickness = 1;
-            pnlContent.CustomizableEdges = customizableEdges3;
+            pnlContent.CustomizableEdges = customizableEdges9;
             pnlContent.FillColor = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor2 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor3 = Color.FromArgb(248, 247, 255);
@@ -522,18 +522,18 @@
             pnlContent.Location = new Point(3, 127);
             pnlContent.Name = "pnlContent";
             pnlContent.Quality = 200;
-            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges10;
             pnlContent.Size = new Size(1315, 808);
             pnlContent.TabIndex = 0;
             // 
             // pnlBottom
             // 
             pnlBottom.Controls.Add(gradientPanel2);
-            pnlBottom.CustomizableEdges = customizableEdges5;
+            pnlBottom.CustomizableEdges = customizableEdges11;
             pnlBottom.Dock = DockStyle.Bottom;
             pnlBottom.Location = new Point(0, 938);
             pnlBottom.Name = "pnlBottom";
-            pnlBottom.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            pnlBottom.ShadowDecoration.CustomizableEdges = customizableEdges12;
             pnlBottom.Size = new Size(1321, 60);
             pnlBottom.TabIndex = 9;
             // 

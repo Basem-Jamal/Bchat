@@ -21,6 +21,8 @@ namespace BChat.UserControls
             _table.IsRtl = true;
             _table.BorderRadius = 10;
             _table.ShadowDepth = 0;
+
+            AppEvents.OnRefreshCustomersTable -= LoadCustomers;
             AppEvents.OnRefreshCustomersTable += LoadCustomers;
 
         }
@@ -77,24 +79,33 @@ namespace BChat.UserControls
         private void Table_ViewClicked(object sender, int rowIndex)
         {
             var parent = this.Parent;
+
+            parent.Controls.Clear();
+
             var row = _table.GetSelectedRow();
             if (row == null) return;
 
             int Id = Convert.ToInt32(row["Id"]);
 
 
-            pnlContent.Controls.Clear();
+            var ucCustomerInfo = new ucCustomerInfo();
+            ucCustomerInfo.Name = "CustomerInfo_View";
+            ucCustomerInfo.Dock = DockStyle.Fill;
+            ucCustomerInfo.LoadCustomer(Id); // ✅ مرر الـ Id
+            parent.Controls.Add(ucCustomerInfo);
+            ucCustomerInfo.BringToFront();
 
-            if (!parent.Controls.ContainsKey("CustomerInfo_View"))
-            {
-                ucCustomerInfo ucCustomerInfo = new ucCustomerInfo();
-                ucCustomerInfo.Name = "CustomerInfo_View";
-                ucCustomerInfo.Dock = DockStyle.Fill;
-                parent.Controls.Add(ucCustomerInfo);
-            }
 
-            parent.Controls["CustomerInfo_View"].Visible = true;
-            parent.Controls["CustomerInfo_View"].BringToFront();
+            //if (!parent.Controls.ContainsKey("CustomerInfo_View"))
+            //{
+            //    ucCustomerInfo ucCustomerInfo = new ucCustomerInfo();
+            //    ucCustomerInfo.Name = "CustomerInfo_View";
+            //    ucCustomerInfo.Dock = DockStyle.Fill;
+            //    parent.Controls.Add(ucCustomerInfo);
+            //}
+
+            //parent.Controls["CustomerInfo_View"].Visible = true;
+            //parent.Controls["CustomerInfo_View"].BringToFront();
 
         }
 

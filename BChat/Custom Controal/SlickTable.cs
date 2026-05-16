@@ -11,7 +11,7 @@ using Timer = System.Windows.Forms.Timer;
 namespace BChat
 {
     // ═══════════════════════════════════════════════════════════
-    //  ENUMS & SUPPORTING CLASSES
+    //  ENUMS & SUPPORTING CLASSES  (لا تغيير)
     // ═══════════════════════════════════════════════════════════
 
     public enum GridCellType { Text, Badge, Avatar, Currency, Actions }
@@ -22,23 +22,22 @@ namespace BChat
         public string Field { get; set; }
         public int Width { get; set; } = 120;
         public GridCellType CellType { get; set; } = GridCellType.Text;
+        public bool Sortable { get; set; } = true;   // ✦ جديد — اختياري
     }
 
     public class BadgeStyle
     {
-
         public Color Background { get; set; }
         public Color Foreground { get; set; }
         public BadgeStyle(Color bg, Color fg) { Background = bg; Foreground = fg; }
     }
 
     // ═══════════════════════════════════════════════════════════
-    //  SLICK TABLE  —  v2  (Border-Radius + Shadow + Smooth Hover)
+    //  SLICK TABLE  —  v3  (GDI Cache + Per-Row Anim + Sort)
     // ═══════════════════════════════════════════════════════════
 
     public class SlickTable : UserControl
     {
-
         // ── Data ─────────────────────────────────────────────
         private List<GridColumn> _columns = new();
         private List<Dictionary<string, object>> _rows = new();
@@ -51,47 +50,73 @@ namespace BChat
         private int _hoverRow = -1;
         private int[] _computedWidths;
 
+        // ── Column index cache  (لا LINQ في كل paint) ────────
+        private int[] _colIndices;                     // ✦ جديد
+
+        // ── Sort ─────────────────────────────────────────────
+        private int _sortCol = -1;                    // ✦ جديد
+        private bool _sortAsc = true;                  // ✦ جديد
+
         // ── Smooth Hover Animation ────────────────────────────
-        private float _hoverAlpha = 0f;     // 0..1
+        private float _hoverAlpha = 0f;
         private int _animHoverRow = -1;
         private Timer _animTimer;
 
-        // ── Shadow painting buffer ────────────────────────────
+        // ── Shadow cache ──────────────────────────────────────
         private Bitmap _shadowCache;
         private Size _shadowCacheSize;
+
+        // ── GDI Resource Cache  (✦ المكسب الأكبر في الأداء) ──
+        // يُعاد بناؤها فقط عند تغيير خاصية تؤثر عليها
+        private Font _cachedHeaderFont;
+        private Font _cachedBadgeFont;
+        private Font _cachedAvatarFont;
+        private SolidBrush _headerBgBrush;
+        private SolidBrush _headerFgBrush;
+        private SolidBrush _rowTextBrush;
+        private Pen _separatorPen;
+        private Pen _outerBorderPen;
+        private Pen _headerBorderPen;
+        private bool _gdiDirty = true;          // ✦ جديد — flag إعادة البناء
+
+        // StringFormats ثابتة — تُبنى مرة واحدة فقط
+        private readonly StringFormat _sfCenter = new()
+        {
+            Alignment = StringAlignment.Center,
+            LineAlignment = StringAlignment.Center,
+            Trimming = StringTrimming.EllipsisCharacter
+        };
+        private readonly StringFormat _sfNear = new()
+        {
+            Alignment = StringAlignment.Near,
+            LineAlignment = StringAlignment.Center,
+            Trimming = StringTrimming.EllipsisCharacter
+        };
+        private readonly StringFormat _sfFar = new()
+        {
+            Alignment = StringAlignment.Far,
+            LineAlignment = StringAlignment.Center,
+            Trimming = StringTrimming.EllipsisCharacter
+        };
 
         // ════════════════════════════════════════════════════════
         //  ✦ DESIGNER PROPERTIES — ✦ Shape
         // ════════════════════════════════════════════════════════
 
         private int _borderRadius = 0;
-        [Category("✦ Shape")]
-        [DefaultValue(16)]
-        [Description("نصف قطر زوايا الجدول كامل (0 = حواف حادة)")]
+        [Category("✦ Shape"), DefaultValue(16)]
         public int BorderRadius
-        {
-            get => _borderRadius;
-            set { _borderRadius = Math.Max(0, value); RebuildShadow(); Invalidate(); }
-        }
+        { get => _borderRadius; set { _borderRadius = Math.Max(0, value); RebuildShadow(); Invalidate(); } }
 
         private int _shadowDepth = 0;
-        [Category("✦ Shape")]
-        [DefaultValue(12)]
-        [Description("عمق الظل الخارجي (0 = بدون ظل)")]
+        [Category("✦ Shape"), DefaultValue(12)]
         public int ShadowDepth
-        {
-            get => _shadowDepth;
-            set { _shadowDepth = Math.Max(0, Math.Min(40, value)); RebuildShadow(); Invalidate(); }
-        }
+        { get => _shadowDepth; set { _shadowDepth = Math.Clamp(value, 0, 40); RebuildShadow(); Invalidate(); } }
 
         private Color _shadowColor = Color.FromArgb(60, 0, 0, 0);
         [Category("✦ Shape")]
-        [Description("لون الظل — Alpha يتحكم في الكثافة")]
         public Color ShadowColor
-        {
-            get => _shadowColor;
-            set { _shadowColor = value; RebuildShadow(); Invalidate(); }
-        }
+        { get => _shadowColor; set { _shadowColor = value; RebuildShadow(); Invalidate(); } }
 
         // ════════════════════════════════════════════════════════
         //  ✦ DESIGNER PROPERTIES — ✦ Header
@@ -99,151 +124,98 @@ namespace BChat
 
         private Color _headerBackground = Color.FromArgb(22, 45, 90);
         [Category("✦ Header")]
-        [Description("لون خلفية الهيدر")]
         public Color HeaderBackground
-        {
-            get => _headerBackground;
-            set { _headerBackground = value; Invalidate(); }
-        }
+        { get => _headerBackground; set { _headerBackground = value; MarkGdiDirty(); } }
 
         private Color _headerForeground = Color.White;
         [Category("✦ Header")]
-        [Description("لون نص الهيدر")]
         public Color HeaderForeground
-        {
-            get => _headerForeground;
-            set { _headerForeground = value; Invalidate(); }
-        }
+        { get => _headerForeground; set { _headerForeground = value; MarkGdiDirty(); } }
 
         private Color _headerBorderColor = Color.FromArgb(10, 30, 70);
         [Category("✦ Header")]
-        [Description("لون الخط الفاصل تحت الهيدر")]
         public Color HeaderBorderColor
-        {
-            get => _headerBorderColor;
-            set { _headerBorderColor = value; Invalidate(); }
-        }
+        { get => _headerBorderColor; set { _headerBorderColor = value; MarkGdiDirty(); } }
 
         // ════════════════════════════════════════════════════════
         //  ✦ DESIGNER PROPERTIES — ✦ Rows
         // ════════════════════════════════════════════════════════
 
         private Color _rowEven = Color.White;
-        [Category("✦ Rows")]
-        [Description("لون صفوف الأرقام الزوجية")]
-        public Color RowEven
-        {
-            get => _rowEven;
-            set { _rowEven = value; Invalidate(); }
-        }
-
         private Color _rowOdd = Color.FromArgb(240, 247, 255);
-        [Category("✦ Rows")]
-        [Description("لون صفوف الأرقام الفردية")]
-        public Color RowOdd
-        {
-            get => _rowOdd;
-            set { _rowOdd = value; Invalidate(); }
-        }
-
         private Color _rowSelected = Color.FromArgb(210, 230, 255);
-        [Category("✦ Rows")]
-        [Description("لون الصف المحدد")]
-        public Color RowSelected
-        {
-            get => _rowSelected;
-            set { _rowSelected = value; Invalidate(); }
-        }
-
         private Color _rowHover = Color.FromArgb(225, 238, 255);
-        [Category("✦ Rows")]
-        [Description("لون الصف عند تمرير الماوس")]
-        public Color RowHover
-        {
-            get => _rowHover;
-            set { _rowHover = value; Invalidate(); }
-        }
-
         private int _rowHeight2 = 52;
-        [Category("✦ Rows")]
-        [DefaultValue(52)]
-        [Description("ارتفاع كل صف بالبكسل")]
+
+        [Category("✦ Rows")] public Color RowEven { get => _rowEven; set { _rowEven = value; Invalidate(); } }
+        [Category("✦ Rows")] public Color RowOdd { get => _rowOdd; set { _rowOdd = value; Invalidate(); } }
+        [Category("✦ Rows")] public Color RowSelected { get => _rowSelected; set { _rowSelected = value; Invalidate(); } }
+        [Category("✦ Rows")] public Color RowHover { get => _rowHover; set { _rowHover = value; Invalidate(); } }
+
+        [Category("✦ Rows"), DefaultValue(52)]
         public int RowHeight
-        {
-            get => _rowHeight2;
-            set { _rowHeight2 = Math.Max(24, value); _rowHeight = _rowHeight2; UpdateScrollbar(); Invalidate(); }
-        }
+        { get => _rowHeight2; set { _rowHeight2 = Math.Max(24, value); _rowHeight = _rowHeight2; UpdateScrollbar(); Invalidate(); } }
 
         // ════════════════════════════════════════════════════════
         //  ✦ DESIGNER PROPERTIES — ✦ Grid Lines
         // ════════════════════════════════════════════════════════
 
         private Color _borderColor = Color.FromArgb(220, 228, 240);
-        [Category("✦ Grid Lines")]
-        [Description("لون الخطوط الفاصلة بين الصفوف")]
-        public Color BorderColor
-        {
-            get => _borderColor;
-            set { _borderColor = value; Invalidate(); }
-        }
-
         private Color _outerBorderColor = Color.FromArgb(200, 215, 235);
-        [Category("✦ Grid Lines")]
-        [Description("لون حد الجدول الخارجي")]
-        public Color OuterBorderColor
-        {
-            get => _outerBorderColor;
-            set { _outerBorderColor = value; Invalidate(); }
-        }
-
         private bool _showOuterBorder = true;
-        [Category("✦ Grid Lines")]
-        [DefaultValue(true)]
-        [Description("إظهار الحد الخارجي للجدول")]
-        public bool ShowOuterBorder
-        {
-            get => _showOuterBorder;
-            set { _showOuterBorder = value; Invalidate(); }
-        }
+
+        [Category("✦ Grid Lines")] public Color BorderColor { get => _borderColor; set { _borderColor = value; MarkGdiDirty(); } }
+        [Category("✦ Grid Lines")] public Color OuterBorderColor { get => _outerBorderColor; set { _outerBorderColor = value; MarkGdiDirty(); } }
+        [Category("✦ Grid Lines"), DefaultValue(true)]
+        public bool ShowOuterBorder { get => _showOuterBorder; set { _showOuterBorder = value; Invalidate(); } }
 
         // ════════════════════════════════════════════════════════
         //  ✦ DESIGNER PROPERTIES — ✦ Hover Animation
         // ════════════════════════════════════════════════════════
 
         private bool _smoothHover = true;
-        [Category("✦ Hover Animation")]
-        [DefaultValue(true)]
-        [Description("تفعيل أنيمشن ناعم عند تمرير الماوس على الصفوف")]
-        public bool SmoothHover
-        {
-            get => _smoothHover;
-            set { _smoothHover = value; }
-        }
+        private int _hoverSpeed = 16;   // ✦ تقليل الـ interval الافتراضي لـ 60fps
 
-        private int _hoverSpeed = 25;
-        [Category("✦ Hover Animation")]
-        [DefaultValue(25)]
-        [Description("سرعة الأنيمشن — أقل = أسرع (5..60)")]
+        [Category("✦ Hover Animation"), DefaultValue(true)]
+        public bool SmoothHover { get => _smoothHover; set { _smoothHover = value; } }
+
+        [Category("✦ Hover Animation"), DefaultValue(16)]
         public int HoverSpeed
+        { get => _hoverSpeed; set { _hoverSpeed = Math.Clamp(value, 5, 60); _animTimer.Interval = _hoverSpeed; } }
+
+        // ════════════════════════════════════════════════════════
+        //  ✦ DESIGNER PROPERTIES — ✦ Features  (جديد)
+        // ════════════════════════════════════════════════════════
+
+        private bool _allowSort = true;
+        private string _emptyText = "لا توجد بيانات للعرض";
+        private Color _sortArrowColor = Color.FromArgb(190, 215, 255);
+
+        [Category("✦ Features"), DefaultValue(true), Description("السماح بالترتيب بالنقر على الهيدر")]
+        public bool AllowSort { get => _allowSort; set { _allowSort = value; } }
+
+        [Category("✦ Features"), Description("النص المعروض عند فراغ الجدول")]
+        public string EmptyText { get => _emptyText; set { _emptyText = value; Invalidate(); } }
+
+        [Category("✦ Features"), Description("لون سهم الترتيب")]
+        public Color SortArrowColor { get => _sortArrowColor; set { _sortArrowColor = value; Invalidate(); } }
+
+        // ════════════════════════════════════════════════════════
+        //  ✦ RTL + Action Icons + Badge Styles  (لا تغيير)
+        // ════════════════════════════════════════════════════════
+
+        private bool _isRtl = false;
+        [Category("✦ Layout"), DefaultValue(false)]
+        public bool IsRtl
         {
-            get => _hoverSpeed;
-            set { _hoverSpeed = Math.Max(5, Math.Min(60, value)); _animTimer.Interval = _hoverSpeed; }
+            get => _isRtl;
+            set { _isRtl = value; RebuildColIndices(); Invalidate(); }
         }
 
-        // ════════════════════════════════════════════════════════
-        //  ✦ RTL
-        // ════════════════════════════════════════════════════════
-        [Category("✦ Layout")]
-        [DefaultValue(false)]
-        [Description("عكس اتجاه الجدول — عربي RTL")]
-        public bool IsRtl { get; set; } = false;
-
-        // ── Action Icons ──────────────────────────────────────
         public Image IconView { get; set; }
         public Image IconEdit { get; set; }
         public Image IconDelete { get; set; }
 
-        // ── Badge Styles ─────────────────────────────────────
         private Dictionary<string, BadgeStyle> _badgeStyles = new(StringComparer.OrdinalIgnoreCase)
         {
             { "Available",   new(Color.FromArgb(39,  174, 96),  Color.White) },
@@ -275,7 +247,7 @@ namespace BChat
         private VScrollBar _vScroll;
 
         // ════════════════════════════════════════════════════════
-        //  EVENTS
+        //  EVENTS  (لا تغيير)
         // ════════════════════════════════════════════════════════
         public event EventHandler<int> RowClicked;
         public event EventHandler<int> ViewClicked;
@@ -287,16 +259,13 @@ namespace BChat
         // ════════════════════════════════════════════════════════
         public SlickTable()
         {
-            SetStyle(ControlStyles.UserPaint |
-                     ControlStyles.AllPaintingInWmPaint |
-                     ControlStyles.OptimizedDoubleBuffer |
-                     ControlStyles.ResizeRedraw |
+            SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint |
+                     ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw |
                      ControlStyles.SupportsTransparentBackColor, true);
 
             BackColor = Color.Transparent;
             Font = new Font("IBM Plex Sans Arabic", 13.5f, FontStyle.Regular);
 
-            // ── Scroll ────────────────────────────────────────
             _vScroll = new VScrollBar
             {
                 Dock = DockStyle.Right,
@@ -307,7 +276,6 @@ namespace BChat
             _vScroll.Scroll += (s, e) => { _scrollOffset = _vScroll.Value; Invalidate(); };
             Controls.Add(_vScroll);
 
-            // ── Smooth Hover Timer ────────────────────────────
             _animTimer = new Timer { Interval = _hoverSpeed, Enabled = false };
             _animTimer.Tick += AnimTick;
 
@@ -315,21 +283,71 @@ namespace BChat
             MouseLeave += OnMouseLeave;
             MouseClick += OnMouseClick;
             MouseWheel += OnMouseWheel;
-            Resize += (s, e) => { ComputeWidths(); UpdateScrollbar(); RebuildShadow(); Invalidate(); };
+            MouseDown += OnMouseDown;   // ✦ جديد — للسورت
+
+            Resize += (s, e) =>
+            {
+                ComputeWidths(); UpdateScrollbar();
+                RebuildShadow(); Invalidate();
+            };
         }
 
         // ════════════════════════════════════════════════════════
-        //  PUBLIC API
+        //  GDI RESOURCE MANAGEMENT  ✦ الجديد الأساسي
+        // ════════════════════════════════════════════════════════
+
+        private void MarkGdiDirty() { _gdiDirty = true; Invalidate(); }
+
+        /// <summary>يُعاد استدعاؤها في بداية OnPaint فقط عند الحاجة — صفر allocation في باقي الأوقات</summary>
+        private void EnsureGdi()
+        {
+            if (!_gdiDirty) return;
+
+            // تحرير القديم
+            _cachedHeaderFont?.Dispose();
+            _cachedBadgeFont?.Dispose();
+            _cachedAvatarFont?.Dispose();
+            _headerBgBrush?.Dispose();
+            _headerFgBrush?.Dispose();
+            _rowTextBrush?.Dispose();
+            _separatorPen?.Dispose();
+            _outerBorderPen?.Dispose();
+            _headerBorderPen?.Dispose();
+
+            // بناء الجديد
+            _cachedHeaderFont = new Font(Font.FontFamily, 15f, FontStyle.Bold);
+            _cachedBadgeFont = new Font(Font.FontFamily, 8.5f, FontStyle.Bold);
+            _cachedAvatarFont = new Font(Font.FontFamily, 9f, FontStyle.Bold);
+            _headerBgBrush = new SolidBrush(_headerBackground);
+            _headerFgBrush = new SolidBrush(_headerForeground);
+            _rowTextBrush = new SolidBrush(Color.FromArgb(50, 50, 70));
+            _separatorPen = new Pen(_borderColor, 1f);
+            _outerBorderPen = new Pen(_outerBorderColor, 1f);
+            _headerBorderPen = new Pen(_headerBorderColor, 2f);
+
+            _gdiDirty = false;
+        }
+
+        // ════════════════════════════════════════════════════════
+        //  PUBLIC API  (لا تغيير في التوقيعات)
         // ════════════════════════════════════════════════════════
 
         public void SetColumns(List<GridColumn> columns)
-        { _columns = columns; ComputeWidths(); Invalidate(); }
+        {
+            _columns = columns ?? new();
+            RebuildColIndices();
+            ComputeWidths();
+            Invalidate();
+        }
 
         public void SetData(List<Dictionary<string, object>> data)
         {
             _rows = data ?? new();
-            _scrollOffset = 0; _selectedRow = -1; _hoverRow = -1; _hoverBtn = ActionBtn.None;
-            UpdateScrollbar(); Invalidate();
+            _scrollOffset = 0; _selectedRow = -1;
+            _hoverRow = -1; _hoverBtn = ActionBtn.None;
+            _sortCol = -1; _sortAsc = true;
+            UpdateScrollbar();
+            Invalidate();
         }
 
         public void AddBadgeStyle(string key, Color bg, Color fg)
@@ -341,29 +359,55 @@ namespace BChat
         public int GetSelectedIndex() => _selectedRow;
 
         // ════════════════════════════════════════════════════════
-        //  SMOOTH HOVER ANIMATION
+        //  COLUMN INDEX CACHE  ✦
+        // ════════════════════════════════════════════════════════
+
+        private void RebuildColIndices()
+        {
+            var range = Enumerable.Range(0, _columns.Count);
+            _colIndices = (IsRtl ? range.Reverse() : range).ToArray();
+        }
+
+        // ════════════════════════════════════════════════════════
+        //  SMOOTH HOVER ANIMATION  ✦ per-row invalidation
         // ════════════════════════════════════════════════════════
 
         private void AnimTick(object s, EventArgs e)
         {
             if (!_smoothHover) { _animTimer.Stop(); return; }
 
+            float prev = _hoverAlpha;
             bool entering = (_animHoverRow == _hoverRow && _hoverRow >= 0);
-            float step = 0.12f;
+            float step = 0.10f;
 
-            if (entering)
-                _hoverAlpha = Math.Min(1f, _hoverAlpha + step);
-            else
-                _hoverAlpha = Math.Max(0f, _hoverAlpha - step);
+            _hoverAlpha = entering
+                ? Math.Min(1f, _hoverAlpha + step)
+                : Math.Max(0f, _hoverAlpha - step);
 
-            Invalidate();
+            // ✦ إعادة رسم الصف المتأثر فقط — لا Invalidate() كاملة
+            if (Math.Abs(_hoverAlpha - prev) > 0.001f)
+            {
+                int dirtyRow = _hoverRow >= 0 ? _hoverRow : _animHoverRow;
+                InvalidateRow(dirtyRow);
+                if (_animHoverRow != _hoverRow && _animHoverRow >= 0)
+                    InvalidateRow(_animHoverRow);
+            }
 
             if (_hoverAlpha <= 0f || _hoverAlpha >= 1f)
                 _animTimer.Stop();
         }
 
+        /// <summary>يُعيد رسم صف واحد فقط — توفير هائل في الـ GPU</summary>
+        private void InvalidateRow(int rowIndex)
+        {
+            if (rowIndex < 0 || rowIndex >= _rows.Count) { Invalidate(); return; }
+            int sd = _shadowDepth;
+            int y = sd + _headerHeight + rowIndex * _rowHeight - _scrollOffset;
+            Invalidate(new Rectangle(sd, y, Width - sd * 2, _rowHeight + 1));
+        }
+
         // ════════════════════════════════════════════════════════
-        //  SHADOW — Gaussian-style omni shadow
+        //  SHADOW  (لا تغيير جوهري — فقط تحسين الفورمولا)
         // ════════════════════════════════════════════════════════
 
         private void RebuildShadow()
@@ -377,23 +421,18 @@ namespace BChat
             using var g = Graphics.FromImage(bmp);
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
-            var cardRect = new Rectangle(sd, sd, Width - 1, Height - 1);
-            using var path = RoundedPath(cardRect, _borderRadius);
-
-            // رسم طبقات ظل متراكبة
             for (int i = sd; i >= 1; i--)
             {
                 float t = 1f - (float)i / sd;
-                int alpha = (int)(_shadowColor.A * t * t * 0.6f);
-                alpha = Math.Max(0, Math.Min(255, alpha));
+                int alpha = (int)(_shadowColor.A * t * t * 0.55f);
+                alpha = Math.Clamp(alpha, 0, 255);
                 if (alpha == 0) continue;
 
-                var sr = new Rectangle(sd - i, sd - i, Width - 1 + i * 2, Height - 1 + i * 2);
+                var sr = new Rectangle(sd - i, sd - i + 3, Width - 1 + i * 2, Height - 1 + i * 2);
                 using var sp = RoundedPath(sr, _borderRadius + i);
                 using var sb = new SolidBrush(Color.FromArgb(alpha, _shadowColor.R, _shadowColor.G, _shadowColor.B));
                 g.FillPath(sb, sp);
             }
-
             _shadowCache = bmp;
             _shadowCacheSize = new Size(Width, Height);
         }
@@ -441,17 +480,13 @@ namespace BChat
                 ComputeWidths();
             }
             else
-            {
-                _vScroll.Visible = false; _scrollOffset = 0; ComputeWidths();
-            }
+            { _vScroll.Visible = false; _scrollOffset = 0; ComputeWidths(); }
         }
 
         private void OnMouseWheel(object sender, MouseEventArgs e)
         {
-            int delta = -e.Delta / 3;
-            _scrollOffset = Math.Max(0, _scrollOffset + delta);
             int maxScroll = Math.Max(0, _rows.Count * _rowHeight - (Height - _headerHeight - _shadowDepth * 2));
-            _scrollOffset = Math.Min(_scrollOffset, maxScroll);
+            _scrollOffset = Math.Clamp(_scrollOffset - e.Delta / 3, 0, maxScroll);
             if (_vScroll.Visible)
                 _vScroll.Value = Math.Min(_scrollOffset, _vScroll.Maximum - _vScroll.LargeChange + 1);
             Invalidate();
@@ -466,7 +501,19 @@ namespace BChat
             int ry = mouseY - _headerHeight - _shadowDepth + _scrollOffset;
             if (ry < 0) return -1;
             int row = ry / _rowHeight;
-            return (row < _rows.Count) ? row : -1;
+            return row < _rows.Count ? row : -1;
+        }
+
+        private int HitTestColumn(int mouseX)
+        {
+            if (_computedWidths == null || _colIndices == null) return -1;
+            int x = _shadowDepth;
+            foreach (int i in _colIndices)
+            {
+                if (mouseX >= x && mouseX < x + _computedWidths[i]) return i;
+                x += _computedWidths[i];
+            }
+            return -1;
         }
 
         private ActionBtn HitTestActionBtn(int mouseX, int mouseY)
@@ -475,7 +522,7 @@ namespace BChat
             if (row < 0 || _computedWidths == null) return ActionBtn.None;
 
             int ax = _shadowDepth, aw = 0;
-            foreach (int i in GetColumnIndices())
+            foreach (int i in _colIndices)
             {
                 if (_columns[i].CellType == GridCellType.Actions) { aw = _computedWidths[i]; break; }
                 ax += _computedWidths[i];
@@ -483,14 +530,13 @@ namespace BChat
             if (aw == 0) return ActionBtn.None;
 
             int rowY = _headerHeight + _shadowDepth + row * _rowHeight - _scrollOffset;
-            int iconSize = 22, spacing = 10;
-            int totalW = 3 * iconSize + 2 * spacing;
+            int iSz = 22, sp = 10, totalW = 3 * iSz + 2 * sp;
             int startX = ax + (aw - totalW) / 2;
-            int iconY = rowY + (_rowHeight - iconSize) / 2;
+            int iconY = rowY + (_rowHeight - iSz) / 2;
 
-            if (new Rectangle(startX, iconY, iconSize, iconSize).Contains(mouseX, mouseY)) return ActionBtn.View;
-            if (new Rectangle(startX + iconSize + spacing, iconY, iconSize, iconSize).Contains(mouseX, mouseY)) return ActionBtn.Edit;
-            if (new Rectangle(startX + 2 * (iconSize + spacing), iconY, iconSize, iconSize).Contains(mouseX, mouseY)) return ActionBtn.Delete;
+            if (new Rectangle(startX, iconY, iSz, iSz).Contains(mouseX, mouseY)) return ActionBtn.View;
+            if (new Rectangle(startX + iSz + sp, iconY, iSz, iSz).Contains(mouseX, mouseY)) return ActionBtn.Edit;
+            if (new Rectangle(startX + 2 * (iSz + sp), iconY, iSz, iSz).Contains(mouseX, mouseY)) return ActionBtn.Delete;
             return ActionBtn.None;
         }
 
@@ -506,21 +552,35 @@ namespace BChat
 
             if (changed && _smoothHover)
             {
+                // ✦ لا نعيد الـ alpha إلى 0 — نبدأ من القيمة الحالية
                 _animHoverRow = row;
-                if (row >= 0) { _hoverAlpha = 0f; _animTimer.Start(); }
-                else { _animTimer.Start(); }
+                _animTimer.Start();
             }
 
             _hoverRow = row; _hoverBtn = btn;
-            Cursor = (row >= 0) ? Cursors.Hand : Cursors.Default;
-            if (changed) Invalidate();
+            Cursor = row >= 0 ? Cursors.Hand : Cursors.Default;
+            if (changed && !_smoothHover) Invalidate();
         }
 
         private void OnMouseLeave(object sender, EventArgs e)
         {
             _hoverRow = -1; _hoverBtn = ActionBtn.None;
             if (_smoothHover) { _animHoverRow = -1; _animTimer.Start(); }
+            else Invalidate();
             Cursor = Cursors.Default;
+        }
+
+        private void OnMouseDown(object sender, MouseEventArgs e)
+        {
+            // ✦ Sort على click الهيدر
+            if (!_allowSort || e.Y > _headerHeight + _shadowDepth) return;
+            int ci = HitTestColumn(e.X);
+            if (ci < 0 || !_columns[ci].Sortable || _columns[ci].CellType == GridCellType.Actions) return;
+
+            if (_sortCol == ci) _sortAsc = !_sortAsc;
+            else { _sortCol = ci; _sortAsc = true; }
+
+            ApplySort();
             Invalidate();
         }
 
@@ -543,11 +603,66 @@ namespace BChat
         }
 
         // ════════════════════════════════════════════════════════
+        //  SORT  ✦
+        // ════════════════════════════════════════════════════════
+
+        private void ApplySort()
+        {
+            if (_sortCol < 0 || _sortCol >= _columns.Count) return;
+            string field = _columns[_sortCol].Field;
+
+            // نستخدم SortKey struct بدلاً من object خام — يضمن مقارنة متسقة
+            _rows = _sortAsc
+                ? _rows.OrderBy(r => GetSortKey(r, field)).ToList()
+                : _rows.OrderByDescending(r => GetSortKey(r, field)).ToList();
+
+            _selectedRow = -1;
+            Invalidate();
+        }
+
+        /// <summary>
+        /// يُرجع مفتاح مقارنة موحّد الـ type — رقم أو تاريخ أو نص.
+        /// Tuple (priority, numericVal, strVal) يضمن عدم خلط الأنواع.
+        /// </summary>
+        private static (int priority, double num, string text)
+            GetSortKey(Dictionary<string, object> row, string field)
+        {
+            if (!row.TryGetValue(field, out var v) || v == null)
+                return (2, 0, "");
+
+            // أرقام صريحة
+            if (v is int i) return (0, i, "");
+            if (v is long l) return (0, l, "");
+            if (v is float f) return (0, f, "");
+            if (v is double d) return (0, d, "");
+            if (v is decimal dm) return (0, (double)dm, "");
+
+            // تاريخ — نحوّله لـ ticks رقمي
+            if (v is DateTime dt) return (1, (double)dt.Ticks, "");
+
+            // نص قابل للتحويل لرقم
+            string s = v.ToString();
+            if (double.TryParse(s, System.Globalization.NumberStyles.Any,
+                                   System.Globalization.CultureInfo.InvariantCulture, out double n))
+                return (0, n, "");
+
+            // تاريخ كنص
+            if (DateTime.TryParse(s, out DateTime dtp))
+                return (1, (double)dtp.Ticks, "");
+
+            // نص عادي
+            return (2, 0, s);
+        }
+
+        // ════════════════════════════════════════════════════════
         //  PAINT
         // ════════════════════════════════════════════════════════
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            // ✦ بناء موارد GDI مرة واحدة فقط عند الحاجة
+            EnsureGdi();
+
             if (_computedWidths == null || _computedWidths.Length != _columns.Count)
                 ComputeWidths();
 
@@ -559,57 +674,43 @@ namespace BChat
             int scrollW = _vScroll.Visible ? _vScroll.Width : 0;
             int gridW = Width - sd * 2 - scrollW;
             int gridH = Height - sd * 2;
-
             var cardRect = new Rectangle(sd, sd, gridW - 1, gridH - 1);
 
             // ── 1. Shadow ─────────────────────────────────────
             if (sd > 0)
             {
                 if (_shadowCache == null || _shadowCacheSize != Size) RebuildShadow();
-                if (_shadowCache != null)
-                    g.DrawImage(_shadowCache, -sd, -sd);
+                if (_shadowCache != null) g.DrawImage(_shadowCache, -sd, -sd);
             }
 
-            // ── 2. Clip to rounded card ───────────────────────
+            // ── 2. Clip to card ───────────────────────────────
             using var cardPath = RoundedPath(cardRect, _borderRadius);
             g.SetClip(cardPath);
 
             // ── 3. Header ─────────────────────────────────────
             DrawHeader(g, sd, gridW);
 
-            // ── 4. Rows ───────────────────────────────────────
+            // ── 4. Rows / Empty ───────────────────────────────
             var rowClip = new Rectangle(sd, sd + _headerHeight, gridW, gridH - _headerHeight);
-            using (var rowClipRegion = RectangleToRegion(rowClip))
-            {
-                g.SetClip(rowClipRegion, CombineMode.Replace);
+            g.SetClip(rowClip);
+
+            if (_rows.Count == 0)
+                DrawEmpty(g, rowClip);
+            else
                 for (int i = 0; i < _rows.Count; i++)
                 {
                     int y = sd + _headerHeight + i * _rowHeight - _scrollOffset;
-                    if (y + _rowHeight < sd + _headerHeight) continue;
-                    if (y > Height) break;
+                    if (y + _rowHeight < rowClip.Top) continue;
+                    if (y > rowClip.Bottom) break;
                     DrawRow(g, i, y, sd, gridW);
                 }
-                g.ResetClip();
-            }
-
-            g.ResetClip();
-            g.SetClip(cardPath);
 
             // ── 5. Outer border ───────────────────────────────
-            if (_showOuterBorder)
-            {
-                using var pen = new Pen(_outerBorderColor, 1f);
-                g.DrawPath(pen, cardPath);
-            }
-
             g.ResetClip();
-        }
-
-        private static Region RectangleToRegion(Rectangle r)
-        {
-            using var path = new GraphicsPath();
-            path.AddRectangle(r);
-            return new Region(path);
+            g.SetClip(cardPath);
+            if (_showOuterBorder)
+                g.DrawPath(_outerBorderPen, cardPath);
+            g.ResetClip();
         }
 
         // ── Header ───────────────────────────────────────────
@@ -617,35 +718,45 @@ namespace BChat
         private void DrawHeader(Graphics g, int sd, int gridW)
         {
             var headerRect = new Rectangle(sd, sd, gridW, _headerHeight);
-            using var br = new SolidBrush(_headerBackground);
-            g.FillRectangle(br, headerRect);
-
-            using var font = new Font(Font.FontFamily, 15f, FontStyle.Bold);
-            using var fg = new SolidBrush(_headerForeground);
+            g.FillRectangle(_headerBgBrush, headerRect);   // ✦ cached brush
 
             int x = sd;
-            foreach (int i in GetColumnIndices())
+            foreach (int i in _colIndices)                 // ✦ cached indices
             {
                 int w = _computedWidths[i];
+
+                // عنوان العمود
                 bool isAvatar = _columns[i].CellType == GridCellType.Avatar;
-                var sf = new StringFormat
-                {
-                    Alignment = (IsRtl && isAvatar) ? StringAlignment.Far : StringAlignment.Center,
-                    LineAlignment = StringAlignment.Center,
-                    Trimming = StringTrimming.EllipsisCharacter
-                };
-                var rect = (IsRtl && isAvatar)
+                var tRect = (IsRtl && isAvatar)
                     ? new Rectangle(x, sd, w - 100, _headerHeight)
                     : new Rectangle(x, sd, w, _headerHeight);
-                g.DrawString(_columns[i].Header, font, fg, rect, sf);
+                var sf = (IsRtl && isAvatar) ? _sfFar : _sfCenter;
+
+                g.DrawString(_columns[i].Header, _cachedHeaderFont, _headerFgBrush, tRect, sf);
+
+                // ✦ سهم الترتيب — يسار في RTL، يمين في LTR
+                if (_allowSort && _sortCol == i)
+                {
+                    int arrowX = _isRtl ? x + 6 : x + w - 18;
+                    DrawSortArrow(g, arrowX, sd + _headerHeight / 2 - 5, _sortAsc);
+                }
+
                 x += w;
             }
 
-            using var pen = new Pen(_headerBorderColor, 2f);
-            g.DrawLine(pen, sd, sd + _headerHeight, sd + gridW, sd + _headerHeight);
+            g.DrawLine(_headerBorderPen, sd, sd + _headerHeight, sd + gridW, sd + _headerHeight);
         }
 
-        // ── Row ─────────────────────────────────────────────-
+        private void DrawSortArrow(Graphics g, int x, int y, bool asc)
+        {
+            using var br = new SolidBrush(_sortArrowColor);
+            Point[] pts = asc
+                ? new[] { new Point(x, y + 8), new Point(x + 8, y + 8), new Point(x + 4, y) }
+                : new[] { new Point(x, y), new Point(x + 8, y), new Point(x + 4, y + 8) };
+            g.FillPolygon(br, pts);
+        }
+
+        // ── Row ──────────────────────────────────────────────
 
         private void DrawRow(Graphics g, int rowIndex, int y, int sd, int gridW)
         {
@@ -653,7 +764,6 @@ namespace BChat
                          : rowIndex % 2 == 0 ? _rowEven
                          : _rowOdd;
 
-            // Smooth hover blend
             Color bg = baseBg;
             if (rowIndex == _hoverRow && rowIndex != _selectedRow)
             {
@@ -664,26 +774,33 @@ namespace BChat
             using (var brush = new SolidBrush(bg))
                 g.FillRectangle(brush, sd, y, gridW, _rowHeight);
 
-            using (var pen = new Pen(_borderColor))
-                g.DrawLine(pen, sd, y + _rowHeight - 1, sd + gridW, y + _rowHeight - 1);
+            g.DrawLine(_separatorPen, sd, y + _rowHeight - 1, sd + gridW, y + _rowHeight - 1); // ✦ cached pen
+
+            // ✦ accent bar — يسار LTR، يمين RTL
+            if (rowIndex == _selectedRow)
+            {
+                using var ab = new SolidBrush(_headerBackground);
+                int barX = _isRtl ? sd + gridW - 3 : sd;
+                g.FillRectangle(ab, barX, y + 6, 3, _rowHeight - 12);
+            }
 
             var row = _rows[rowIndex];
             int x = sd;
 
-            foreach (int c in GetColumnIndices())
+            foreach (int c in _colIndices)
             {
                 var col = _columns[c];
                 int w = _computedWidths[c];
-                var cellRect = new Rectangle(x, y, w, _rowHeight);
-                string val = row.ContainsKey(col.Field) ? row[col.Field]?.ToString() ?? "" : "";
+                var cr = new Rectangle(x, y, w, _rowHeight);
+                string val = row.TryGetValue(col.Field, out var v) ? v?.ToString() ?? "" : "";
 
                 switch (col.CellType)
                 {
-                    case GridCellType.Avatar: DrawAvatarCell(g, cellRect, val, rowIndex); break;
-                    case GridCellType.Badge: DrawBadgeCell(g, cellRect, val); break;
-                    case GridCellType.Currency: DrawTextCell(g, cellRect, "$" + val, StringAlignment.Center); break;
-                    case GridCellType.Actions: DrawActionsCell(g, cellRect, rowIndex); break;
-                    default: DrawTextCell(g, cellRect, val, StringAlignment.Center); break;
+                    case GridCellType.Avatar: DrawAvatarCell(g, cr, val, rowIndex); break;
+                    case GridCellType.Badge: DrawBadgeCell(g, cr, val); break;
+                    case GridCellType.Currency: DrawTextCell(g, cr, "$" + val, StringAlignment.Center); break;
+                    case GridCellType.Actions: DrawActionsCell(g, cr, rowIndex); break;
+                    default: DrawTextCell(g, cr, val, StringAlignment.Center); break;
                 }
                 x += w;
             }
@@ -693,10 +810,15 @@ namespace BChat
 
         private void DrawTextCell(Graphics g, Rectangle rect, string text, StringAlignment align)
         {
-            var sf = new StringFormat { Alignment = align, LineAlignment = StringAlignment.Center, Trimming = StringTrimming.EllipsisCharacter };
+            // ✦ في RTL: Near ↔ Far يتبادلان — Center يبقى ثابت
+            if (_isRtl)
+            {
+                if (align == StringAlignment.Near) align = StringAlignment.Far;
+                else if (align == StringAlignment.Far) align = StringAlignment.Near;
+            }
+            var sf = align == StringAlignment.Near ? _sfNear : align == StringAlignment.Far ? _sfFar : _sfCenter;
             var r = new Rectangle(rect.X + 6, rect.Y, rect.Width - 12, rect.Height);
-            using var brush = new SolidBrush(Color.FromArgb(50, 50, 70));
-            g.DrawString(text, Font, brush, r, sf);
+            g.DrawString(text, Font, _rowTextBrush, r, sf);
         }
 
         private void DrawBadgeCell(Graphics g, Rectangle rect, string text)
@@ -705,95 +827,91 @@ namespace BChat
             if (!_badgeStyles.TryGetValue(text, out var style))
                 style = new BadgeStyle(Color.FromArgb(149, 165, 166), Color.White);
 
-            SizeF sz = g.MeasureString(text, Font);
+            SizeF sz = g.MeasureString(text, _cachedBadgeFont);  // ✦ cached font
             int bw = (int)sz.Width + 20, bh = 24;
-            int bx = rect.X + (rect.Width - bw) / 2;
-            int by = rect.Y + (rect.Height - bh) / 2;
-            var bRect = new Rectangle(bx, by, bw, bh);
+            var bRect = new Rectangle(rect.X + (rect.Width - bw) / 2, rect.Y + (rect.Height - bh) / 2, bw, bh);
 
             using var path = RoundedPath(bRect, 12);
-            using var brush = new SolidBrush(style.Background);
-            g.FillPath(brush, path);
+            using var bg = new SolidBrush(style.Background);
+            g.FillPath(bg, path);
 
-            var sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
-            using var font2 = new Font(Font.FontFamily, 8.5f, FontStyle.Bold);
             using var fg = new SolidBrush(style.Foreground);
-            g.DrawString(text, font2, fg, bRect, sf);
+            g.DrawString(text, _cachedBadgeFont, fg, bRect, _sfCenter);  // ✦ cached font & format
         }
 
         private void DrawAvatarCell(Graphics g, Rectangle rect, string text, int rowIndex)
         {
-            int diameter = 32, padding = 10;
+            int d = 32, pad = 10;
             int cx, textX, textW;
 
             if (IsRtl)
-            { cx = rect.Right - padding - diameter - 55; textX = rect.X + padding; textW = rect.Width - diameter - padding * 2 - 58; }
+            { cx = rect.Right - pad - d - 55; textX = rect.X + pad; textW = rect.Width - d - pad * 2 - 58; }
             else
-            { cx = rect.X + padding; textX = cx + diameter + 8; textW = rect.Width - diameter - padding - 16; }
+            { cx = rect.X + pad; textX = cx + d + 8; textW = rect.Width - d - pad - 16; }
 
-            int cy = rect.Y + (rect.Height - diameter) / 2;
-            var circle = new Rectangle(cx, cy, diameter, diameter);
+            int cy = rect.Y + (rect.Height - d) / 2;
+            var circle = new Rectangle(cx, cy, d, d);
 
-            using (var brush = new SolidBrush(_avatarColors[rowIndex % _avatarColors.Length]))
-                g.FillEllipse(brush, circle);
+            using (var ab = new SolidBrush(_avatarColors[rowIndex % _avatarColors.Length]))
+                g.FillEllipse(ab, circle);
 
-            var sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
-            using var font2 = new Font(Font.FontFamily, 9f, FontStyle.Bold);
             using var white = new SolidBrush(Color.White);
-            g.DrawString(GetInitials(text), font2, white, circle, sf);
+            g.DrawString(GetInitials(text), _cachedAvatarFont, white, circle, _sfCenter);  // ✦ cached
 
+            var textSf = IsRtl ? _sfFar : _sfNear;
             var textRect = new Rectangle(textX, rect.Y, textW, rect.Height);
-            var textSf = new StringFormat
-            {
-                Alignment = IsRtl ? StringAlignment.Far : StringAlignment.Near,
-                LineAlignment = StringAlignment.Center,
-                Trimming = StringTrimming.EllipsisCharacter
-            };
-            using var dark = new SolidBrush(Color.FromArgb(40, 40, 60));
-            g.DrawString(text, Font, dark, textRect, textSf);
+            g.DrawString(text, Font, _rowTextBrush, textRect, textSf);   // ✦ cached
         }
 
         private void DrawActionsCell(Graphics g, Rectangle rect, int rowIndex)
         {
-            int iconSize = 22, spacing = 10;
-            int totalW = 3 * iconSize + 2 * spacing;
+            int iSz = 22, sp = 10, totalW = 3 * iSz + 2 * sp;
             int startX = rect.X + (rect.Width - totalW) / 2;
-            int iconY = rect.Y + (rect.Height - iconSize) / 2;
+            int iconY = rect.Y + (rect.Height - iSz) / 2;
 
-            DrawOneAction(g, IconView, new Rectangle(startX, iconY, iconSize, iconSize), Color.FromArgb(41, 128, 185), rowIndex == _hoverRow && _hoverBtn == ActionBtn.View);
-            DrawOneAction(g, IconEdit, new Rectangle(startX + iconSize + spacing, iconY, iconSize, iconSize), Color.FromArgb(230, 126, 34), rowIndex == _hoverRow && _hoverBtn == ActionBtn.Edit);
-            DrawOneAction(g, IconDelete, new Rectangle(startX + 2 * (iconSize + spacing), iconY, iconSize, iconSize), Color.FromArgb(192, 57, 43), rowIndex == _hoverRow && _hoverBtn == ActionBtn.Delete);
+            DrawOneAction(g, IconView, new Rectangle(startX, iconY, iSz, iSz), Color.FromArgb(41, 128, 185), rowIndex == _hoverRow && _hoverBtn == ActionBtn.View);
+            DrawOneAction(g, IconEdit, new Rectangle(startX + iSz + sp, iconY, iSz, iSz), Color.FromArgb(230, 126, 34), rowIndex == _hoverRow && _hoverBtn == ActionBtn.Edit);
+            DrawOneAction(g, IconDelete, new Rectangle(startX + 2 * (iSz + sp), iconY, iSz, iSz), Color.FromArgb(192, 57, 43), rowIndex == _hoverRow && _hoverBtn == ActionBtn.Delete);
         }
 
         private void DrawOneAction(Graphics g, Image icon, Rectangle rect, Color color, bool hover)
         {
             if (hover)
             {
-                var hRect = new Rectangle(rect.X - 4, rect.Y - 4, rect.Width + 8, rect.Height + 8);
-                using var b = new SolidBrush(Color.FromArgb(35, color));
-                g.FillEllipse(b, hRect);
+                var hr = new Rectangle(rect.X - 4, rect.Y - 4, rect.Width + 8, rect.Height + 8);
+                using var hb = new SolidBrush(Color.FromArgb(35, color));
+                g.FillEllipse(hb, hr);
             }
             if (icon != null) g.DrawImage(icon, rect);
             else { using var b = new SolidBrush(color); g.FillEllipse(b, rect); }
         }
 
-        // ════════════════════════════════════════════════════════
-        //  HELPERS
-        // ════════════════════════════════════════════════════════
+        // ✦ Empty State ───────────────────────────────────────
 
-        private IEnumerable<int> GetColumnIndices()
+        private void DrawEmpty(Graphics g, Rectangle area)
         {
-            var idx = Enumerable.Range(0, _columns.Count);
-            return IsRtl ? idx.Reverse() : idx;
+            using var br = new SolidBrush(Color.FromArgb(140, 50, 50, 70));
+            using var f = new Font(Font.FontFamily, Font.Size + 1f);
+            g.DrawString(_emptyText, f, br, area, _sfCenter);
         }
+
+        // ════════════════════════════════════════════════════════
+        //  HELPERS  (لا تغيير جوهري)
+        // ════════════════════════════════════════════════════════
 
         private string GetInitials(string name)
         {
             if (string.IsNullOrWhiteSpace(name)) return "?";
+            // ✦ دعم أسماء عربية: نأخذ أول حرف حقيقي من كل كلمة
             var parts = name.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            return parts.Length == 1
-                ? parts[0].Substring(0, Math.Min(2, parts[0].Length)).ToUpper()
-                : (parts[0][0].ToString() + parts[1][0].ToString()).ToUpper();
+            if (parts.Length == 1)
+            {
+                foreach (char c in parts[0]) if (char.IsLetter(c)) return c.ToString().ToUpper();
+                return "?";
+            }
+            char c1 = parts[0].FirstOrDefault(char.IsLetter);
+            char c2 = parts[1].FirstOrDefault(char.IsLetter);
+            return ((c1 == default ? "" : c1.ToString()) + (c2 == default ? "" : c2.ToString())).ToUpper();
         }
 
         private static GraphicsPath RoundedPath(Rectangle r, int radius)
@@ -816,12 +934,28 @@ namespace BChat
                 (int)(a.G + (b.G - a.G) * t),
                 (int)(a.B + (b.B - a.B) * t));
 
+        // ════════════════════════════════════════════════════════
+        //  DISPOSE  — تحرير كامل
+        // ════════════════════════════════════════════════════════
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
                 _animTimer?.Dispose();
                 _shadowCache?.Dispose();
+                _cachedHeaderFont?.Dispose();
+                _cachedBadgeFont?.Dispose();
+                _cachedAvatarFont?.Dispose();
+                _headerBgBrush?.Dispose();
+                _headerFgBrush?.Dispose();
+                _rowTextBrush?.Dispose();
+                _separatorPen?.Dispose();
+                _outerBorderPen?.Dispose();
+                _headerBorderPen?.Dispose();
+                _sfCenter?.Dispose();
+                _sfNear?.Dispose();
+                _sfFar?.Dispose();
             }
             base.Dispose(disposing);
         }
