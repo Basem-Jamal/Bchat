@@ -100,6 +100,7 @@ namespace BChat
 
         private void MonthlySummaryReport_Page()
         {
+         
             if (!pnlContent.Controls.ContainsKey("MonthlyReports_View"))
             {
                 ucMonthlySummary ucMonthlySummary = new ucMonthlySummary();
@@ -107,7 +108,8 @@ namespace BChat
                 ucMonthlySummary.Dock = DockStyle.Fill;
                 pnlContent.Controls.Add(ucMonthlySummary);
             }
-            pnlContent.Controls["MonthlyReports_View"].Visible = true;
+            //pnlContent.Controls["MonthlyReports_View"].Visible = true;
+            
             pnlContent.Controls["MonthlyReports_View"].BringToFront();
 
         }

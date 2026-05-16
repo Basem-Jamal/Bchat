@@ -29,10 +29,18 @@ namespace BChat.WhatsApp
 
                 var json = JsonSerializer.Serialize(payload);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
-                _client.DefaultRequestHeaders.Clear();
-                _client.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
 
-                var response = await _client.PostAsync(url, content);
+                //_client.DefaultRequestHeaders.Clear();
+                //_client.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
+
+                var request = new HttpRequestMessage(HttpMethod.Post, url);
+                request.Headers.Add("Authorization", $"Bearer {accessToken}");
+                request.Content = content;
+
+                var response = await _client.SendAsync(request);
+
+
+
                 var result = await response.Content.ReadAsStringAsync();
                 System.Diagnostics.Debug.WriteLine($"📤 Meta Send: {response.StatusCode} - {result}");
                 return response.IsSuccessStatusCode;
@@ -108,10 +116,15 @@ namespace BChat.WhatsApp
 
                 var json = JsonSerializer.Serialize(payload);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
-                _client.DefaultRequestHeaders.Clear();
-                _client.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
 
-                var response = await _client.PostAsync(url, content);
+                //_client.DefaultRequestHeaders.Clear();
+                //_client.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
+
+                var request = new HttpRequestMessage(HttpMethod.Post, url);
+                request.Headers.Add("Authorization", $"Bearer {accessToken}");
+                request.Content = content;
+
+                var response = await _client.SendAsync(request);
                 var result = await response.Content.ReadAsStringAsync();
                 System.Diagnostics.Debug.WriteLine($"📤 Template Send: {response.StatusCode} - {result}");
                 return response.IsSuccessStatusCode;

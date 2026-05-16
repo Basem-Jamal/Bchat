@@ -3,6 +3,7 @@ using BChat.Data.DataStore.Customers_Repository;
 using BChat.Events;
 using BChat.Forms;
 using BChat.Global;
+using BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC;
 using BChat.Models;
 using BChat.Services;
 
@@ -75,15 +76,26 @@ namespace BChat.UserControls
 
         private void Table_ViewClicked(object sender, int rowIndex)
         {
+            var parent = this.Parent;
             var row = _table.GetSelectedRow();
             if (row == null) return;
 
-            MessageBox.Show(
-                $"الاسم: {row["Name"]}\nالهاتف: {row["Phone"]}",
-                "تفاصيل العميل",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information
-            );
+            int Id = Convert.ToInt32(row["Id"]);
+
+
+            pnlContent.Controls.Clear();
+
+            if (!parent.Controls.ContainsKey("CustomerInfo_View"))
+            {
+                ucCustomerInfo ucCustomerInfo = new ucCustomerInfo();
+                ucCustomerInfo.Name = "CustomerInfo_View";
+                ucCustomerInfo.Dock = DockStyle.Fill;
+                parent.Controls.Add(ucCustomerInfo);
+            }
+
+            parent.Controls["CustomerInfo_View"].Visible = true;
+            parent.Controls["CustomerInfo_View"].BringToFront();
+
         }
 
         private void Table_EditClicked(object sender, int rowIndex)
