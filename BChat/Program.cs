@@ -3,6 +3,7 @@ using BChat.Data.DataStore;
 using BChat.Data.DataStore.Customers_Repository;
 using BChat.Data.DataStore.Users_DB;
 using BChat.Global;
+using BChat.Models.Users;
 using System.Diagnostics;
 
 namespace BChat
@@ -48,11 +49,25 @@ namespace BChat
 
             while (true)
             {
-                using (var login = new Login())
+                //using (var login = new Login())
+                //{
+                //    if (login.ShowDialog() != DialogResult.OK)
+                //        break;
+                //}
+
+                string email = "BASEM";
+                string password = "123";
+
+                User? user = UsersRepository.Login(email, password);
+                if (user == null)
                 {
-                    if (login.ShowDialog() != DialogResult.OK)
-                        break;
+                    MessageBox.Show("البريد أو كلمة المرور غير صحيحة", "BChat",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
+
+                AppCache.CurrentUser = user;
+
                 var home = new Home();
                 home.Shown += (s, e) => AppCache.WhatsAppListener.Start(); // ← ابدأ بعد تحميل الـ UI
                 Application.Run(home);

@@ -1,4 +1,6 @@
-﻿namespace BChat.Auth
+﻿
+
+namespace BChat.Auth
 {
     partial class Login
     {
