@@ -72,7 +72,7 @@ namespace BChat.Forms
             }
 
             // ── 4. جيب عملاء المجموعة ─────────────────────────
-            int groupId = 7;
+            int groupId = 5;
             var groupMemberIds = AppCache.GroupMembers
                 .Where(m => m.GroupId == groupId)
                 .Select(m => m.CustomerId)
@@ -84,7 +84,7 @@ namespace BChat.Forms
                 .Where(c => groupMemberIds.Contains(c.Id))
                 .Where(c => !recentlySentIds.Contains(c.Id))
                 .Where(c => !c.IsBlocked) // ← استثني المحجوبين
-                .Take(3000)
+                .Take(20000)
                 .ToList();
 
 

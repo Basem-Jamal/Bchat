@@ -31,26 +31,27 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ucCustomerInfo));
             pnlContent = new Car_Rental_System.CustomControls.CustomPanel();
             modernPanel1 = new AdvancedPanel();
+            customPanel1 = new Car_Rental_System.CustomControls.CustomPanel();
+            avatarControl1 = new BChat.Custom_Controal.Custom_Bchat.AvatarControl();
+            customPanel4 = new Car_Rental_System.CustomControls.CustomPanel();
+            modernButton2 = new BChat.Controls.ModernButton();
+            modernButton1 = new BChat.Controls.ModernButton();
             pnlSidebarProfile = new Car_Rental_System.CustomControls.CustomPanel();
             modernButton4 = new BChat.Controls.ModernButton();
             btnCurrentPhone = new BChat.Controls.ModernButton();
             pnlName = new Car_Rental_System.CustomControls.CustomPanel();
             lblCurrentCustomerName = new Label();
-            avatarControl1 = new BChat.Custom_Controal.Custom_Bchat.AvatarControl();
-            customPanel4 = new Car_Rental_System.CustomControls.CustomPanel();
-            modernButton2 = new BChat.Controls.ModernButton();
-            modernButton1 = new BChat.Controls.ModernButton();
             customPanel2 = new Car_Rental_System.CustomControls.CustomPanel();
-            customPanel1 = new Car_Rental_System.CustomControls.CustomPanel();
             customPanel7 = new Car_Rental_System.CustomControls.CustomPanel();
             customPanel5 = new Car_Rental_System.CustomControls.CustomPanel();
             customPanel3 = new Car_Rental_System.CustomControls.CustomPanel();
             btnBack = new BChat.Controls.ModernButton();
             pnlContent.SuspendLayout();
             modernPanel1.SuspendLayout();
+            customPanel1.SuspendLayout();
+            customPanel4.SuspendLayout();
             pnlSidebarProfile.SuspendLayout();
             pnlName.SuspendLayout();
-            customPanel4.SuspendLayout();
             customPanel2.SuspendLayout();
             SuspendLayout();
             // 
@@ -82,8 +83,8 @@
             modernPanel1.BorderColor = Color.FromArgb(230, 230, 230);
             modernPanel1.BorderRadius = 1;
             modernPanel1.BorderThickness = 1;
+            modernPanel1.Controls.Add(customPanel1);
             modernPanel1.Controls.Add(pnlSidebarProfile);
-            modernPanel1.Controls.Add(customPanel4);
             modernPanel1.Controls.Add(customPanel2);
             modernPanel1.Font = new Font("Segoe UI", 9F);
             modernPanel1.ForeColor = Color.Black;
@@ -107,6 +108,120 @@
             modernPanel1.UseGlow = false;
             modernPanel1.UseGradient = true;
             modernPanel1.UseShadow = false;
+            modernPanel1.Paint += modernPanel1_Paint;
+            // 
+            // customPanel1
+            // 
+            customPanel1.BackColor = Color.Transparent;
+            customPanel1.BackColorEx = Color.FromArgb(40, 255, 255, 255);
+            customPanel1.BlurRadius = 30;
+            customPanel1.BorderColor = Color.Transparent;
+            customPanel1.BorderRadius = 1;
+            customPanel1.BorderThickness = 0;
+            customPanel1.Controls.Add(avatarControl1);
+            customPanel1.Controls.Add(customPanel4);
+            customPanel1.CornerRadius.BottomLeft = 1;
+            customPanel1.CornerRadius.BottomRight = 1;
+            customPanel1.CornerRadius.TopLeft = 1;
+            customPanel1.CornerRadius.TopRight = 1;
+            customPanel1.Font = new Font("Segoe UI", 10F);
+            customPanel1.ForeColor = Color.White;
+            customPanel1.Location = new Point(0, 0);
+            customPanel1.Name = "customPanel1";
+            customPanel1.ShadowColor = Color.Transparent;
+            customPanel1.ShadowSize = 0;
+            customPanel1.Size = new Size(1327, 808);
+            customPanel1.TabIndex = 24;
+            customPanel1.UseBlur = true;
+            customPanel1.UseShadow = true;
+            // 
+            // avatarControl1
+            // 
+            avatarControl1.AvatarImage = (Image)resources.GetObject("avatarControl1.AvatarImage");
+            avatarControl1.BackColor = Color.Transparent;
+            avatarControl1.BorderColor = Color.White;
+            avatarControl1.BorderColor2 = Color.White;
+            avatarControl1.BorderRadius = 50;
+            avatarControl1.BorderStyle = Custom_Controal.Custom_Bchat.AvatarBorderStyle.DoubleLine;
+            avatarControl1.BorderThickness = 1;
+            avatarControl1.DashSize = 4;
+            avatarControl1.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            avatarControl1.FontSize = 14F;
+            avatarControl1.FullName = "User";
+            avatarControl1.GlowColor = Color.FromArgb(80, 100, 180, 255);
+            avatarControl1.GlowSize = 10;
+            avatarControl1.GradientAngle = 135F;
+            avatarControl1.ImageFit = Custom_Controal.Custom_Bchat.AvatarImageFit.Cover;
+            avatarControl1.ImageOffset = (PointF)resources.GetObject("avatarControl1.ImageOffset");
+            avatarControl1.Location = new Point(1105, 67);
+            avatarControl1.Name = "avatarControl1";
+            avatarControl1.Size = new Size(125, 128);
+            avatarControl1.TabIndex = 0;
+            avatarControl1.Text = "avatarControl1";
+            avatarControl1.ZoomFactor = 22F;
+            // 
+            // customPanel4
+            // 
+            customPanel4.BackColor = Color.Transparent;
+            customPanel4.BackColorEx = Color.FromArgb(80, 255, 255, 255);
+            customPanel4.BorderColor = Color.LightGray;
+            customPanel4.BorderRadius = 30;
+            customPanel4.BorderThickness = 0;
+            customPanel4.Controls.Add(modernButton2);
+            customPanel4.Controls.Add(modernButton1);
+            customPanel4.CornerRadius.BottomLeft = 30;
+            customPanel4.CornerRadius.BottomRight = 30;
+            customPanel4.CornerRadius.TopLeft = 30;
+            customPanel4.CornerRadius.TopRight = 0;
+            customPanel4.Font = new Font("Segoe UI", 10F);
+            customPanel4.ForeColor = Color.Black;
+            customPanel4.Location = new Point(36, 687);
+            customPanel4.Name = "customPanel4";
+            customPanel4.ShadowColor = Color.Transparent;
+            customPanel4.ShadowSize = 0;
+            customPanel4.Size = new Size(1254, 95);
+            customPanel4.TabIndex = 6;
+            customPanel4.UseShadow = true;
+            // 
+            // modernButton2
+            // 
+            modernButton2.BackColor = Color.Transparent;
+            modernButton2.BorderColor = Color.FromArgb(255, 128, 128);
+            modernButton2.BorderHoverColor = Color.White;
+            modernButton2.BorderRadius = 10;
+            modernButton2.BorderStyle = BChat.Controls.ModernBorderStyle.Dashed;
+            modernButton2.CustomBackground = Color.White;
+            modernButton2.CustomBackgroundHover = Color.FromArgb(255, 128, 128);
+            modernButton2.CustomForeground = Color.IndianRed;
+            modernButton2.Font = new Font("IBM Plex Sans Arabic", 13F, FontStyle.Bold);
+            modernButton2.ForeColor = Color.IndianRed;
+            modernButton2.Icon = null;
+            modernButton2.Location = new Point(259, 13);
+            modernButton2.Name = "modernButton2";
+            modernButton2.RightToLeft = RightToLeft.Yes;
+            modernButton2.Size = new Size(210, 62);
+            modernButton2.TabIndex = 21;
+            modernButton2.Text = "تعديل البيانات";
+            modernButton2.UseCustomColors = true;
+            // 
+            // modernButton1
+            // 
+            modernButton1.BackColor = Color.Transparent;
+            modernButton1.BorderColor = Color.FromArgb(200, 196, 214);
+            modernButton1.BorderHoverColor = Color.FromArgb(85, 69, 205);
+            modernButton1.BorderRadius = 10;
+            modernButton1.CustomBackground = Color.DodgerBlue;
+            modernButton1.CustomBackgroundHover = Color.SteelBlue;
+            modernButton1.CustomForeground = Color.White;
+            modernButton1.Font = new Font("IBM Plex Sans Arabic", 13F, FontStyle.Bold);
+            modernButton1.Icon = Properties.Resources.refersh;
+            modernButton1.Location = new Point(14, 13);
+            modernButton1.Name = "modernButton1";
+            modernButton1.RightToLeft = RightToLeft.Yes;
+            modernButton1.Size = new Size(210, 62);
+            modernButton1.TabIndex = 20;
+            modernButton1.Text = "تعديل البيانات";
+            modernButton1.UseCustomColors = true;
             // 
             // pnlSidebarProfile
             // 
@@ -118,7 +233,6 @@
             pnlSidebarProfile.Controls.Add(modernButton4);
             pnlSidebarProfile.Controls.Add(btnCurrentPhone);
             pnlSidebarProfile.Controls.Add(pnlName);
-            pnlSidebarProfile.Controls.Add(avatarControl1);
             pnlSidebarProfile.CornerRadius.BottomLeft = 0;
             pnlSidebarProfile.CornerRadius.BottomRight = 0;
             pnlSidebarProfile.CornerRadius.TopLeft = 0;
@@ -205,94 +319,6 @@
             lblCurrentCustomerName.TabIndex = 22;
             lblCurrentCustomerName.Text = "label1";
             // 
-            // avatarControl1
-            // 
-            avatarControl1.AvatarImage = (Image)resources.GetObject("avatarControl1.AvatarImage");
-            avatarControl1.BackColor = Color.Transparent;
-            avatarControl1.BorderColor = Color.White;
-            avatarControl1.BorderColor2 = Color.White;
-            avatarControl1.BorderRadius = 50;
-            avatarControl1.BorderStyle = Custom_Controal.Custom_Bchat.AvatarBorderStyle.DoubleLine;
-            avatarControl1.BorderThickness = 1;
-            avatarControl1.DashSize = 4;
-            avatarControl1.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-            avatarControl1.FontSize = 14F;
-            avatarControl1.FullName = "User";
-            avatarControl1.GlowColor = Color.FromArgb(80, 100, 180, 255);
-            avatarControl1.GlowSize = 10;
-            avatarControl1.GradientAngle = 135F;
-            avatarControl1.ImageFit = Custom_Controal.Custom_Bchat.AvatarImageFit.Cover;
-            avatarControl1.ImageOffset = (PointF)resources.GetObject("avatarControl1.ImageOffset");
-            avatarControl1.Location = new Point(104, 31);
-            avatarControl1.Name = "avatarControl1";
-            avatarControl1.Size = new Size(125, 128);
-            avatarControl1.TabIndex = 0;
-            avatarControl1.Text = "avatarControl1";
-            avatarControl1.ZoomFactor = 22F;
-            // 
-            // customPanel4
-            // 
-            customPanel4.BackColor = Color.Transparent;
-            customPanel4.BackColorEx = Color.FromArgb(248, 247, 255);
-            customPanel4.BorderColor = Color.LightGray;
-            customPanel4.BorderRadius = 30;
-            customPanel4.BorderThickness = 0;
-            customPanel4.Controls.Add(modernButton2);
-            customPanel4.Controls.Add(modernButton1);
-            customPanel4.CornerRadius.BottomLeft = 30;
-            customPanel4.CornerRadius.BottomRight = 30;
-            customPanel4.CornerRadius.TopLeft = 30;
-            customPanel4.CornerRadius.TopRight = 0;
-            customPanel4.Font = new Font("Segoe UI", 10F);
-            customPanel4.ForeColor = Color.Black;
-            customPanel4.Location = new Point(28, 724);
-            customPanel4.Name = "customPanel4";
-            customPanel4.ShadowColor = Color.FromArgb(80, 0, 0, 0);
-            customPanel4.ShadowSize = 0;
-            customPanel4.Size = new Size(1254, 95);
-            customPanel4.TabIndex = 6;
-            customPanel4.UseShadow = true;
-            // 
-            // modernButton2
-            // 
-            modernButton2.BackColor = Color.Transparent;
-            modernButton2.BorderColor = Color.FromArgb(255, 128, 128);
-            modernButton2.BorderHoverColor = Color.White;
-            modernButton2.BorderRadius = 10;
-            modernButton2.BorderStyle = BChat.Controls.ModernBorderStyle.Dashed;
-            modernButton2.CustomBackground = Color.White;
-            modernButton2.CustomBackgroundHover = Color.FromArgb(255, 128, 128);
-            modernButton2.CustomForeground = Color.IndianRed;
-            modernButton2.Font = new Font("IBM Plex Sans Arabic", 13F, FontStyle.Bold);
-            modernButton2.ForeColor = Color.IndianRed;
-            modernButton2.Icon = null;
-            modernButton2.Location = new Point(259, 13);
-            modernButton2.Name = "modernButton2";
-            modernButton2.RightToLeft = RightToLeft.Yes;
-            modernButton2.Size = new Size(210, 62);
-            modernButton2.TabIndex = 21;
-            modernButton2.Text = "تعديل البيانات";
-            modernButton2.UseCustomColors = true;
-            // 
-            // modernButton1
-            // 
-            modernButton1.BackColor = Color.Transparent;
-            modernButton1.BorderColor = Color.FromArgb(200, 196, 214);
-            modernButton1.BorderHoverColor = Color.FromArgb(85, 69, 205);
-            modernButton1.BorderRadius = 10;
-            modernButton1.CustomBackground = Color.DodgerBlue;
-            modernButton1.CustomBackgroundHover = Color.SteelBlue;
-            modernButton1.CustomForeground = Color.White;
-            modernButton1.Font = new Font("IBM Plex Sans Arabic", 13F, FontStyle.Bold);
-            modernButton1.Icon = Properties.Resources.refersh;
-            modernButton1.Location = new Point(14, 13);
-            modernButton1.Name = "modernButton1";
-            modernButton1.RightToLeft = RightToLeft.Yes;
-            modernButton1.Size = new Size(210, 62);
-            modernButton1.TabIndex = 20;
-            modernButton1.Text = "تعديل البيانات";
-            modernButton1.UseCustomColors = true;
-            // 
             // customPanel2
             // 
             customPanel2.BackColor = Color.Transparent;
@@ -300,7 +326,6 @@
             customPanel2.BorderColor = Color.LightGray;
             customPanel2.BorderRadius = 30;
             customPanel2.BorderThickness = 1;
-            customPanel2.Controls.Add(customPanel1);
             customPanel2.Controls.Add(customPanel7);
             customPanel2.Controls.Add(customPanel5);
             customPanel2.Controls.Add(customPanel3);
@@ -309,38 +334,16 @@
             customPanel2.CornerRadius.BottomRight = 0;
             customPanel2.CornerRadius.TopLeft = 30;
             customPanel2.CornerRadius.TopRight = 0;
+            customPanel2.Dock = DockStyle.Fill;
             customPanel2.Font = new Font("Segoe UI", 10F);
             customPanel2.ForeColor = Color.Black;
-            customPanel2.Location = new Point(28, 20);
+            customPanel2.Location = new Point(0, 0);
             customPanel2.Name = "customPanel2";
             customPanel2.ShadowColor = Color.FromArgb(80, 0, 0, 0);
             customPanel2.ShadowSize = 0;
-            customPanel2.Size = new Size(930, 708);
+            customPanel2.Size = new Size(1315, 808);
             customPanel2.TabIndex = 20;
             customPanel2.UseShadow = true;
-            // 
-            // customPanel1
-            // 
-            customPanel1.BackColor = Color.Transparent;
-            customPanel1.BackColorEx = Color.FromArgb(40, 255, 255, 255);
-            customPanel1.BlurRadius = 30;
-            customPanel1.BorderColor = Color.FromArgb(60, 255, 255, 255);
-            customPanel1.BorderRadius = 1;
-            customPanel1.BorderThickness = 1;
-            customPanel1.CornerRadius.BottomLeft = 1;
-            customPanel1.CornerRadius.BottomRight = 1;
-            customPanel1.CornerRadius.TopLeft = 1;
-            customPanel1.CornerRadius.TopRight = 1;
-            customPanel1.Font = new Font("Segoe UI", 10F);
-            customPanel1.ForeColor = Color.White;
-            customPanel1.Location = new Point(52, 131);
-            customPanel1.Name = "customPanel1";
-            customPanel1.ShadowColor = Color.Transparent;
-            customPanel1.ShadowSize = 0;
-            customPanel1.Size = new Size(870, 183);
-            customPanel1.TabIndex = 24;
-            customPanel1.UseBlur = true;
-            customPanel1.UseShadow = true;
             // 
             // customPanel7
             // 
@@ -436,10 +439,11 @@
             Size = new Size(1315, 808);
             pnlContent.ResumeLayout(false);
             modernPanel1.ResumeLayout(false);
+            customPanel1.ResumeLayout(false);
+            customPanel4.ResumeLayout(false);
             pnlSidebarProfile.ResumeLayout(false);
             pnlName.ResumeLayout(false);
             pnlName.PerformLayout();
-            customPanel4.ResumeLayout(false);
             customPanel2.ResumeLayout(false);
             ResumeLayout(false);
         }

@@ -75,6 +75,12 @@ namespace Car_Rental_System.CustomControls
         private bool _useBlur = false;
         private int _blurRadius = 10;
 
+        // ─── Blur Cache ───────────────────────────────────────
+        // نُعيد استخدام الـ Bitmap المضبّب بدل إعادة حسابه كل frame
+        private Bitmap? _blurCache;
+        private Size _blurCacheSize = Size.Empty;
+        private int _blurCacheRadius = -1;
+
         // ─── Constructor ──────────────────────────────────────
         public CustomPanel()
         {
@@ -167,7 +173,7 @@ namespace Car_Rental_System.CustomControls
         public bool UseBlur
         {
             get => _useBlur;
-            set { _useBlur = value; Invalidate(); }
+            set { _useBlur = value; InvalidateBlurCache(); Invalidate(); }
         }
 
         [Category("Glass")]
@@ -176,7 +182,7 @@ namespace Car_Rental_System.CustomControls
         public int BlurRadius
         {
             get => _blurRadius;
-            set { _blurRadius = Math.Clamp(value, 1, 40); Invalidate(); }
+            set { _blurRadius = Math.Clamp(value, 1, 40); InvalidateBlurCache(); Invalidate(); }
         }
 
         // ════════════════════════════════════════════════════
@@ -202,11 +208,14 @@ namespace Car_Rental_System.CustomControls
             using var pathPanel = GetRoundedPath(rectPanel, _cornerRadius);
             using var pathShadow = GetRoundedPath(rectShadow, _cornerRadius);
 
-            // ── 1: خلفية مضبّبة أو عادية ─────────────────────
+            // ── 1: دائماً ارسم خلفية الـ Parent أولاً ──────────
+            // هذا يُنظّف الزوايا خارج الـ Rounded Path (المنطقة المدورة)
+            // بدونه تبقى الزوايا بها بكسلات قديمة أو داكنة
+            PaintSceneBackground(g);
+
+            // ── 2: فوقها ارسم الـ Blur داخل الـ Path فقط ───────
             if (_useBlur)
                 DrawBlurredBackground(g, pathPanel);
-            else
-                PaintSceneBackground(g);
 
             // ── 2: الظل ───────────────────────────────────────
             if (_useShadow)
@@ -237,74 +246,127 @@ namespace Car_Rental_System.CustomControls
         {
             if (Parent == null) { PaintSceneBackground(g); return; }
 
-            // 1: التقط المشهد الكامل خلفنا (Parent + Siblings)
-            using var captureBmp = CaptureSceneBehind();
+            // أعد البناء فقط إذا تغيّر الحجم أو الـ BlurRadius
+            if (_blurCache == null ||
+                _blurCacheSize != Size ||
+                _blurCacheRadius != _blurRadius)
+            {
+                _blurCache?.Dispose();
+                _blurCache = BuildBlurredBitmap();
+                _blurCacheSize = Size;
+                _blurCacheRadius = _blurRadius;
+            }
 
-            // 2: طبّق الـ Gaussian Blur
-            using var blurred = GaussianBlur(captureBmp, _blurRadius);
-
-            // 3: ارسم الـ Bitmap داخل الـ Path باستخدام TextureBrush
-            // ✅ هذا يحترم الـ Anti-Aliasing على الحواف المدورة بدون artifacts
-            // ❌ SetClip+DrawImage = قطع حاد بالبكسل على الحواف
-            using var textureBrush = new TextureBrush(blurred);
+            // TextureBrush + FillPath = حواف ناعمة مع Anti-Aliasing
+            using var textureBrush = new TextureBrush(_blurCache);
             g.FillPath(textureBrush, clipPath);
         }
 
         /// <summary>
-        /// يلتقط المشهد الكامل خلف الـ Panel:
-        ///   1 - خلفية الـ Parent
-        ///   2 - كل الكنترولات الأخوية (Siblings) التي هي خلفنا في الـ Z-Order
-        ///       وتتقاطع مع مساحتنا
+        /// الخوارزمية:
+        ///   1. التقط المشهد بالحجم الكامل
+        ///   2. صغّره إلى 25%  ← هذا يجعله أسرع 16x
+        ///   3. طبّق الـ Blur على الحجم الصغير (بسيط وسريع)
+        ///   4. كبّره مرة أخرى ← HighQualityBicubic يُعطي حواف ناعمة تلقائياً
+        ///
+        ///   النتيجة: مطابقة بصرياً للـ Blur الكامل، بسرعة 16x.
         /// </summary>
+        private Bitmap BuildBlurredBitmap()
+        {
+            const float scale = 0.25f; // 25% — غيّره لـ 0.5f لو أردت دقة أعلى
+
+            int smallW = Math.Max(1, (int)(Width * scale));
+            int smallH = Math.Max(1, (int)(Height * scale));
+
+            // الخطوة 1: التقط المشهد الكامل
+            using var full = CaptureSceneBehind();
+
+            // الخطوة 2: صغّر إلى 25%
+            using var small = new Bitmap(smallW, smallH, PixelFormat.Format32bppArgb);
+            using (var sg = Graphics.FromImage(small))
+            {
+                sg.InterpolationMode = InterpolationMode.Bilinear;
+                sg.DrawImage(full, 0, 0, smallW, smallH);
+            }
+
+            // الخطوة 3: Blur على الحجم الصغير
+            // radius × scale لأن كل بكسل يمثّل الآن 4 بكسلات أصلية
+            int smallRadius = Math.Max(1, (int)(_blurRadius * scale));
+            using var blurredSmall = GaussianBlur(small, smallRadius);
+
+            // الخطوة 4: كبّر للحجم الأصلي
+            var result = new Bitmap(Width, Height, PixelFormat.Format32bppArgb);
+            using (var rg = Graphics.FromImage(result))
+            {
+                rg.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                rg.DrawImage(blurredSmall, 0, 0, Width, Height);
+            }
+
+            return result;
+        }
+
+        // ── يُفرغ الـ Cache عند تغيير الحجم ─────────────────
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            InvalidateBlurCache();
+        }
+
+        private void InvalidateBlurCache()
+        {
+            _blurCache?.Dispose();
+            _blurCache = null;
+            _blurCacheSize = Size.Empty;
+            _blurCacheRadius = -1;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing) InvalidateBlurCache();
+            base.Dispose(disposing);
+        }
+
+        // ════════════════════════════════════════════════════
+        //  Scene Capture (Parent + Siblings behind us)
+        // ════════════════════════════════════════════════════
+
         private Bitmap CaptureSceneBehind()
         {
             var bmp = new Bitmap(Width, Height, PixelFormat.Format32bppArgb);
             using var g = Graphics.FromImage(bmp);
 
-            // نحرك الكانفس بحيث إحداثيات الـ Parent تصبح صحيحة
             g.TranslateTransform(-Left, -Top);
 
-            // ── الخطوة 1: ارسم خلفية الـ Parent ──────────────
+            // الـ Parent
             using (var pe = new PaintEventArgs(g, new Rectangle(Left, Top, Width, Height)))
             {
                 InvokePaintBackground(Parent, pe);
                 InvokePaint(Parent, pe);
             }
 
-            // ── الخطوة 2: ارسم الـ Siblings التي خلفنا ────────
-            // في WinForms: Controls[0] = الأمامي، index أعلى = خلفي
-            // إذن الكنترولات خلفنا هي التي index > myIndex
+            // الـ Siblings التي خلفنا في الـ Z-Order
             int myIndex = Parent.Controls.GetChildIndex(this);
             var myBounds = new Rectangle(Left, Top, Width, Height);
 
-            // نرسم من الأعمق (آخر index) للأقل عمقاً حتى نصل لـ myIndex
             for (int i = Parent.Controls.Count - 1; i > myIndex; i--)
             {
                 var sib = Parent.Controls[i];
-
-                // تخطّ: مخفي أو لا يتقاطع معنا
                 if (!sib.Visible) continue;
                 if (!sib.Bounds.IntersectsWith(myBounds)) continue;
 
-                // أضف ترجمة إضافية لموضع الـ Sibling داخل الـ Parent
                 var state = g.Save();
                 g.TranslateTransform(sib.Left, sib.Top);
-
                 using (var sibPe = new PaintEventArgs(g, new Rectangle(0, 0, sib.Width, sib.Height)))
                 {
                     InvokePaintBackground(sib, sibPe);
                     InvokePaint(sib, sibPe);
                 }
-
                 g.Restore(state);
             }
 
             return bmp;
         }
 
-        /// <summary>
-        /// يرسم المشهد الكامل خلفنا مباشرة على الـ Graphics (بدون Blur)
-        /// </summary>
         private void PaintSceneBackground(Graphics g)
         {
             if (Parent == null) return;
@@ -312,14 +374,12 @@ namespace Car_Rental_System.CustomControls
             var state = g.Save();
             g.TranslateTransform(-Left, -Top);
 
-            // Parent
             using (var pe = new PaintEventArgs(g, new Rectangle(Left, Top, Width, Height)))
             {
                 InvokePaintBackground(Parent, pe);
                 InvokePaint(Parent, pe);
             }
 
-            // Siblings خلفنا
             int myIndex = Parent.Controls.GetChildIndex(this);
             var myBounds = new Rectangle(Left, Top, Width, Height);
 

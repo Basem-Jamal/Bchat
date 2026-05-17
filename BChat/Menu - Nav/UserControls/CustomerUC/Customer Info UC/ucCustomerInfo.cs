@@ -65,5 +65,10 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
 
 
         }
+
+        private void modernPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

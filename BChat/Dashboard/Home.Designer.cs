@@ -30,12 +30,12 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Home));
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges7 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges8 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges9 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges10 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pictureBox3 = new PictureBox();
             btnNavMarketingAPI = new BChat.Controls.ModernNavButton();
             lblUserCurrentName = new Guna.UI2.WinForms.Guna2HtmlLabel();
@@ -50,9 +50,6 @@
             gradientPanel3 = new GradientPanel();
             picClose = new PictureBox();
             pnlMain = new Car_Rental_System.CustomControls.CustomPanel();
-            customPanel7 = new Car_Rental_System.CustomControls.CustomPanel();
-            customPanel4 = new Car_Rental_System.CustomControls.CustomPanel();
-            guna2HtmlLabel1 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             pnlTop = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             pnlHeader = new Car_Rental_System.CustomControls.CustomPanel();
             gradientPanel5 = new GradientPanel();
@@ -65,7 +62,6 @@
             pnlMenuSidebar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)picClose).BeginInit();
             pnlMain.SuspendLayout();
-            customPanel7.SuspendLayout();
             pnlTop.SuspendLayout();
             pnlHeader.SuspendLayout();
             gradientPanel5.SuspendLayout();
@@ -274,6 +270,10 @@
             customPanel1.BorderRadius = 1;
             customPanel1.BorderThickness = 0;
             customPanel1.Controls.Add(pnlMenuSidebar);
+            customPanel1.CornerRadius.BottomLeft = 1;
+            customPanel1.CornerRadius.BottomRight = 1;
+            customPanel1.CornerRadius.TopLeft = 1;
+            customPanel1.CornerRadius.TopRight = 1;
             customPanel1.Dock = DockStyle.Right;
             customPanel1.Font = new Font("Segoe UI", 10F);
             customPanel1.ForeColor = Color.Black;
@@ -297,8 +297,8 @@
             pnlMenuSidebar.Controls.Add(btnNavCustomers);
             pnlMenuSidebar.Controls.Add(btnNavMessages);
             pnlMenuSidebar.CornerRadius = 30;
-            pnlMenuSidebar.GradientEndColor = Color.Violet;
-            pnlMenuSidebar.GradientMidColor = Color.Violet;
+            pnlMenuSidebar.GradientEndColor = Color.Teal;
+            pnlMenuSidebar.GradientMidColor = Color.Transparent;
             pnlMenuSidebar.GradientStartColor = Color.FromArgb(85, 69, 205);
             pnlMenuSidebar.HoverGlowColor = Color.Transparent;
             pnlMenuSidebar.HoverGlowRadius = 0;
@@ -316,7 +316,12 @@
             // btnLogout
             // 
             btnLogout.BackColor = Color.Transparent;
+            btnLogout.BorderColor = Color.FromArgb(200, 196, 214);
+            btnLogout.BorderHoverColor = Color.FromArgb(85, 69, 205);
             btnLogout.BorderRadius = 15;
+            btnLogout.CustomBackground = Color.FromArgb(85, 69, 205);
+            btnLogout.CustomBackgroundHover = Color.FromArgb(63, 43, 184);
+            btnLogout.CustomForeground = Color.White;
             btnLogout.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
             btnLogout.Icon = null;
             btnLogout.Location = new Point(48, 951);
@@ -376,11 +381,14 @@
             pnlMain.BorderColor = Color.Transparent;
             pnlMain.BorderRadius = 1;
             pnlMain.BorderThickness = 1;
-            pnlMain.Controls.Add(customPanel7);
             pnlMain.Controls.Add(pnlTop);
             pnlMain.Controls.Add(pnlContent);
             pnlMain.Controls.Add(pnlBottom);
             pnlMain.Controls.Add(customPanel1);
+            pnlMain.CornerRadius.BottomLeft = 1;
+            pnlMain.CornerRadius.BottomRight = 1;
+            pnlMain.CornerRadius.TopLeft = 1;
+            pnlMain.CornerRadius.TopRight = 1;
             pnlMain.Dock = DockStyle.Fill;
             pnlMain.Font = new Font("Segoe UI", 10F);
             pnlMain.ForeColor = Color.Black;
@@ -392,61 +400,15 @@
             pnlMain.TabIndex = 3;
             pnlMain.UseShadow = true;
             // 
-            // customPanel7
-            // 
-            customPanel7.BackColor = Color.White;
-            customPanel7.BackColorEx = Color.White;
-            customPanel7.BorderColor = Color.Transparent;
-            customPanel7.BorderRadius = 7;
-            customPanel7.BorderThickness = 0;
-            customPanel7.Controls.Add(customPanel4);
-            customPanel7.Controls.Add(guna2HtmlLabel1);
-            customPanel7.Font = new Font("Segoe UI", 10F);
-            customPanel7.ForeColor = Color.Black;
-            customPanel7.Location = new Point(-17, 76);
-            customPanel7.Name = "customPanel7";
-            customPanel7.ShadowColor = Color.Transparent;
-            customPanel7.ShadowSize = 0;
-            customPanel7.Size = new Size(203, 40);
-            customPanel7.TabIndex = 23;
-            customPanel7.UseShadow = true;
-            // 
-            // customPanel4
-            // 
-            customPanel4.BackColor = Color.White;
-            customPanel4.BackColorEx = Color.MediumAquamarine;
-            customPanel4.BorderColor = Color.LightGray;
-            customPanel4.BorderRadius = 10;
-            customPanel4.BorderThickness = 1;
-            customPanel4.Font = new Font("Segoe UI", 10F);
-            customPanel4.ForeColor = Color.Black;
-            customPanel4.Location = new Point(128, 9);
-            customPanel4.Name = "customPanel4";
-            customPanel4.ShadowColor = Color.Transparent;
-            customPanel4.ShadowSize = 6;
-            customPanel4.Size = new Size(29, 28);
-            customPanel4.TabIndex = 24;
-            customPanel4.UseShadow = true;
-            // 
-            // guna2HtmlLabel1
-            // 
-            guna2HtmlLabel1.BackColor = Color.Transparent;
-            guna2HtmlLabel1.Font = new Font("Microsoft YaHei UI", 17.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            guna2HtmlLabel1.Location = new Point(39, 4);
-            guna2HtmlLabel1.Name = "guna2HtmlLabel1";
-            guna2HtmlLabel1.Size = new Size(75, 32);
-            guna2HtmlLabel1.TabIndex = 22;
-            guna2HtmlLabel1.Text = "Online";
-            // 
             // pnlTop
             // 
             pnlTop.BackColor = Color.White;
             pnlTop.BorderThickness = 4;
             pnlTop.Controls.Add(pnlHeader);
-            pnlTop.CustomizableEdges = customizableEdges7;
+            pnlTop.CustomizableEdges = customizableEdges1;
             pnlTop.Location = new Point(-17, 0);
             pnlTop.Name = "pnlTop";
-            pnlTop.ShadowDecoration.CustomizableEdges = customizableEdges8;
+            pnlTop.ShadowDecoration.CustomizableEdges = customizableEdges2;
             pnlTop.Size = new Size(1332, 70);
             pnlTop.TabIndex = 8;
             // 
@@ -459,6 +421,10 @@
             pnlHeader.BorderThickness = 1;
             pnlHeader.Controls.Add(gradientPanel5);
             pnlHeader.Controls.Add(gradientPanel3);
+            pnlHeader.CornerRadius.BottomLeft = 10;
+            pnlHeader.CornerRadius.BottomRight = 10;
+            pnlHeader.CornerRadius.TopLeft = 10;
+            pnlHeader.CornerRadius.TopRight = 10;
             pnlHeader.Font = new Font("Segoe UI", 10F);
             pnlHeader.ForeColor = Color.Black;
             pnlHeader.Location = new Point(17, -10);
@@ -478,7 +444,7 @@
             gradientPanel5.CornerRadius = 15;
             gradientPanel5.GlassBorderAlpha = 255;
             gradientPanel5.GradientAngle = 223F;
-            gradientPanel5.GradientEndColor = Color.Violet;
+            gradientPanel5.GradientEndColor = Color.Turquoise;
             gradientPanel5.GradientMidColor = Color.Violet;
             gradientPanel5.GradientStartColor = Color.FromArgb(85, 69, 205);
             gradientPanel5.HoverGlowColor = Color.Transparent;
@@ -514,26 +480,26 @@
             pnlContent.BorderColor = Color.Gainsboro;
             pnlContent.BorderRadius = 30;
             pnlContent.BorderThickness = 1;
-            pnlContent.CustomizableEdges = customizableEdges9;
+            pnlContent.CustomizableEdges = customizableEdges3;
             pnlContent.FillColor = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor2 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor3 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor4 = Color.FromArgb(248, 247, 255);
-            pnlContent.Location = new Point(3, 127);
+            pnlContent.Location = new Point(3, 76);
             pnlContent.Name = "pnlContent";
             pnlContent.Quality = 200;
-            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges10;
-            pnlContent.Size = new Size(1315, 808);
+            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            pnlContent.Size = new Size(1315, 859);
             pnlContent.TabIndex = 0;
             // 
             // pnlBottom
             // 
             pnlBottom.Controls.Add(gradientPanel2);
-            pnlBottom.CustomizableEdges = customizableEdges11;
+            pnlBottom.CustomizableEdges = customizableEdges5;
             pnlBottom.Dock = DockStyle.Bottom;
             pnlBottom.Location = new Point(0, 938);
             pnlBottom.Name = "pnlBottom";
-            pnlBottom.ShadowDecoration.CustomizableEdges = customizableEdges12;
+            pnlBottom.ShadowDecoration.CustomizableEdges = customizableEdges6;
             pnlBottom.Size = new Size(1321, 60);
             pnlBottom.TabIndex = 9;
             // 
@@ -576,8 +542,6 @@
             pnlMenuSidebar.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)picClose).EndInit();
             pnlMain.ResumeLayout(false);
-            customPanel7.ResumeLayout(false);
-            customPanel7.PerformLayout();
             pnlTop.ResumeLayout(false);
             pnlHeader.ResumeLayout(false);
             gradientPanel5.ResumeLayout(false);
@@ -599,13 +563,10 @@
         private Controls.ModernNavButton btnNavHome;
         private Controls.ModernNavButton btnNavMessages;
         private Guna.UI2.WinForms.Guna2HtmlLabel lblUserCurrentName;
-        private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel1;
         private Controls.ModernNavButton btnNavMarketingAPI;
         private PictureBox btnFormMinimized;
         private Controls.ModernButton btnLogout;
         private PictureBox pictureBox3;
-        private Car_Rental_System.CustomControls.CustomPanel customPanel7;
-        private Car_Rental_System.CustomControls.CustomPanel customPanel4;
         private GradientPanel pnlMenuSidebar;
         private GradientPanel gradientPanel3;
         private GradientPanel gradientPanel2;
