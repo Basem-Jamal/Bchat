@@ -31,10 +31,10 @@ namespace BChat.Global
 
         //── Customer Helpers ───────────────
 
-        public static CustomerProfile? GetCustomerProfilesFromCache(int customerId)
-        {
-            return CustomerProfiles.FirstOrDefault(p => p.CustomerId == customerId);
-        }
+        //public static CustomerProfile? GetCustomerProfilesFromCache(int customerId)
+        //{
+        //    return CustomerProfiles.FirstOrDefault(p => p.CustomerId == customerId);
+        //}
 
 
         // ── GroupMember Helpers ───────────────

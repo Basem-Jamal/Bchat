@@ -27,17 +27,24 @@ namespace BChat.Events
         // Message Action
         public static event Action OnRefreshMessagesTable;
 
-        public static event Action<Customer>? CustomerAdded;
+
+        //Customer
+        public static event Action<Customer>? OnCustomerAdded;
         public static void NotifyCustomerAdded(Customer customer)
         {
-            CustomerAdded?.Invoke(customer);
+            OnCustomerAdded?.Invoke(customer);
         }
-            
 
-        public static event Action<int>? CustomerDeleted;
+        public static event Action<Customer>? OnCustomerUpdated;
+        public static void NotifyCustomerUpdated(Customer customer)
+        {
+            OnCustomerUpdated?.Invoke(customer);
+        }
+
+        public static event Action<int>? OnCustomerDeleted;
         public static void NotifyCustomerDeleted(int customerId)
         {
-            CustomerDeleted?.Invoke(customerId);
+            OnCustomerDeleted?.Invoke(customerId);
         }
             
 

@@ -1,4 +1,5 @@
 ﻿using BChat.Events;
+using BChat.Global;
 using BChat.Models;
 using Microsoft.Data.SqlClient;
 using System;
@@ -166,10 +167,11 @@ namespace BChat.Data.DataStore.Customers_Repository
                 }
             }
 
+            AppEvents.NotifyCustomerUpdated(customer);
             AppEvents.ChangeRefreshCustomesTable();
         }
 
-        public static void Block(int customerId, bool isBlocked)
+        public static void Block(Customer customer)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -177,11 +179,13 @@ namespace BChat.Data.DataStore.Customers_Repository
                 string query = "UPDATE Customers SET IsBlocked = @IsBlocked WHERE Id = @Id";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@Id", customerId);
-                    cmd.Parameters.AddWithValue("@IsBlocked", isBlocked);
+                    cmd.Parameters.AddWithValue("@Id", customer.Id);
+                    cmd.Parameters.AddWithValue("@IsBlocked", customer.IsBlocked);
                     cmd.ExecuteNonQuery();
                 }
             }
+            AppEvents.NotifyCustomerUpdated(customer);
+
         }
 
         public static bool TestConnection()

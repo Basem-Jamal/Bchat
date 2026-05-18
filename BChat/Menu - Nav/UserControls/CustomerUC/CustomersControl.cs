@@ -115,11 +115,19 @@ namespace BChat.UserControls
 
             int Id = Convert.ToInt32(row["Id"]);
 
+            var Customer = AppCache.Customers.FirstOrDefault(c =>  c.Id == Id);
+
+
+            if (Customer == null)
+            {
+                MessageBox.Show("لا يوجد عميل ", "Null Customer", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                 return;
+            }
 
             var ucCustomerInfo = new ucCustomerInfo();
             ucCustomerInfo.Name = "CustomerInfo_View";
             ucCustomerInfo.Dock = DockStyle.Fill;
-            ucCustomerInfo.LoadCustomer(Id); // ✅ مرر الـ Id
+            ucCustomerInfo.LoadCustomer(Customer); // ✅ مرر الـ Id
             parent.Controls.Add(ucCustomerInfo);
             ucCustomerInfo.BringToFront();
 

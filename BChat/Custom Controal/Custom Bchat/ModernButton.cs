@@ -1,12 +1,23 @@
 ﻿// Controls/ModernButton.cs
+// ✅ FontAwesome.Sharp 6.x — IconChar + IconPosition + IconTextGap
+// ✅ دعم كامل للشفافية (Alpha) عبر PaintParentBackground
+// ✅ بوردر مخصص مع Hover
+// ✅ 6 Variants جاهزة + Custom Colors
+
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Design;
 using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using System.Windows.Forms;
+using FontAwesome.Sharp;
 
 namespace BChat.Controls
 {
+    // ══════════════════════════════════════════════════════════
+    //  Enums
+    // ══════════════════════════════════════════════════════════
     public enum ButtonVariant
     {
         Primary, Secondary, Ghost, Danger, OnPrimary, CustomBasem
@@ -14,21 +25,24 @@ namespace BChat.Controls
 
     public enum ModernBorderStyle
     {
-        None,
-        Solid,
-        Dashed,
-        Dotted,
-        DashDot,
-        DashDotDot
+        None, Solid, Dashed, Dotted, DashDot, DashDotDot
     }
 
+    public enum IconPosition
+    {
+        Left,   // أيقونة يسار النص
+        Right   // أيقونة يمين النص (افتراضي عربي)
+    }
+
+    // ══════════════════════════════════════════════════════════
+    //  ModernButton
+    // ══════════════════════════════════════════════════════════
     [DefaultEvent("Click")]
     [ToolboxItem(true)]
     public class ModernButton : Control
     {
-        // ─── Fields ───────────────────────────────────────────
+        // ─── Core Fields ──────────────────────────────────────
         private ButtonVariant _variant = ButtonVariant.Primary;
-        private Image? _icon;
         private bool _isHovered = false;
         private bool _isPressed = false;
         private int _borderRadius = 999;
@@ -39,6 +53,15 @@ namespace BChat.Controls
         private Color _customBgHover = Color.FromArgb(63, 43, 184);
         private Color _customFg = Color.White;
 
+        // ─── Icon (Font Awesome) Fields ───────────────────────
+        private IconChar _iconChar = IconChar.None;
+        private int _iconSize = 18;
+        private IconPosition _iconPosition = IconPosition.Right;
+        private int _iconTextGap = 6;
+
+        // ─── Image Fallback Field ─────────────────────────────
+        private Image? _image;
+
         // ─── Border Fields ────────────────────────────────────
         private ModernBorderStyle _borderStyle = ModernBorderStyle.None;
         private float _borderWidth = 1.5f;
@@ -46,7 +69,7 @@ namespace BChat.Controls
         private Color _borderHoverColor = Color.FromArgb(85, 69, 205);
         private bool _borderUseHoverColor = false;
 
-        // ─── Variant Colors ───────────────────────────────────
+        // ─── Variant Palette ──────────────────────────────────
         private static readonly Color PrimaryBg = Color.FromArgb(85, 69, 205);
         private static readonly Color PrimaryHover = Color.FromArgb(63, 43, 184);
         private static readonly Color PrimaryFg = Color.White;
@@ -94,19 +117,70 @@ namespace BChat.Controls
         }
 
         [Category("BChat")]
-        public Image? Icon
-        {
-            get => _icon;
-            set { _icon = value; Invalidate(); }
-        }
-
-        [Category("BChat")]
         [DefaultValue(999)]
         [Description("نصف قطر الحواف — 999 = pill كامل  |  0 = مستطيل")]
         public int BorderRadius
         {
             get => _borderRadius;
             set { _borderRadius = Math.Max(0, value); Invalidate(); }
+        }
+
+        // ─── BChat - Icon (Font Awesome) ──────────────────────
+        [Category("BChat - Icon")]
+        [DefaultValue(IconChar.None)]
+        [Description("أيقونة Font Awesome 6 Free — اختر None لإخفائها")]
+        [Editor(typeof(IconCharSortedEditor), typeof(UITypeEditor))]
+        public IconChar IconChar
+        {
+            get => _iconChar;
+            set { _iconChar = value; Invalidate(); }
+        }
+
+        [Category("BChat - Icon")]
+        [DefaultValue(18)]
+        [Description("حجم الأيقونة بالبكسل")]
+        public int IconSize
+        {
+            get => _iconSize;
+            set { _iconSize = Math.Max(8, value); Invalidate(); }
+        }
+
+        [Category("BChat - Icon")]
+        [DefaultValue(IconPosition.Right)]
+        [Description("موضع الأيقونة: Right = أمام النص (للعربية) | Left = بعده")]
+        public IconPosition IconPosition
+        {
+            get => _iconPosition;
+            set { _iconPosition = value; Invalidate(); }
+        }
+
+        [Category("BChat - Icon")]
+        [DefaultValue(6)]
+        [Description("المسافة بين الأيقونة والنص بالبكسل")]
+        public int IconTextGap
+        {
+            get => _iconTextGap;
+            set { _iconTextGap = Math.Max(0, value); Invalidate(); }
+        }
+
+        [Category("BChat - Icon")]
+        [Description("صورة بديلة (Image) — تُستخدم فقط إذا كان IconChar = None")]
+        public Image? Image
+        {
+            get => _image;
+            set { _image = value; Invalidate(); }
+        }
+
+        /// <summary>
+        /// توافق مع الكود القديم — نفس Image تماماً
+        /// </summary>
+        [Category("BChat - Icon")]
+        [Description("نفس Image — للتوافق مع الكود القديم الذي يستخدم .Icon")]
+        [Browsable(false)]   // مخفي في Designer لتجنب التكرار
+        public Image? Icon
+        {
+            get => _image;
+            set { _image = value; Invalidate(); }
         }
 
         // ─── BChat - Custom Colors ────────────────────────────
@@ -119,7 +193,7 @@ namespace BChat.Controls
         }
 
         [Category("BChat - Custom Colors")]
-        [Description("لون الخلفية عند Hover — يشغّل UseCustomColors تلقائياً — يدعم الشفافية (Alpha)")]
+        [Description("لون الخلفية عند Hover — يشغّل UseCustomColors تلقائياً")]
         public Color CustomBackgroundHover
         {
             get => _customBgHover;
@@ -207,65 +281,58 @@ namespace BChat.Controls
         {
             var g = e.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
-            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 
             var rect = new Rectangle(0, 0, Width - 1, Height - 1);
             int r = Math.Min(_borderRadius, Height / 2);
 
             using var path = RoundedRect(rect, r);
 
-            // ── رسم خلفية الـ Parent الحقيقية (يُمكّن الشفافية الكاملة) ──
-            // هذا يحل مشكلة rgba/alpha — بدلاً من ملء الزوايا بلون ثابت
+            // 1. خلفية الـ Parent الحقيقية (يُمكّن الشفافية الكاملة)
             PaintParentBackground(g);
 
-            // ── خلفية الزر (تدعم Alpha كاملاً) ──────────────
+            // 2. خلفية الزر
             Color bg = GetBgColor();
             if (_isPressed) bg = BlendWithAlpha(bg, -20);
             using (var bgBrush = new SolidBrush(bg))
                 g.FillPath(bgBrush, path);
 
-            // ── البوردر ───────────────────────────────────────
+            // 3. البوردر
             DrawBorder(g, path);
 
-            // ── تأثير الضغط ──────────────────────────────────
+            // 4. تأثير الضغط (scale)
             if (_isPressed)
             {
                 g.ScaleTransform(0.97f, 0.97f);
                 g.TranslateTransform(Width * 0.015f, Height * 0.015f);
             }
 
+            // 5. المحتوى (أيقونة + نص)
             DrawContent(g, GetFgColor());
         }
 
-        // ─── Paint Parent Background (True Transparency) ──────
-        // يرسم خلفية الـ Parent الفعلية داخل الكنترول
-        // هذا يُمكّن ألوان مثل rgba(255,255,255,0.05) من العمل بشكل صحيح
+        // ─── Paint Parent Background ──────────────────────────
         private void PaintParentBackground(Graphics g)
         {
             if (Parent == null) return;
-
             var state = g.Save();
             try
             {
-                // نحرك الـ Graphics ليبدأ من موضع الكنترول داخل الـ Parent
                 g.TranslateTransform(-Left, -Top);
-
                 using var pe = new PaintEventArgs(g, new Rectangle(Left, Top, Width, Height));
                 InvokePaintBackground(Parent, pe);
                 InvokePaint(Parent, pe);
             }
-            finally
-            {
-                g.Restore(state);
-            }
+            finally { g.Restore(state); }
         }
 
         // ─── Draw Border ──────────────────────────────────────
         private void DrawBorder(Graphics g, GraphicsPath path)
         {
-            bool isGhostVariant = !_useCustomColors && _variant == ButtonVariant.Ghost;
+            bool isGhost = !_useCustomColors && _variant == ButtonVariant.Ghost;
 
-            if (isGhostVariant && _borderStyle == ModernBorderStyle.None)
+            // Ghost Variant: بوردر افتراضي رفيع دائماً
+            if (isGhost && _borderStyle == ModernBorderStyle.None)
             {
                 using var defaultPen = new Pen(GhostBorder, 1f);
                 g.DrawPath(defaultPen, path);
@@ -276,15 +343,17 @@ namespace BChat.Controls
 
             Color bColor = (_borderUseHoverColor && _isHovered) ? _borderHoverColor : _borderColor;
 
-            using var pen = new Pen(bColor, _borderWidth);
-            pen.DashStyle = _borderStyle switch
+            using var pen = new Pen(bColor, _borderWidth)
             {
-                ModernBorderStyle.Solid => DashStyle.Solid,
-                ModernBorderStyle.Dashed => DashStyle.Dash,
-                ModernBorderStyle.Dotted => DashStyle.Dot,
-                ModernBorderStyle.DashDot => DashStyle.DashDot,
-                ModernBorderStyle.DashDotDot => DashStyle.DashDotDot,
-                _ => DashStyle.Solid
+                DashStyle = _borderStyle switch
+                {
+                    ModernBorderStyle.Solid => DashStyle.Solid,
+                    ModernBorderStyle.Dashed => DashStyle.Dash,
+                    ModernBorderStyle.Dotted => DashStyle.Dot,
+                    ModernBorderStyle.DashDot => DashStyle.DashDot,
+                    ModernBorderStyle.DashDotDot => DashStyle.DashDotDot,
+                    _ => DashStyle.Solid
+                }
             };
 
             float inset = _borderWidth / 2f;
@@ -298,28 +367,57 @@ namespace BChat.Controls
         // ─── Draw Content ─────────────────────────────────────
         private void DrawContent(Graphics g, Color fg)
         {
-            bool hasIcon = _icon != null;
+            // الأولوية: IconChar (FA)  ←  Image مخصصة
+            bool hasFaIcon = _iconChar != IconChar.None;
+            bool hasImage = !hasFaIcon && _image != null;
+            bool hasIcon = hasFaIcon || hasImage;
+
             string txt = Text ?? "";
             bool hasText = !string.IsNullOrEmpty(txt);
 
-            float iconW = hasIcon ? 20f : 0f;
-            float gap = (hasIcon && hasText) ? 6f : 0f;
+            float iconW = hasIcon ? _iconSize : 0f;
+            float gap = (hasIcon && hasText) ? _iconTextGap : 0f;
             var tsz = hasText ? g.MeasureString(txt, Font) : SizeF.Empty;
             float totalW = iconW + gap + tsz.Width;
             float startX = (Width - totalW) / 2f;
             float cy = Height / 2f;
 
-            if (hasIcon)
+            // Right = أيقونة أولاً (RTL عربي) | Left = نص أولاً
+            if (_iconPosition == IconPosition.Right || !hasText)
             {
-                g.DrawImage(_icon!, new RectangleF(startX, cy - iconW / 2f, iconW, iconW));
-                startX += iconW + gap;
+                if (hasIcon) { DrawIcon(g, fg, hasFaIcon, startX, cy); startX += iconW + gap; }
+                if (hasText) DrawText(g, fg, txt, startX, cy, tsz);
             }
+            else
+            {
+                if (hasText) { DrawText(g, fg, txt, startX, cy, tsz); startX += tsz.Width + gap; }
+                if (hasIcon) DrawIcon(g, fg, hasFaIcon, startX, cy);
+            }
+        }
 
-            if (hasText)
+        private void DrawIcon(Graphics g, Color fg, bool useFa, float x, float cy)
+        {
+            float y = cy - _iconSize / 2f;
+
+            if (useFa)
             {
-                using var brush = new SolidBrush(fg);
-                g.DrawString(txt, Font, brush, new PointF(startX, cy - tsz.Height / 2f));
+                try
+                {
+                    using var bmp = _iconChar.ToBitmap(fg, _iconSize);
+                    g.DrawImage(bmp, x, y, _iconSize, _iconSize);
+                }
+                catch { /* أيقونة غير متاحة — تجاهل */ }
             }
+            else if (_image != null)
+            {
+                g.DrawImage(_image, new RectangleF(x, y, _iconSize, _iconSize));
+            }
+        }
+
+        private void DrawText(Graphics g, Color fg, string txt, float x, float cy, SizeF tsz)
+        {
+            using var brush = new SolidBrush(fg);
+            g.DrawString(txt, Font, brush, new PointF(x, cy - tsz.Height / 2f));
         }
 
         // ─── Color Resolution ─────────────────────────────────
@@ -356,16 +454,13 @@ namespace BChat.Controls
             };
         }
 
-        // ─── Alpha-safe Darken (بديل لـ ControlPaint.Dark) ───
-        // ControlPaint.Dark يُفقد الـ Alpha — هذه الدالة تحافظ عليه
-        private static Color BlendWithAlpha(Color c, int offset)
-        {
-            return Color.FromArgb(
+        // ─── Alpha-safe Darken ────────────────────────────────
+        private static Color BlendWithAlpha(Color c, int offset) =>
+            Color.FromArgb(
                 c.A,
                 Math.Clamp(c.R + offset, 0, 255),
                 Math.Clamp(c.G + offset, 0, 255),
                 Math.Clamp(c.B + offset, 0, 255));
-        }
 
         // ─── Rounded Rectangle Helpers ────────────────────────
         private static GraphicsPath RoundedRect(Rectangle r, int radius)

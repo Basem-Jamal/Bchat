@@ -32,6 +32,7 @@
             customPanel2 = new Car_Rental_System.CustomControls.CustomPanel();
             customPanel1 = new Car_Rental_System.CustomControls.CustomPanel();
             label3 = new Label();
+            btnIconTotalSpent = new BChat.Controls.IconButton();
             btnTotalSpent = new BChat.Controls.ModernButton();
             pnlSidebarProfile = new Car_Rental_System.CustomControls.CustomPanel();
             customPanel10 = new Car_Rental_System.CustomControls.CustomPanel();
@@ -41,17 +42,19 @@
             lblGroupCustomerName = new Label();
             customPanel6 = new Car_Rental_System.CustomControls.CustomPanel();
             avatarCustomer = new BChat.Custom_Controal.Custom_Bchat.AvatarControl();
-            modernButton4 = new BChat.Controls.ModernButton();
+            btnCurrentEmail = new BChat.Controls.ModernButton();
             btnCurrentPhone = new BChat.Controls.ModernButton();
             pnlName = new Car_Rental_System.CustomControls.CustomPanel();
             lblCurrentCustomerName = new Label();
             customPanel4 = new Car_Rental_System.CustomControls.CustomPanel();
-            modernButton2 = new BChat.Controls.ModernButton();
-            modernButton1 = new BChat.Controls.ModernButton();
+            btnBlock = new BChat.Controls.ModernButton();
+            btnEdit = new BChat.Controls.ModernButton();
             customPanel7 = new Car_Rental_System.CustomControls.CustomPanel();
+            btnIconCancelledOrders = new BChat.Controls.IconButton();
             label2 = new Label();
             btnCancelledOrders = new BChat.Controls.ModernButton();
             customPanel5 = new Car_Rental_System.CustomControls.CustomPanel();
+            btnIconOrderCount = new BChat.Controls.IconButton();
             label1 = new Label();
             btnOrderCount = new BChat.Controls.ModernButton();
             customPanel3 = new Car_Rental_System.CustomControls.CustomPanel();
@@ -104,6 +107,7 @@
             customPanel1.BorderRadius = 30;
             customPanel1.BorderThickness = 1;
             customPanel1.Controls.Add(label3);
+            customPanel1.Controls.Add(btnIconTotalSpent);
             customPanel1.Controls.Add(btnTotalSpent);
             customPanel1.CornerRadius.BottomLeft = 30;
             customPanel1.CornerRadius.BottomRight = 30;
@@ -123,29 +127,47 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("IBM Plex Sans Arabic", 13F, FontStyle.Bold);
-            label3.Location = new Point(67, 19);
+            label3.Location = new Point(86, 19);
             label3.Name = "label3";
             label3.Size = new Size(126, 31);
             label3.TabIndex = 29;
             label3.Text = "اجمالي المبيعات";
+            // 
+            // btnIconTotalSpent
+            // 
+            btnIconTotalSpent.BackColor = Color.Transparent;
+            btnIconTotalSpent.BgColor = Color.FromArgb(220, 237, 255);
+            btnIconTotalSpent.BgHoverColor = Color.FromArgb(220, 237, 255);
+            btnIconTotalSpent.BgPressColor = Color.FromArgb(220, 237, 255);
+            btnIconTotalSpent.BorderColor = Color.FromArgb(220, 237, 255);
+            btnIconTotalSpent.IconChar = FontAwesome.Sharp.IconChar.MoneyBills;
+            btnIconTotalSpent.IconColor = Color.DodgerBlue;
+            btnIconTotalSpent.IconHoverColor = Color.DodgerBlue;
+            btnIconTotalSpent.IconSize = 40;
+            btnIconTotalSpent.Location = new Point(18, 22);
+            btnIconTotalSpent.Name = "btnIconTotalSpent";
+            btnIconTotalSpent.Size = new Size(53, 47);
+            btnIconTotalSpent.TabIndex = 0;
+            btnIconTotalSpent.Text = "iconButton1";
             // 
             // btnTotalSpent
             // 
             btnTotalSpent.BackColor = Color.Transparent;
             btnTotalSpent.BorderColor = Color.Empty;
             btnTotalSpent.BorderHoverColor = Color.FromArgb(85, 69, 205);
-            btnTotalSpent.BorderRadius = 30;
+            btnTotalSpent.BorderRadius = 20;
             btnTotalSpent.CustomBackground = Color.SteelBlue;
-            btnTotalSpent.CustomBackgroundHover = Color.Transparent;
+            btnTotalSpent.CustomBackgroundHover = Color.SteelBlue;
             btnTotalSpent.CustomForeground = Color.White;
             btnTotalSpent.Font = new Font("IBM Plex Sans Arabic", 13F, FontStyle.Bold);
             btnTotalSpent.Icon = null;
-            btnTotalSpent.Location = new Point(86, 71);
+            btnTotalSpent.Image = null;
+            btnTotalSpent.Location = new Point(51, 75);
             btnTotalSpent.Name = "btnTotalSpent";
             btnTotalSpent.RightToLeft = RightToLeft.Yes;
-            btnTotalSpent.Size = new Size(89, 64);
+            btnTotalSpent.Size = new Size(161, 60);
             btnTotalSpent.TabIndex = 28;
-            btnTotalSpent.Text = "20";
+            btnTotalSpent.Text = "0.00ريـال";
             btnTotalSpent.UseCustomColors = true;
             btnTotalSpent.Variant = BChat.Controls.ButtonVariant.OnPrimary;
             // 
@@ -159,7 +181,7 @@
             pnlSidebarProfile.Controls.Add(customPanel10);
             pnlSidebarProfile.Controls.Add(customPanel6);
             pnlSidebarProfile.Controls.Add(avatarCustomer);
-            pnlSidebarProfile.Controls.Add(modernButton4);
+            pnlSidebarProfile.Controls.Add(btnCurrentEmail);
             pnlSidebarProfile.Controls.Add(btnCurrentPhone);
             pnlSidebarProfile.Controls.Add(pnlName);
             pnlSidebarProfile.CornerRadius.BottomLeft = 30;
@@ -313,25 +335,26 @@
             avatarCustomer.ZoomFactor = 22F;
             avatarCustomer.Click += avatarControl1_Click;
             // 
-            // modernButton4
+            // btnCurrentEmail
             // 
-            modernButton4.BackColor = Color.Transparent;
-            modernButton4.BorderColor = Color.Empty;
-            modernButton4.BorderHoverColor = Color.FromArgb(85, 69, 205);
-            modernButton4.BorderRadius = 10;
-            modernButton4.CustomBackground = Color.FromArgb(13, 255, 255, 255);
-            modernButton4.CustomBackgroundHover = Color.FromArgb(26, 255, 255, 255);
-            modernButton4.CustomForeground = Color.White;
-            modernButton4.Font = new Font("IBM Plex Sans Arabic", 13F, FontStyle.Bold);
-            modernButton4.Icon = null;
-            modernButton4.Location = new Point(24, 342);
-            modernButton4.Name = "modernButton4";
-            modernButton4.RightToLeft = RightToLeft.Yes;
-            modernButton4.Size = new Size(222, 58);
-            modernButton4.TabIndex = 23;
-            modernButton4.Text = "تعديل البيانات";
-            modernButton4.UseCustomColors = true;
-            modernButton4.Variant = BChat.Controls.ButtonVariant.OnPrimary;
+            btnCurrentEmail.BackColor = Color.Transparent;
+            btnCurrentEmail.BorderColor = Color.Empty;
+            btnCurrentEmail.BorderHoverColor = Color.FromArgb(85, 69, 205);
+            btnCurrentEmail.BorderRadius = 10;
+            btnCurrentEmail.CustomBackground = Color.FromArgb(13, 255, 255, 255);
+            btnCurrentEmail.CustomBackgroundHover = Color.FromArgb(26, 255, 255, 255);
+            btnCurrentEmail.CustomForeground = Color.White;
+            btnCurrentEmail.Font = new Font("IBM Plex Sans Arabic", 13F, FontStyle.Bold);
+            btnCurrentEmail.Icon = null;
+            btnCurrentEmail.Image = null;
+            btnCurrentEmail.Location = new Point(24, 342);
+            btnCurrentEmail.Name = "btnCurrentEmail";
+            btnCurrentEmail.RightToLeft = RightToLeft.Yes;
+            btnCurrentEmail.Size = new Size(222, 58);
+            btnCurrentEmail.TabIndex = 23;
+            btnCurrentEmail.Text = "Email";
+            btnCurrentEmail.UseCustomColors = true;
+            btnCurrentEmail.Variant = BChat.Controls.ButtonVariant.OnPrimary;
             // 
             // btnCurrentPhone
             // 
@@ -344,6 +367,7 @@
             btnCurrentPhone.CustomForeground = Color.White;
             btnCurrentPhone.Font = new Font("IBM Plex Sans Arabic", 13F, FontStyle.Bold);
             btnCurrentPhone.Icon = null;
+            btnCurrentPhone.Image = null;
             btnCurrentPhone.Location = new Point(24, 278);
             btnCurrentPhone.Name = "btnCurrentPhone";
             btnCurrentPhone.RightToLeft = RightToLeft.Yes;
@@ -379,21 +403,21 @@
             // 
             lblCurrentCustomerName.AutoSize = true;
             lblCurrentCustomerName.Font = new Font("Segoe UI Semibold", 16F, FontStyle.Bold);
-            lblCurrentCustomerName.Location = new Point(71, 28);
+            lblCurrentCustomerName.Location = new Point(54, 30);
             lblCurrentCustomerName.Name = "lblCurrentCustomerName";
-            lblCurrentCustomerName.Size = new Size(70, 30);
+            lblCurrentCustomerName.Size = new Size(117, 30);
             lblCurrentCustomerName.TabIndex = 22;
-            lblCurrentCustomerName.Text = "label1";
+            lblCurrentCustomerName.Text = "اسم العميل";
             // 
             // customPanel4
             // 
             customPanel4.BackColor = Color.Transparent;
-            customPanel4.BackColorEx = Color.FromArgb(80, 255, 255, 255);
+            customPanel4.BackColorEx = Color.FromArgb(240, 255, 255, 255);
             customPanel4.BorderColor = Color.LightGray;
             customPanel4.BorderRadius = 30;
             customPanel4.BorderThickness = 0;
-            customPanel4.Controls.Add(modernButton2);
-            customPanel4.Controls.Add(modernButton1);
+            customPanel4.Controls.Add(btnBlock);
+            customPanel4.Controls.Add(btnEdit);
             customPanel4.CornerRadius.BottomLeft = 30;
             customPanel4.CornerRadius.BottomRight = 30;
             customPanel4.CornerRadius.TopLeft = 30;
@@ -408,45 +432,50 @@
             customPanel4.TabIndex = 6;
             customPanel4.UseShadow = true;
             // 
-            // modernButton2
+            // btnBlock
             // 
-            modernButton2.BackColor = Color.Transparent;
-            modernButton2.BorderColor = Color.FromArgb(255, 128, 128);
-            modernButton2.BorderHoverColor = Color.White;
-            modernButton2.BorderRadius = 10;
-            modernButton2.BorderStyle = BChat.Controls.ModernBorderStyle.Dashed;
-            modernButton2.CustomBackground = Color.White;
-            modernButton2.CustomBackgroundHover = Color.FromArgb(255, 128, 128);
-            modernButton2.CustomForeground = Color.IndianRed;
-            modernButton2.Font = new Font("IBM Plex Sans Arabic", 13F, FontStyle.Bold);
-            modernButton2.ForeColor = Color.IndianRed;
-            modernButton2.Icon = null;
-            modernButton2.Location = new Point(259, 13);
-            modernButton2.Name = "modernButton2";
-            modernButton2.RightToLeft = RightToLeft.Yes;
-            modernButton2.Size = new Size(210, 62);
-            modernButton2.TabIndex = 21;
-            modernButton2.Text = "تعديل البيانات";
-            modernButton2.UseCustomColors = true;
+            btnBlock.BackColor = Color.Transparent;
+            btnBlock.BorderColor = Color.FromArgb(255, 128, 128);
+            btnBlock.BorderHoverColor = Color.White;
+            btnBlock.BorderRadius = 10;
+            btnBlock.BorderStyle = BChat.Controls.ModernBorderStyle.Dashed;
+            btnBlock.CustomBackground = Color.White;
+            btnBlock.CustomBackgroundHover = Color.White;
+            btnBlock.CustomForeground = Color.IndianRed;
+            btnBlock.Font = new Font("IBM Plex Sans Arabic", 13F, FontStyle.Bold);
+            btnBlock.ForeColor = Color.IndianRed;
+            btnBlock.Icon = null;
+            btnBlock.Image = null;
+            btnBlock.Location = new Point(259, 13);
+            btnBlock.Name = "btnBlock";
+            btnBlock.RightToLeft = RightToLeft.Yes;
+            btnBlock.Size = new Size(210, 62);
+            btnBlock.TabIndex = 21;
+            btnBlock.Text = "حضر العميل";
+            btnBlock.UseCustomColors = true;
+            btnBlock.Click += btnBlock_Click;
             // 
-            // modernButton1
+            // btnEdit
             // 
-            modernButton1.BackColor = Color.Transparent;
-            modernButton1.BorderColor = Color.FromArgb(200, 196, 214);
-            modernButton1.BorderHoverColor = Color.FromArgb(85, 69, 205);
-            modernButton1.BorderRadius = 10;
-            modernButton1.CustomBackground = Color.DodgerBlue;
-            modernButton1.CustomBackgroundHover = Color.SteelBlue;
-            modernButton1.CustomForeground = Color.White;
-            modernButton1.Font = new Font("IBM Plex Sans Arabic", 13F, FontStyle.Bold);
-            modernButton1.Icon = Properties.Resources.refersh;
-            modernButton1.Location = new Point(14, 13);
-            modernButton1.Name = "modernButton1";
-            modernButton1.RightToLeft = RightToLeft.Yes;
-            modernButton1.Size = new Size(210, 62);
-            modernButton1.TabIndex = 20;
-            modernButton1.Text = "تعديل البيانات";
-            modernButton1.UseCustomColors = true;
+            btnEdit.BackColor = Color.Transparent;
+            btnEdit.BorderColor = Color.FromArgb(200, 196, 214);
+            btnEdit.BorderHoverColor = Color.FromArgb(85, 69, 205);
+            btnEdit.BorderRadius = 10;
+            btnEdit.CustomBackground = Color.DodgerBlue;
+            btnEdit.CustomBackgroundHover = Color.SteelBlue;
+            btnEdit.CustomForeground = Color.White;
+            btnEdit.Font = new Font("IBM Plex Sans Arabic", 13F, FontStyle.Bold);
+            btnEdit.Icon = Properties.Resources.refersh;
+            btnEdit.IconChar = FontAwesome.Sharp.IconChar.Edit;
+            btnEdit.Image = Properties.Resources.refersh;
+            btnEdit.Location = new Point(14, 13);
+            btnEdit.Name = "btnEdit";
+            btnEdit.RightToLeft = RightToLeft.Yes;
+            btnEdit.Size = new Size(210, 62);
+            btnEdit.TabIndex = 20;
+            btnEdit.Text = "تعديل البيانات";
+            btnEdit.UseCustomColors = true;
+            btnEdit.Click += btnEdit_Click;
             // 
             // customPanel7
             // 
@@ -455,6 +484,7 @@
             customPanel7.BorderColor = Color.LightGray;
             customPanel7.BorderRadius = 30;
             customPanel7.BorderThickness = 1;
+            customPanel7.Controls.Add(btnIconCancelledOrders);
             customPanel7.Controls.Add(label2);
             customPanel7.Controls.Add(btnCancelledOrders);
             customPanel7.CornerRadius.BottomLeft = 30;
@@ -471,6 +501,23 @@
             customPanel7.TabIndex = 21;
             customPanel7.UseShadow = true;
             // 
+            // btnIconCancelledOrders
+            // 
+            btnIconCancelledOrders.BackColor = Color.Transparent;
+            btnIconCancelledOrders.BgColor = Color.FromArgb(220, 237, 255);
+            btnIconCancelledOrders.BgHoverColor = Color.FromArgb(220, 237, 255);
+            btnIconCancelledOrders.BgPressColor = Color.FromArgb(220, 237, 255);
+            btnIconCancelledOrders.BorderColor = Color.FromArgb(220, 237, 255);
+            btnIconCancelledOrders.IconChar = FontAwesome.Sharp.IconChar.None;
+            btnIconCancelledOrders.IconColor = Color.DodgerBlue;
+            btnIconCancelledOrders.IconHoverColor = Color.DodgerBlue;
+            btnIconCancelledOrders.IconSize = 40;
+            btnIconCancelledOrders.Location = new Point(22, 19);
+            btnIconCancelledOrders.Name = "btnIconCancelledOrders";
+            btnIconCancelledOrders.Size = new Size(53, 47);
+            btnIconCancelledOrders.TabIndex = 30;
+            btnIconCancelledOrders.Text = "iconButton2";
+            // 
             // label2
             // 
             label2.AutoSize = true;
@@ -479,23 +526,24 @@
             label2.Name = "label2";
             label2.Size = new Size(121, 31);
             label2.TabIndex = 27;
-            label2.Text = "الطلبات الملغاه";
+            label2.Text = "الطلبات الملغاة";
             // 
             // btnCancelledOrders
             // 
             btnCancelledOrders.BackColor = Color.Transparent;
             btnCancelledOrders.BorderColor = Color.Empty;
             btnCancelledOrders.BorderHoverColor = Color.FromArgb(85, 69, 205);
-            btnCancelledOrders.BorderRadius = 30;
+            btnCancelledOrders.BorderRadius = 20;
             btnCancelledOrders.CustomBackground = Color.SteelBlue;
-            btnCancelledOrders.CustomBackgroundHover = Color.Transparent;
+            btnCancelledOrders.CustomBackgroundHover = Color.SteelBlue;
             btnCancelledOrders.CustomForeground = Color.White;
             btnCancelledOrders.Font = new Font("IBM Plex Sans Arabic", 13F, FontStyle.Bold);
             btnCancelledOrders.Icon = null;
-            btnCancelledOrders.Location = new Point(90, 71);
+            btnCancelledOrders.Image = null;
+            btnCancelledOrders.Location = new Point(90, 75);
             btnCancelledOrders.Name = "btnCancelledOrders";
             btnCancelledOrders.RightToLeft = RightToLeft.Yes;
-            btnCancelledOrders.Size = new Size(89, 64);
+            btnCancelledOrders.Size = new Size(89, 60);
             btnCancelledOrders.TabIndex = 26;
             btnCancelledOrders.Text = "20";
             btnCancelledOrders.UseCustomColors = true;
@@ -508,6 +556,7 @@
             customPanel5.BorderColor = Color.LightGray;
             customPanel5.BorderRadius = 30;
             customPanel5.BorderThickness = 1;
+            customPanel5.Controls.Add(btnIconOrderCount);
             customPanel5.Controls.Add(label1);
             customPanel5.Controls.Add(btnOrderCount);
             customPanel5.CornerRadius.BottomLeft = 30;
@@ -524,6 +573,23 @@
             customPanel5.TabIndex = 20;
             customPanel5.UseShadow = true;
             // 
+            // btnIconOrderCount
+            // 
+            btnIconOrderCount.BackColor = Color.Transparent;
+            btnIconOrderCount.BgColor = Color.FromArgb(220, 237, 255);
+            btnIconOrderCount.BgHoverColor = Color.FromArgb(220, 237, 255);
+            btnIconOrderCount.BgPressColor = Color.FromArgb(220, 237, 255);
+            btnIconOrderCount.BorderColor = Color.FromArgb(220, 237, 255);
+            btnIconOrderCount.IconChar = FontAwesome.Sharp.IconChar.None;
+            btnIconOrderCount.IconColor = Color.DodgerBlue;
+            btnIconOrderCount.IconHoverColor = Color.DodgerBlue;
+            btnIconOrderCount.IconSize = 40;
+            btnIconOrderCount.Location = new Point(29, 22);
+            btnIconOrderCount.Name = "btnIconOrderCount";
+            btnIconOrderCount.Size = new Size(53, 47);
+            btnIconOrderCount.TabIndex = 31;
+            btnIconOrderCount.Text = "iconButton2";
+            // 
             // label1
             // 
             label1.AutoSize = true;
@@ -539,16 +605,17 @@
             btnOrderCount.BackColor = Color.Transparent;
             btnOrderCount.BorderColor = Color.Empty;
             btnOrderCount.BorderHoverColor = Color.FromArgb(85, 69, 205);
-            btnOrderCount.BorderRadius = 30;
+            btnOrderCount.BorderRadius = 20;
             btnOrderCount.CustomBackground = Color.SteelBlue;
-            btnOrderCount.CustomBackgroundHover = Color.Transparent;
+            btnOrderCount.CustomBackgroundHover = Color.SteelBlue;
             btnOrderCount.CustomForeground = Color.White;
             btnOrderCount.Font = new Font("IBM Plex Sans Arabic", 13F, FontStyle.Bold);
             btnOrderCount.Icon = null;
-            btnOrderCount.Location = new Point(88, 71);
+            btnOrderCount.Image = null;
+            btnOrderCount.Location = new Point(88, 75);
             btnOrderCount.Name = "btnOrderCount";
             btnOrderCount.RightToLeft = RightToLeft.Yes;
-            btnOrderCount.Size = new Size(89, 64);
+            btnOrderCount.Size = new Size(89, 60);
             btnOrderCount.TabIndex = 24;
             btnOrderCount.Text = "20";
             btnOrderCount.UseCustomColors = true;
@@ -581,11 +648,12 @@
             btnBack.BorderColor = Color.LightGray;
             btnBack.BorderHoverColor = Color.FromArgb(85, 69, 205);
             btnBack.BorderRadius = 20;
-            btnBack.CustomBackground = Color.White;
-            btnBack.CustomBackgroundHover = Color.FromArgb(63, 43, 184);
-            btnBack.CustomForeground = Color.FromArgb(156, 163, 175);
+            btnBack.CustomBackground = Color.FromArgb(156, 163, 175);
+            btnBack.CustomBackgroundHover = Color.FromArgb(156, 163, 175);
+            btnBack.CustomForeground = Color.White;
             btnBack.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
             btnBack.Icon = Properties.Resources.refersh;
+            btnBack.Image = Properties.Resources.refersh;
             btnBack.Location = new Point(21, 13);
             btnBack.Name = "btnBack";
             btnBack.RightToLeft = RightToLeft.Yes;
@@ -628,13 +696,13 @@
         private Car_Rental_System.CustomControls.CustomPanel customPanel2;
         private Car_Rental_System.CustomControls.CustomPanel pnlSidebarProfile;
         private Custom_Controal.Custom_Bchat.AvatarControl avatarCustomer;
-        private Controls.ModernButton modernButton4;
+        private Controls.ModernButton btnCurrentEmail;
         private Controls.ModernButton btnCurrentPhone;
         private Car_Rental_System.CustomControls.CustomPanel pnlName;
         private Label lblCurrentCustomerName;
         private Car_Rental_System.CustomControls.CustomPanel customPanel4;
-        private Controls.ModernButton modernButton2;
-        private Controls.ModernButton modernButton1;
+        private Controls.ModernButton btnBlock;
+        private Controls.ModernButton btnEdit;
         private Car_Rental_System.CustomControls.CustomPanel customPanel7;
         private Car_Rental_System.CustomControls.CustomPanel customPanel5;
         private Car_Rental_System.CustomControls.CustomPanel customPanel3;
@@ -653,5 +721,8 @@
         private Car_Rental_System.CustomControls.CustomPanel customPanel10;
         private Car_Rental_System.CustomControls.CustomPanel customPanel8;
         private Car_Rental_System.CustomControls.CustomPanel customPanel9;
+        private Controls.IconButton btnIconTotalSpent;
+        private Controls.IconButton btnIconCancelledOrders;
+        private Controls.IconButton btnIconOrderCount;
     }
 }

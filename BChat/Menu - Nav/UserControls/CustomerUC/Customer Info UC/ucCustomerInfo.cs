@@ -1,5 +1,8 @@
 ﻿using BChat.Custom_Controal.Custom_Bchat;
 using BChat.Data.DataStore.CustomerProfile_Repository;
+using BChat.Data.DataStore.Customers_Repository;
+using BChat.Events;
+using BChat.Forms;
 using BChat.Global;
 using BChat.Models;
 using BChat.UserControls;
@@ -18,6 +21,7 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
 {
     public partial class ucCustomerInfo : UserControl
     {
+        private Customer _customer;
         public ucCustomerInfo()
         {
             InitializeComponent();
@@ -29,24 +33,30 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
                 ControlStyles.ResizeRedraw |
                 ControlStyles.SupportsTransparentBackColor, true);
 
-            this.DoubleBuffered = true;
+            AppEvents.OnCustomerUpdated += LoadCustomer;
 
+
+
+            this.DoubleBuffered = true;
             //Settings
             SettingLocationControls();
+            SettingIcons();
         }
 
-        public void LoadCustomer(int Id)
+        public void LoadCustomer(Customer customer)
         {
-            var customer = AppCache.Customers.FirstOrDefault(c => c.Id == Id);
-            if (customer == null) return;
+
+
+            _customer = customer;
+            if (_customer == null) return;
 
             //Profile Info
-            Profile(customer);
+            Profile(_customer);
 
             //Order Info
-            OrderCount(customer);
-            CancelledOrders(customer);
-            TotalSpent(customer);
+            OrderCount(_customer);
+            CancelledOrders(_customer);
+            TotalSpent(_customer);
 
         }
         private void btnBack_Click(object sender, EventArgs e)
@@ -77,6 +87,17 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
 
 
         }
+        private void SettingIcons()
+        {
+            btnIconTotalSpent.IconChar = FontAwesome.Sharp.IconChar.MoneyBill;
+            btnIconCancelledOrders.IconChar = FontAwesome.Sharp.IconChar.Ban;
+            btnIconOrderCount.IconChar = FontAwesome.Sharp.IconChar.CartShopping;
+
+            // btn footer
+            btnEdit.IconChar = FontAwesome.Sharp.IconChar.UserEdit;
+            btnBlock.IconChar = FontAwesome.Sharp.IconChar.Ban;
+
+        }
         private void Profile(Customer customer)
         {
             avatarCustomer.FullName = customer.Name;
@@ -91,21 +112,21 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
         }
         private void OrderCount(Customer customer)
         {
-            var order = AppCache.GetCustomerProfilesFromCache(customer.Id);
+            var order = CustomerProfileRepository.GetByCusotmerId(customer.Id);
 
-            btnOrderCount.Text = order?.OrderCount.ToString() ?? "0";
+            btnOrderCount.Text = order?.OrderCount != null ? order.OrderCount.ToString() : "0";
         }
 
         private void CancelledOrders(Customer customer)
         {
             var order = CustomerProfileRepository.GetByCusotmerId(customer.Id);
-            btnCancelledOrders.Text = order?.CancelledOrders.ToString() ?? "0";
+            btnCancelledOrders.Text = order?.CancelledOrders != null ? order.CancelledOrders.ToString() : "0";
         }
 
         private void TotalSpent(Customer customer)
         {
-            var order = AppCache.GetCustomerProfilesFromCache(customer.Id);
-            btnTotalSpent.Text = order?.TotalSpent.ToString() ?? "0";
+            var order = CustomerProfileRepository.GetByCusotmerId(customer.Id);
+            btnTotalSpent.Text = order?.TotalSpent != null ? $"ريـال {order.TotalSpent:N2}" : "ريـال " + "0.00";
 
         }
         private void modernPanel1_Paint(object sender, PaintEventArgs e)
@@ -115,6 +136,23 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
 
         private void avatarControl1_Click(object sender, EventArgs e)
         {
+
+        }
+
+        private void btnEdit_Click(object sender, EventArgs e)
+        {
+            AddCustomerForm customerForm = new AddCustomerForm(_customer, CustomerStatus.Update);
+            customerForm.ShowDialog();
+
+        }
+
+        private void btnBlock_Click(object sender, EventArgs e)
+        {
+            _customer.IsBlocked = !_customer.IsBlocked;
+            CustomerRepository.Block(_customer);
+
+            string msg = _customer.IsBlocked ? "تم حجب العميل ✅" : "تم رفع الحجب ✅";
+            MessageBox.Show(msg, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         }
     }

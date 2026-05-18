@@ -38,12 +38,11 @@ namespace BChat.UserControls
             var customer = AppCache.Customers.FirstOrDefault(c => c.Id == _activeContactId);
             if (customer == null) return;
 
-            bool newStatus = !customer.IsBlocked;
+            customer.IsBlocked = !customer.IsBlocked;
 
-            CustomerRepository.Block(_activeContactId, newStatus);
-            customer.IsBlocked = newStatus;
+            CustomerRepository.Block(customer);
 
-            string msg = newStatus ? "تم حجب العميل ✅" : "تم رفع الحجب ✅";
+            string msg = customer.IsBlocked ? "تم حجب العميل ✅" : "تم رفع الحجب ✅";
             MessageBox.Show(msg, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -51,9 +50,9 @@ namespace BChat.UserControls
         // ─── الخطوة 1: تحميل البيانات الحقيقية من AppCache ───────────────────
         private void LoadFromCache()
         {
-            AppEvents.CustomerAdded += OnCustomerAdded;
+            AppEvents.OnCustomerAdded += OnCustomerAdded;
 
-            AppEvents.CustomerDeleted += OnCustomerDeleted;
+            AppEvents.OnCustomerDeleted += OnCustomerDeleted;
 
 
             var agentName = AppCache.Users
