@@ -1,5 +1,6 @@
 using BChat.Auth;
 using BChat.Data.DataStore;
+using BChat.Data.DataStore.CustomerProfile_Repository;
 using BChat.Data.DataStore.Customers_Repository;
 using BChat.Data.DataStore.Users_DB;
 using BChat.Global;
@@ -27,8 +28,13 @@ namespace BChat
             AppCache.Users = UsersRepository.GetAll();
             //---------
             //Customers
-            AppCache.Customers = CustomerRepository.GetAll();      
-            //---------
+            AppCache.Customers = CustomerRepository.GetAll();
+            //---------       
+            ////صار ثقيل واضطريت استخدم getById
+            //AppCache.CustomerProfiles = CustomerProfileRepository.GetAll();
+            ////---------
+
+
             //Groups
             AppCache.Groups = GroupRepository.GetAll();
             //---------

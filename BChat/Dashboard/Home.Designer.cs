@@ -319,10 +319,11 @@
             btnLogout.BorderColor = Color.FromArgb(200, 196, 214);
             btnLogout.BorderHoverColor = Color.FromArgb(85, 69, 205);
             btnLogout.BorderRadius = 15;
-            btnLogout.CustomBackground = Color.FromArgb(85, 69, 205);
+            btnLogout.CustomBackground = Color.White;
             btnLogout.CustomBackgroundHover = Color.FromArgb(63, 43, 184);
-            btnLogout.CustomForeground = Color.White;
+            btnLogout.CustomForeground = Color.Black;
             btnLogout.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
+            btnLogout.ForeColor = Color.White;
             btnLogout.Icon = null;
             btnLogout.Location = new Point(48, 951);
             btnLogout.Name = "btnLogout";
@@ -330,6 +331,7 @@
             btnLogout.Size = new Size(160, 44);
             btnLogout.TabIndex = 25;
             btnLogout.Text = "تسجيل الخروج";
+            btnLogout.UseCustomColors = true;
             btnLogout.Click += btnLogout_Click;
             // 
             // guna2BorderlessForm1
@@ -344,7 +346,7 @@
             // 
             gradientPanel3.BackColor = Color.Transparent;
             gradientPanel3.CornerRadius = 30;
-            gradientPanel3.GradientEndColor = Color.Violet;
+            gradientPanel3.GradientEndColor = Color.Teal;
             gradientPanel3.GradientMidColor = Color.Violet;
             gradientPanel3.GradientStartColor = Color.FromArgb(85, 69, 205);
             gradientPanel3.HoverGlowColor = Color.Transparent;
@@ -368,7 +370,7 @@
             picClose.Image = Properties.Resources.close__1_1;
             picClose.Location = new Point(132, 24);
             picClose.Name = "picClose";
-            picClose.Size = new Size(45, 36);
+            picClose.Size = new Size(43, 29);
             picClose.SizeMode = PictureBoxSizeMode.Zoom;
             picClose.TabIndex = 2;
             picClose.TabStop = false;
@@ -409,7 +411,7 @@
             pnlTop.Location = new Point(-17, 0);
             pnlTop.Name = "pnlTop";
             pnlTop.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            pnlTop.Size = new Size(1332, 70);
+            pnlTop.Size = new Size(1332, 57);
             pnlTop.TabIndex = 8;
             // 
             // pnlHeader
@@ -431,7 +433,7 @@
             pnlHeader.Name = "pnlHeader";
             pnlHeader.ShadowColor = Color.FromArgb(80, 0, 0, 0);
             pnlHeader.ShadowSize = 6;
-            pnlHeader.Size = new Size(1312, 80);
+            pnlHeader.Size = new Size(1321, 63);
             pnlHeader.TabIndex = 3;
             pnlHeader.UseShadow = true;
             pnlHeader.MouseDown += pnlHeader_MouseDown;
@@ -458,7 +460,7 @@
             gradientPanel5.ShowGlassBorder = false;
             gradientPanel5.ShowShadow = false;
             gradientPanel5.ShowShimmer = false;
-            gradientPanel5.Size = new Size(220, 75);
+            gradientPanel5.Size = new Size(215, 64);
             gradientPanel5.TabIndex = 31;
             // 
             // btnFormMinimized
@@ -468,7 +470,7 @@
             btnFormMinimized.Image = Properties.Resources.closed_eyes;
             btnFormMinimized.Location = new Point(52, 24);
             btnFormMinimized.Name = "btnFormMinimized";
-            btnFormMinimized.Size = new Size(45, 36);
+            btnFormMinimized.Size = new Size(43, 29);
             btnFormMinimized.SizeMode = PictureBoxSizeMode.Zoom;
             btnFormMinimized.TabIndex = 4;
             btnFormMinimized.TabStop = false;
@@ -485,11 +487,11 @@
             pnlContent.FillColor2 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor3 = Color.FromArgb(248, 247, 255);
             pnlContent.FillColor4 = Color.FromArgb(248, 247, 255);
-            pnlContent.Location = new Point(3, 76);
+            pnlContent.Location = new Point(3, 63);
             pnlContent.Name = "pnlContent";
             pnlContent.Quality = 200;
             pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges4;
-            pnlContent.Size = new Size(1315, 859);
+            pnlContent.Size = new Size(1315, 890);
             pnlContent.TabIndex = 0;
             // 
             // pnlBottom
@@ -497,10 +499,10 @@
             pnlBottom.Controls.Add(gradientPanel2);
             pnlBottom.CustomizableEdges = customizableEdges5;
             pnlBottom.Dock = DockStyle.Bottom;
-            pnlBottom.Location = new Point(0, 938);
+            pnlBottom.Location = new Point(0, 959);
             pnlBottom.Name = "pnlBottom";
             pnlBottom.ShadowDecoration.CustomizableEdges = customizableEdges6;
-            pnlBottom.Size = new Size(1321, 60);
+            pnlBottom.Size = new Size(1321, 39);
             pnlBottom.TabIndex = 9;
             // 
             // gradientPanel2
@@ -508,12 +510,12 @@
             gradientPanel2.BackColor = Color.Transparent;
             gradientPanel2.CornerRadius = 15;
             gradientPanel2.GradientAngle = 81F;
-            gradientPanel2.GradientEndColor = Color.Violet;
+            gradientPanel2.GradientEndColor = Color.Teal;
             gradientPanel2.GradientMidColor = Color.Violet;
             gradientPanel2.GradientStartColor = Color.FromArgb(85, 69, 205);
             gradientPanel2.HoverGlowColor = Color.Transparent;
             gradientPanel2.HoverGlowRadius = 0;
-            gradientPanel2.Location = new Point(3, 42);
+            gradientPanel2.Location = new Point(-52, 16);
             gradientPanel2.Name = "gradientPanel2";
             gradientPanel2.Padding = new Padding(6, 6, 6, 8);
             gradientPanel2.ShadowColor = Color.Transparent;
@@ -521,7 +523,7 @@
             gradientPanel2.ShowGlassBorder = false;
             gradientPanel2.ShowShadow = false;
             gradientPanel2.ShowShimmer = false;
-            gradientPanel2.Size = new Size(1042, 52);
+            gradientPanel2.Size = new Size(1097, 47);
             gradientPanel2.TabIndex = 26;
             // 
             // Home

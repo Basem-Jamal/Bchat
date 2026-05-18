@@ -24,6 +24,7 @@ namespace BChat.UserControls
 
             AppEvents.OnRefreshCustomersTable -= LoadCustomers;
             AppEvents.OnRefreshCustomersTable += LoadCustomers;
+            txbSearchCustomer.TextChanged += LoadCustomer;
 
         }
 
@@ -52,6 +53,33 @@ namespace BChat.UserControls
             _table.ViewClicked += Table_ViewClicked;
             _table.EditClicked += Table_EditClicked;
             pnlContent.Controls.Add(_table);
+        }
+
+        private void LoadCustomer(object sender , EventArgs e)
+        {
+            string search = txbSearchCustomer.Text.Trim().ToLower();
+
+            var customers = AppCache.Customers
+                .Where(c =>
+                    c.Name.ToLower().Contains(search) ||
+                    c.Phone.Contains(search))
+                .ToList();
+
+            var rows = new List<Dictionary<string, object>>();
+
+            foreach (var c in customers)
+            {
+                rows.Add(new Dictionary<string, object>
+        {
+            { "Id",        c.Id },
+            { "Name",      c.Name },
+            { "Phone",     c.Phone },
+            { "CreatedAt", c.CreatedAt.ToString("yyyy/MM/dd") }
+        });
+            }
+
+            _table.SetData(rows);
+
         }
         private void LoadCustomers()
         {

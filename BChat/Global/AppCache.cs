@@ -7,6 +7,7 @@ using BChat.Models;
 using System.Collections.Generic;
 using BChat.Models.Users;
 using BChat.Models.Meta_Business;
+using BChat.Models.Customer_Module.CustomerProfiles_Module;
 
 
 namespace BChat.Global
@@ -20,10 +21,20 @@ namespace BChat.Global
         // ── Data ──────────────────────────────
         public static List <Groups> Groups { get; set; } = new List<Groups> ();
         public static List<Customer> Customers { get; set; } = new List<Customer>();
+        public static List <CustomerProfile> CustomerProfiles { get; set; } = new List<CustomerProfile> ();
         public static List<GroupMember> GroupMembers { get; set; } = new List<GroupMember>();
         public static List<ChatMessage> ChatMessages { get; set; } = new List<ChatMessage>();
         public static List<WhatsAppTemplate> WhatsAppTemplates { get; set; } = new List<WhatsAppTemplate>();
         public static BChat.WhatsApp.WhatsAppWebhookListener? WhatsAppListener { get; set; }
+
+
+
+        //── Customer Helpers ───────────────
+
+        public static CustomerProfile? GetCustomerProfilesFromCache(int customerId)
+        {
+            return CustomerProfiles.FirstOrDefault(p => p.CustomerId == customerId);
+        }
 
 
         // ── GroupMember Helpers ───────────────

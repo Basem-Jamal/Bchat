@@ -37,6 +37,7 @@
             btnRefreshData = new BChat.Controls.ModernButton();
             btnImportExcel = new BChat.Controls.ModernButton();
             progressBar1 = new ProgressBar();
+            txbSearchCustomer = new BChat.Controls.ModernTextBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -82,7 +83,12 @@
             // btnAddCustomer
             // 
             btnAddCustomer.BackColor = Color.Transparent;
+            btnAddCustomer.BorderColor = Color.FromArgb(200, 196, 214);
+            btnAddCustomer.BorderHoverColor = Color.FromArgb(85, 69, 205);
             btnAddCustomer.BorderRadius = 20;
+            btnAddCustomer.CustomBackground = Color.FromArgb(85, 69, 205);
+            btnAddCustomer.CustomBackgroundHover = Color.FromArgb(63, 43, 184);
+            btnAddCustomer.CustomForeground = Color.White;
             btnAddCustomer.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
             btnAddCustomer.Icon = Properties.Resources.plus;
             btnAddCustomer.Location = new Point(1068, 50);
@@ -96,7 +102,12 @@
             // btnRefreshData
             // 
             btnRefreshData.BackColor = Color.Transparent;
+            btnRefreshData.BorderColor = Color.FromArgb(200, 196, 214);
+            btnRefreshData.BorderHoverColor = Color.FromArgb(85, 69, 205);
             btnRefreshData.BorderRadius = 20;
+            btnRefreshData.CustomBackground = Color.FromArgb(85, 69, 205);
+            btnRefreshData.CustomBackgroundHover = Color.FromArgb(63, 43, 184);
+            btnRefreshData.CustomForeground = Color.White;
             btnRefreshData.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
             btnRefreshData.Icon = Properties.Resources.refersh;
             btnRefreshData.Location = new Point(245, 41);
@@ -110,7 +121,12 @@
             // btnImportExcel
             // 
             btnImportExcel.BackColor = Color.Transparent;
+            btnImportExcel.BorderColor = Color.FromArgb(200, 196, 214);
+            btnImportExcel.BorderHoverColor = Color.FromArgb(85, 69, 205);
             btnImportExcel.BorderRadius = 20;
+            btnImportExcel.CustomBackground = Color.FromArgb(85, 69, 205);
+            btnImportExcel.CustomBackgroundHover = Color.FromArgb(63, 43, 184);
+            btnImportExcel.CustomForeground = Color.White;
             btnImportExcel.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
             btnImportExcel.Icon = null;
             btnImportExcel.Location = new Point(409, 41);
@@ -128,11 +144,32 @@
             progressBar1.Size = new Size(284, 43);
             progressBar1.TabIndex = 14;
             // 
+            // txbSearchCustomer
+            // 
+            txbSearchCustomer.BackColor = Color.Transparent;
+            txbSearchCustomer.BackColorEx = Color.White;
+            txbSearchCustomer.BorderColor = Color.FromArgb(220, 215, 250);
+            txbSearchCustomer.BorderRadius = 14;
+            txbSearchCustomer.Direction = BChat.Controls.TextDirection.Auto;
+            txbSearchCustomer.FocusBorderColor = Color.FromArgb(124, 111, 247);
+            txbSearchCustomer.Font = new Font("Microsoft Sans Serif", 10F);
+            txbSearchCustomer.LabelText = "";
+            txbSearchCustomer.Location = new Point(802, 134);
+            txbSearchCustomer.MaxLength = 32767;
+            txbSearchCustomer.Name = "txbSearchCustomer";
+            txbSearchCustomer.PlaceholderText = "ابحث عن عميل";
+            txbSearchCustomer.RightToLeft = RightToLeft.Yes;
+            txbSearchCustomer.Size = new Size(446, 50);
+            txbSearchCustomer.TabIndex = 15;
+            txbSearchCustomer.TextPadding = 14;
+            txbSearchCustomer.UsePasswordChar = false;
+            // 
             // CustomersControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(248, 247, 255);
+            Controls.Add(txbSearchCustomer);
             Controls.Add(progressBar1);
             Controls.Add(btnImportExcel);
             Controls.Add(btnRefreshData);
@@ -155,5 +192,6 @@
         private Controls.ModernButton btnRefreshData;
         private Controls.ModernButton btnImportExcel;
         private ProgressBar progressBar1;
+        private Controls.ModernTextBox txbSearchCustomer;
     }
 }

@@ -10,8 +10,29 @@ namespace BChat.Data.DataStore.CustomerProfile_Repository
 {
     public static class CustomerProfileRepository
     {
-        private static string _connectionString = DatabaseConfig.ConnectionString;
 
+
+        private static string _connectionString = DatabaseConfig.ConnectionString;
+        public static List<CustomerProfile> GetAll()
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                string query = @"SELECT * FROM CustomerProfiles";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Map(reader);
+                    }
+                }
+            }
+
+            return GetAll();
+        }
         public static CustomerProfile? GetByCusotmerId(int cusotmerId)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
