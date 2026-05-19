@@ -451,7 +451,7 @@
             btnBlock.RightToLeft = RightToLeft.Yes;
             btnBlock.Size = new Size(210, 62);
             btnBlock.TabIndex = 21;
-            btnBlock.Text = "حضر العميل";
+            btnBlock.Text = "حظر العميل";
             btnBlock.UseCustomColors = true;
             btnBlock.Click += btnBlock_Click;
             // 

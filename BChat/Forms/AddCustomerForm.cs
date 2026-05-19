@@ -38,6 +38,9 @@ namespace BChat.Forms
             // Check Group
             Check_GroupNotFound();
 
+            //Setting
+            SettingIcons(status);
+
             if (status == CustomerStatus.Update)
             {
                 txbCustomerName.Text = customer.Name;
@@ -49,11 +52,24 @@ namespace BChat.Forms
                 btnAddCustomer.Text = "حفظ التعديل";
 
             }
+
+
         }
 
         private void picClose_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+        private void SettingIcons(CustomerStatus status)
+        {
+
+            iconTop.Image = status == CustomerStatus.Add 
+                ? Properties.Resources.add_user 
+                : Properties.Resources.edit_info;
+
+            btnAddCustomer.IconChar = status == CustomerStatus.Add 
+                ? FontAwesome.Sharp.IconChar.Add 
+                : FontAwesome.Sharp.IconChar.UserEdit ;
         }
         private void Check_GroupNotFound()
         {

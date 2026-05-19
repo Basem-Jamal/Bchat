@@ -28,16 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             monthlyMessagesCard1 = new BChat.Custom_Controal.Custom_Bchat.Report.MonthlyMessagesCard();
             responseRateCard1 = new BChat.Custom_Controal.Custom_Bchat.Report.ResponseRateCard();
             monthlyMessagesCard21 = new BChat.Custom_Controal.Custom_Bchat.Report.MonthlyMessagesCard2();
             campaignSuccessCard1 = new BChat.Custom_Controal.Custom_Bchat.Report.CampaignSuccessCard();
             darkMessagesChartCard1 = new BChat.Custom_Controal.Custom_Bchat.Report.DarkMessagesChartCard();
             messagesChartCard1 = new BChat.Custom_Controal.Custom_Bchat.Report.MessagesChartCard();
-            pnlContent = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
-            pnlContent.SuspendLayout();
+            customPanel1 = new Car_Rental_System.CustomControls.CustomPanel();
+            gradientPanel1 = new GradientPanel();
+            customPanel2 = new Car_Rental_System.CustomControls.CustomPanel();
+            customPanel1.SuspendLayout();
+            gradientPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // monthlyMessagesCard1
@@ -85,7 +86,7 @@
             monthlyMessagesCard1.IconColor = Color.FromArgb(124, 111, 247);
             monthlyMessagesCard1.IconImage = Properties.Resources.add_group;
             monthlyMessagesCard1.LeftAccentBorderWidth = 25;
-            monthlyMessagesCard1.Location = new Point(717, 11);
+            monthlyMessagesCard1.Location = new Point(836, 198);
             monthlyMessagesCard1.MessageCount = 20000;
             monthlyMessagesCard1.Name = "monthlyMessagesCard1";
             monthlyMessagesCard1.RightToLeft = RightToLeft.Yes;
@@ -105,7 +106,7 @@
             responseRateCard1.CardBackColor = Color.FromArgb(20, 25, 55);
             responseRateCard1.IconColor = Color.FromArgb(82, 215, 175);
             responseRateCard1.LabelFont = new Font("Microsoft Sans Serif", 9F, FontStyle.Bold);
-            responseRateCard1.Location = new Point(292, 107);
+            responseRateCard1.Location = new Point(419, 389);
             responseRateCard1.Name = "responseRateCard1";
             responseRateCard1.PercentFont = new Font("Microsoft Sans Serif", 30F, FontStyle.Bold);
             responseRateCard1.RightToLeft = RightToLeft.Yes;
@@ -157,11 +158,11 @@
     };
             monthlyMessagesCard21.CountFont = new Font("Microsoft Sans Serif", 28F, FontStyle.Bold);
             monthlyMessagesCard21.IconColor = Color.FromArgb(124, 111, 247);
-            monthlyMessagesCard21.Location = new Point(708, 257);
+            monthlyMessagesCard21.Location = new Point(404, 198);
             monthlyMessagesCard21.MonthLabel = "May 2026";
             monthlyMessagesCard21.Name = "monthlyMessagesCard21";
             monthlyMessagesCard21.RightToLeft = RightToLeft.Yes;
-            monthlyMessagesCard21.Size = new Size(336, 141);
+            monthlyMessagesCard21.Size = new Size(378, 145);
             monthlyMessagesCard21.SubFont = new Font("Microsoft Sans Serif", 9F);
             monthlyMessagesCard21.TabIndex = 2;
             monthlyMessagesCard21.Text = "monthlyMessagesCard21";
@@ -177,12 +178,12 @@
             campaignSuccessCard1.BackColor = Color.Transparent;
             campaignSuccessCard1.BadgeColor = Color.FromArgb(16, 185, 129);
             campaignSuccessCard1.BadgeFont = new Font("Microsoft Sans Serif", 9F);
-            campaignSuccessCard1.Location = new Point(86, 487);
+            campaignSuccessCard1.Location = new Point(123, 389);
             campaignSuccessCard1.Name = "campaignSuccessCard1";
             campaignSuccessCard1.PercentFont = new Font("Microsoft Sans Serif", 32F, FontStyle.Bold);
             campaignSuccessCard1.RightToLeft = RightToLeft.Yes;
             campaignSuccessCard1.RingBgColor = Color.FromArgb(40, 45, 80);
-            campaignSuccessCard1.Size = new Size(260, 260);
+            campaignSuccessCard1.Size = new Size(290, 301);
             campaignSuccessCard1.TabIndex = 3;
             campaignSuccessCard1.Text = "campaignSuccessCard1";
             campaignSuccessCard1.TitleFont = new Font("Microsoft Sans Serif", 11F, FontStyle.Bold);
@@ -228,7 +229,7 @@
     };
             darkMessagesChartCard1.CountFont = new Font("Microsoft Sans Serif", 26F, FontStyle.Bold);
             darkMessagesChartCard1.IconColor = Color.FromArgb(82, 215, 175);
-            darkMessagesChartCard1.Location = new Point(402, 560);
+            darkMessagesChartCard1.Location = new Point(83, 188);
             darkMessagesChartCard1.Name = "darkMessagesChartCard1";
             darkMessagesChartCard1.RightToLeft = RightToLeft.Yes;
             darkMessagesChartCard1.Size = new Size(315, 177);
@@ -279,10 +280,10 @@
     };
             messagesChartCard1.CountFont = new Font("Microsoft Sans Serif", 26F, FontStyle.Bold);
             messagesChartCard1.IconColor = Color.FromArgb(82, 215, 175);
-            messagesChartCard1.Location = new Point(741, 500);
+            messagesChartCard1.Location = new Point(753, 430);
             messagesChartCard1.Name = "messagesChartCard1";
             messagesChartCard1.RightToLeft = RightToLeft.Yes;
-            messagesChartCard1.Size = new Size(420, 222);
+            messagesChartCard1.Size = new Size(410, 202);
             messagesChartCard1.TabIndex = 5;
             messagesChartCard1.Text = "messagesChartCard1";
             messagesChartCard1.Theme = Custom_Controal.Custom_Bchat.Report.CardTheme.Dark;
@@ -291,37 +292,87 @@
             messagesChartCard1.TrendNegativeColor = Color.FromArgb(239, 68, 68);
             messagesChartCard1.TrendPositiveColor = Color.FromArgb(16, 185, 129);
             // 
-            // pnlContent
+            // customPanel1
             // 
-            pnlContent.BackColor = Color.Transparent;
-            pnlContent.BorderColor = Color.Gainsboro;
-            pnlContent.BorderRadius = 30;
-            pnlContent.BorderThickness = 1;
-            pnlContent.Controls.Add(darkMessagesChartCard1);
-            pnlContent.Controls.Add(campaignSuccessCard1);
-            pnlContent.Controls.Add(messagesChartCard1);
-            pnlContent.Controls.Add(monthlyMessagesCard21);
-            pnlContent.Controls.Add(monthlyMessagesCard1);
-            pnlContent.Controls.Add(responseRateCard1);
-            pnlContent.CustomizableEdges = customizableEdges1;
-            pnlContent.FillColor = Color.FromArgb(248, 247, 255);
-            pnlContent.FillColor2 = Color.FromArgb(248, 247, 255);
-            pnlContent.FillColor3 = Color.FromArgb(248, 247, 255);
-            pnlContent.FillColor4 = Color.FromArgb(248, 247, 255);
-            pnlContent.Location = new Point(8, 3);
-            pnlContent.Name = "pnlContent";
-            pnlContent.Quality = 200;
-            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            pnlContent.Size = new Size(1289, 802);
-            pnlContent.TabIndex = 6;
+            customPanel1.BackColor = Color.Transparent;
+            customPanel1.BackColorEx = Color.FromArgb(248, 247, 255);
+            customPanel1.BorderColor = Color.Gainsboro;
+            customPanel1.BorderRadius = 30;
+            customPanel1.BorderThickness = 1;
+            customPanel1.Controls.Add(gradientPanel1);
+            customPanel1.Controls.Add(responseRateCard1);
+            customPanel1.Controls.Add(darkMessagesChartCard1);
+            customPanel1.Controls.Add(monthlyMessagesCard21);
+            customPanel1.Controls.Add(monthlyMessagesCard1);
+            customPanel1.Controls.Add(messagesChartCard1);
+            customPanel1.Controls.Add(campaignSuccessCard1);
+            customPanel1.CornerRadius.BottomLeft = 30;
+            customPanel1.CornerRadius.BottomRight = 30;
+            customPanel1.CornerRadius.TopLeft = 30;
+            customPanel1.CornerRadius.TopRight = 30;
+            customPanel1.Font = new Font("Segoe UI", 10F);
+            customPanel1.ForeColor = Color.White;
+            customPanel1.Location = new Point(16, 14);
+            customPanel1.Name = "customPanel1";
+            customPanel1.ShadowColor = Color.FromArgb(80, 0, 0, 0);
+            customPanel1.ShadowSize = 6;
+            customPanel1.Size = new Size(1283, 782);
+            customPanel1.TabIndex = 7;
+            customPanel1.UseBlur = true;
+            customPanel1.UseShadow = true;
+            // 
+            // gradientPanel1
+            // 
+            gradientPanel1.BackColor = Color.Transparent;
+            gradientPanel1.Controls.Add(customPanel2);
+            gradientPanel1.CornerRadiusEx.BottomLeft = 22;
+            gradientPanel1.CornerRadiusEx.BottomRight = 22;
+            gradientPanel1.CornerRadiusEx.TopLeft = 22;
+            gradientPanel1.CornerRadiusEx.TopRight = 22;
+            gradientPanel1.Dock = DockStyle.Fill;
+            gradientPanel1.GradientEndColor = Color.FromArgb(80, 20, 80, 180);
+            gradientPanel1.GradientMidColor = Color.Empty;
+            gradientPanel1.GradientStartColor = Color.FromArgb(80, 20, 80, 180);
+            gradientPanel1.HoverGlowColor = Color.Transparent;
+            gradientPanel1.Location = new Point(0, 0);
+            gradientPanel1.Name = "gradientPanel1";
+            gradientPanel1.Padding = new Padding(6, 6, 6, 8);
+            gradientPanel1.ShadowColor = Color.Transparent;
+            gradientPanel1.ShowGlassBorder = false;
+            gradientPanel1.ShowShadow = false;
+            gradientPanel1.ShowShimmer = false;
+            gradientPanel1.Size = new Size(1283, 782);
+            gradientPanel1.TabIndex = 7;
+            gradientPanel1.UseBlur = true;
+            // 
+            // customPanel2
+            // 
+            customPanel2.BackColor = Color.Transparent;
+            customPanel2.BackColorEx = Color.FromArgb(220, 255, 255, 255);
+            customPanel2.BorderColor = Color.FromArgb(70, 255, 255, 255);
+            customPanel2.BorderThickness = 1;
+            customPanel2.CornerRadius.BottomLeft = 15;
+            customPanel2.CornerRadius.BottomRight = 15;
+            customPanel2.CornerRadius.TopLeft = 15;
+            customPanel2.CornerRadius.TopRight = 15;
+            customPanel2.Font = new Font("Segoe UI", 10F);
+            customPanel2.ForeColor = Color.White;
+            customPanel2.Location = new Point(302, 188);
+            customPanel2.Name = "customPanel2";
+            customPanel2.ShadowColor = Color.Transparent;
+            customPanel2.ShadowSize = 6;
+            customPanel2.Size = new Size(632, 353);
+            customPanel2.TabIndex = 0;
+            customPanel2.UseShadow = true;
             // 
             // ucMonthlySummary
             // 
-            BackColor = Color.FromArgb(248, 247, 255);
-            Controls.Add(pnlContent);
+            BackColor = Color.White;
+            Controls.Add(customPanel1);
             Name = "ucMonthlySummary";
             Size = new Size(1315, 808);
-            pnlContent.ResumeLayout(false);
+            customPanel1.ResumeLayout(false);
+            gradientPanel1.ResumeLayout(false);
             ResumeLayout(false);
             // 
         }
@@ -334,6 +385,8 @@
         private Custom_Controal.Custom_Bchat.Report.CampaignSuccessCard campaignSuccessCard1;
         private Custom_Controal.Custom_Bchat.Report.DarkMessagesChartCard darkMessagesChartCard1;
         private Custom_Controal.Custom_Bchat.Report.MessagesChartCard messagesChartCard1;
-        private Guna.UI2.WinForms.Guna2CustomGradientPanel pnlContent;
+        private Car_Rental_System.CustomControls.CustomPanel customPanel1;
+        private GradientPanel gradientPanel1;
+        private Car_Rental_System.CustomControls.CustomPanel customPanel2;
     }
 }

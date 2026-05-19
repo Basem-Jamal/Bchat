@@ -1,10 +1,12 @@
-﻿using BChat.Custom_Controal.Custom_Bchat;
+﻿using BChat.Controls;
+using BChat.Custom_Controal.Custom_Bchat;
 using BChat.Data.DataStore.CustomerProfile_Repository;
 using BChat.Data.DataStore.Customers_Repository;
 using BChat.Events;
 using BChat.Forms;
 using BChat.Global;
 using BChat.Models;
+using BChat.Models.Customer_Module.CustomerProfiles_Module;
 using BChat.UserControls;
 using System;
 using System.Collections.Generic;
@@ -22,6 +24,7 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
     public partial class ucCustomerInfo : UserControl
     {
         private Customer _customer;
+        private CustomerProfile _customerProfile;
         public ucCustomerInfo()
         {
             InitializeComponent();
@@ -46,7 +49,8 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
         public void LoadCustomer(Customer customer)
         {
 
-
+            _customerProfile = CustomerProfileRepository.GetByCusotmerId(customer.Id);
+            
             _customer = customer;
             if (_customer == null) return;
 
@@ -104,6 +108,8 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
 
             lblCurrentCustomerName.Text = customer.Name;
             btnCurrentPhone.Text = customer.Phone;
+            btnCurrentEmail.Text = _customerProfile.Email;
+
             var GroupMembers = AppCache.GroupMembers.FirstOrDefault(gm => gm.CustomerId == customer.Id);
 
 
@@ -112,21 +118,18 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
         }
         private void OrderCount(Customer customer)
         {
-            var order = CustomerProfileRepository.GetByCusotmerId(customer.Id);
 
-            btnOrderCount.Text = order?.OrderCount != null ? order.OrderCount.ToString() : "0";
+            btnOrderCount.Text = _customerProfile?.OrderCount != null ? _customerProfile.OrderCount.ToString() : "0";
         }
 
         private void CancelledOrders(Customer customer)
         {
-            var order = CustomerProfileRepository.GetByCusotmerId(customer.Id);
-            btnCancelledOrders.Text = order?.CancelledOrders != null ? order.CancelledOrders.ToString() : "0";
+            btnCancelledOrders.Text = _customerProfile?.CancelledOrders != null ? _customerProfile.CancelledOrders.ToString() : "0";
         }
 
         private void TotalSpent(Customer customer)
         {
-            var order = CustomerProfileRepository.GetByCusotmerId(customer.Id);
-            btnTotalSpent.Text = order?.TotalSpent != null ? $"ريـال {order.TotalSpent:N2}" : "ريـال " + "0.00";
+            btnTotalSpent.Text = _customerProfile?.TotalSpent != null ? $"ريـال {_customerProfile.TotalSpent:N2}" : "ريـال " + "0.00";
 
         }
         private void modernPanel1_Paint(object sender, PaintEventArgs e)
@@ -141,18 +144,26 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
+
+            var mainForm = this.FindForm();
+            var overlaye = OverlayPanel.Show(mainForm);
+
+
             AddCustomerForm customerForm = new AddCustomerForm(_customer, CustomerStatus.Update);
             customerForm.ShowDialog();
 
+            overlaye.Close(customerForm);
         }
 
         private void btnBlock_Click(object sender, EventArgs e)
         {
             _customer.IsBlocked = !_customer.IsBlocked;
             CustomerRepository.Block(_customer);
-
+            
             string msg = _customer.IsBlocked ? "تم حجب العميل ✅" : "تم رفع الحجب ✅";
             MessageBox.Show(msg, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            btnBlock.Text = _customer.IsBlocked ? "رفع الحظر" : "حظر العميل";
 
         }
     }

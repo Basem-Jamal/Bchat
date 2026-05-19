@@ -35,7 +35,7 @@
             picClose = new PictureBox();
             lblCustomerName = new ReaLTaiizor.Controls.BigLabel();
             lblCustomerPhone = new ReaLTaiizor.Controls.BigLabel();
-            pictureBox1 = new PictureBox();
+            iconTop = new PictureBox();
             btnAddCustomer = new BChat.Controls.ModernButton();
             guna2CustomGradientPanel1 = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             lblNotGroupFound = new ReaLTaiizor.Controls.BigLabel();
@@ -44,7 +44,7 @@
             txbCustomerPhone = new BChat.Controls.ModernTextBox();
             txbCustomerName = new BChat.Controls.ModernTextBox();
             ((System.ComponentModel.ISupportInitialize)picClose).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)iconTop).BeginInit();
             guna2CustomGradientPanel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -91,29 +91,38 @@
             lblCustomerPhone.TabIndex = 7;
             lblCustomerPhone.Text = "رقم العميل";
             // 
-            // pictureBox1
+            // iconTop
             // 
-            pictureBox1.Cursor = Cursors.Hand;
-            pictureBox1.Image = Properties.Resources.add_f;
-            pictureBox1.Location = new Point(422, 30);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(135, 98);
-            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox1.TabIndex = 8;
-            pictureBox1.TabStop = false;
+            iconTop.Cursor = Cursors.Hand;
+            iconTop.Image = Properties.Resources.add_user1;
+            iconTop.Location = new Point(422, 30);
+            iconTop.Name = "iconTop";
+            iconTop.Size = new Size(135, 98);
+            iconTop.SizeMode = PictureBoxSizeMode.Zoom;
+            iconTop.TabIndex = 8;
+            iconTop.TabStop = false;
             // 
             // btnAddCustomer
             // 
             btnAddCustomer.BackColor = Color.Transparent;
+            btnAddCustomer.BorderColor = Color.FromArgb(200, 196, 214);
+            btnAddCustomer.BorderHoverColor = Color.FromArgb(85, 69, 205);
             btnAddCustomer.BorderRadius = 23;
+            btnAddCustomer.CustomBackground = Color.DodgerBlue;
+            btnAddCustomer.CustomBackgroundHover = Color.SteelBlue;
+            btnAddCustomer.CustomForeground = Color.White;
             btnAddCustomer.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
-            btnAddCustomer.Icon = Properties.Resources.plus;
+            btnAddCustomer.Icon = null;
+            btnAddCustomer.IconChar = FontAwesome.Sharp.IconChar.DAndDBeyond;
+            btnAddCustomer.IconSize = 30;
+            btnAddCustomer.Image = null;
             btnAddCustomer.Location = new Point(26, 630);
             btnAddCustomer.Name = "btnAddCustomer";
             btnAddCustomer.RightToLeft = RightToLeft.Yes;
             btnAddCustomer.Size = new Size(162, 62);
             btnAddCustomer.TabIndex = 10;
             btnAddCustomer.Text = "اضافة ";
+            btnAddCustomer.UseCustomColors = true;
             btnAddCustomer.Click += btnAddCustomer_Click;
             // 
             // guna2CustomGradientPanel1
@@ -170,7 +179,8 @@
             // 
             // txbCustomerPhone
             // 
-            txbCustomerPhone.BackColorEx = Color.FromArgb(237, 235, 255);
+            txbCustomerPhone.BackColor = Color.Transparent;
+            txbCustomerPhone.BackColorEx = Color.White;
             txbCustomerPhone.BorderColor = Color.FromArgb(220, 215, 250);
             txbCustomerPhone.BorderRadius = 14;
             txbCustomerPhone.Direction = BChat.Controls.TextDirection.Auto;
@@ -189,7 +199,8 @@
             // 
             // txbCustomerName
             // 
-            txbCustomerName.BackColorEx = Color.FromArgb(237, 235, 255);
+            txbCustomerName.BackColor = Color.Transparent;
+            txbCustomerName.BackColorEx = Color.White;
             txbCustomerName.BorderColor = Color.FromArgb(220, 215, 250);
             txbCustomerName.BorderRadius = 14;
             txbCustomerName.Direction = BChat.Controls.TextDirection.Auto;
@@ -212,7 +223,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(942, 907);
-            Controls.Add(pictureBox1);
+            Controls.Add(iconTop);
             Controls.Add(picClose);
             Controls.Add(guna2CustomGradientPanel1);
             FormBorderStyle = FormBorderStyle.None;
@@ -220,7 +231,7 @@
             StartPosition = FormStartPosition.CenterParent;
             Text = "AddCustomerForm";
             ((System.ComponentModel.ISupportInitialize)picClose).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)iconTop).EndInit();
             guna2CustomGradientPanel1.ResumeLayout(false);
             guna2CustomGradientPanel1.PerformLayout();
             ResumeLayout(false);
@@ -234,7 +245,7 @@
         private ReaLTaiizor.Controls.BigLabel bigLabel2;
         private ReaLTaiizor.Controls.BigLabel lblCustomerName;
         private ReaLTaiizor.Controls.BigLabel lblCustomerPhone;
-        private PictureBox pictureBox1;
+        private PictureBox iconTop;
         private Controls.ModernButton btnAddCustomer;
         private Guna.UI2.WinForms.Guna2CustomGradientPanel guna2CustomGradientPanel1;
         private Controls.ModernTextBox txbCustomerName;

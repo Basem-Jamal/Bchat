@@ -20,7 +20,7 @@ namespace BChat.Menu___Nav.UserControls.Today_s_Summary_Report_UC
         public ucMonthlySummary()
         {
             InitializeComponent();
-            ShowOverlay();
+            //ShowOverlay();
         }
 
         // ── لما تريد تفتح الـ Overlay ──

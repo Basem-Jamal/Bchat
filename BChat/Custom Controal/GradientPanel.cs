@@ -1,13 +1,18 @@
 // =====================================================================
-//  GradientPanel.cs — v11
+//  GradientPanel.cs — v13 (Fixed Cascading Between Nested GradientPanels)
 //
+//  ✅ إصلاح #1: OnLocationChanged → يمسح الـ Blur Cache عند التحريك
+//  ✅ إصلاح #2: _isPaintingBackground → instance field (مش static) لمنع مشاركة الحالة
+//  ✅ إصلاح #3: DrawSiblingsBehind → يتجاهل نفسه (sib == this)
+//  ✅ إصلاح #4: try/catch في PaintSceneBackground و CaptureSceneBehind
 //  ✅ إصلاح الحواف: PaintSceneBackground بدل GetSolidAncestorColor
 //  ✅ إصلاح بكسل الزوايا: TextureBrush + FillPath بدل SetClip
 //  ✅ Blur احترافي: Downscale → Blur → Upscale + Cache
 //  ✅ Blur يرى الـ Siblings (كنترولات خلفنا)
 //  ✅ Per-corner radius مستقل لكل زاوية
 //  ✅ Alpha / rgba كاملة
-//  ✅ كل ميزات v10 محفوظة
+//  ✅ إصلاح #5 (v13): _sceneCaptureActive [ThreadStatic] لمنع الـ Cascading
+//       بين GradientPanels المتداخلة — يمنع translate مضاعف وتشوّه الرسم
 // =====================================================================
 
 using System;
@@ -117,9 +122,20 @@ namespace BChat
         private Bitmap? _blurCache;
         private Size _blurCacheSize = Size.Empty;
         private int _blurCacheRadius = -1;
+        private Point _blurCacheLocation = new Point(-99999, -99999);
 
         // ─── State ────────────────────────────────────────────────
         private bool _isHovered = false;
+
+        // ─── ✅ FIXED v12: instance field — كل بانل له حالته المستقلة
+        private bool _isPaintingBackground;
+
+        // ─── ✅ NEW v13: [ThreadStatic] — يمنع الـ Cascading بين GradientPanels المتداخلة
+        //     عندما GradientPanel يكون فوق GradientPanel آخر (أب أو أخ)
+        //     بدون هذا الـ Flag، الـ Parent.InvokePaint يستدعي PaintSceneBackground مرة ثانية
+        //     مما يسبب translate مضاعف وتشوّه الرسم بين الأب والأولاد
+        [ThreadStatic]
+        private static bool _sceneCaptureActive;
 
         // ─── Win32 ────────────────────────────────────────────────
         private const int WM_NCPAINT = 0x0085;
@@ -324,7 +340,6 @@ namespace BChat
             using var path = BuildPath(rc, _cornerRadiusEx);
 
             // ── 1: امسح الكنترول كله بالمشهد الحقيقي خلفنا ────
-            // ✅ يحل مشكلة الزوايا والبكسلات الداكنة
             PaintSceneBackground(g);
 
             // ── 2: Blur مضبّب داخل الـ Path فقط ────────────────
@@ -341,7 +356,6 @@ namespace BChat
             }
 
             // ── 4: Gradient داخل الـ Path ────────────────────────
-            // ✅ g.SetClip + FillPath = ناعم بدون artifacts
             g.SetClip(path);
             PaintGradient(g, rc);
             if (_showShimmer && _shimmerOpacity > 0)
@@ -366,15 +380,16 @@ namespace BChat
 
             if (_blurCache == null ||
                 _blurCacheSize != Size ||
-                _blurCacheRadius != _blurRadius)
+                _blurCacheRadius != _blurRadius ||
+                _blurCacheLocation != Location)
             {
                 _blurCache?.Dispose();
                 _blurCache = BuildBlurredBitmap();
                 _blurCacheSize = Size;
                 _blurCacheRadius = _blurRadius;
+                _blurCacheLocation = Location;
             }
 
-            // ✅ TextureBrush + FillPath = حواف ناعمة، بدون setClip artifacts
             using var tb = new TextureBrush(_blurCache);
             g.FillPath(tb, clipPath);
         }
@@ -410,41 +425,78 @@ namespace BChat
         //  Scene Capture (Parent + Siblings behind us)
         // ══════════════════════════════════════════════════════════
 
-        /// <summary>يرسم المشهد الكامل خلف البانل على الـ Graphics مباشرة</summary>
+        /// <summary>
+        /// ✅ FIXED v13: _sceneCaptureActive [ThreadStatic] + instance flag + try/catch
+        /// يرسم المشهد الكامل خلف البانل دون cascading عند التداخل بين GradientPanels
+        /// </summary>
         private void PaintSceneBackground(Graphics g)
         {
             if (Parent == null) return;
-            var state = g.Save();
-            g.TranslateTransform(-Left, -Top);
+            if (_isPaintingBackground) return;   // منع الـ Recursion داخل نفس الـ Instance
+            if (_sceneCaptureActive) return;   // ✅ منع الـ Cascading بين GradientPanels المتداخلة
 
-            using (var pe = new PaintEventArgs(g, new Rectangle(Left, Top, Width, Height)))
+            _isPaintingBackground = true;
+            _sceneCaptureActive = true;
+            try
             {
-                InvokePaintBackground(Parent, pe);
-                InvokePaint(Parent, pe);
-            }
+                var state = g.Save();
+                g.TranslateTransform(-Left, -Top);
 
-            DrawSiblingsBehind(g);
-            g.Restore(state);
+                using (var pe = new PaintEventArgs(g, new Rectangle(Left, Top, Width, Height)))
+                {
+                    InvokePaintBackground(Parent, pe);
+                    InvokePaint(Parent, pe);           // ← الآن أي GradientPanel أب لن يستدعي PaintSceneBackground
+                }
+
+                DrawSiblingsBehind(g);
+                g.Restore(state);
+            }
+            catch { /* تجاهل أخطاء الرسم الخلفي */ }
+            finally
+            {
+                _isPaintingBackground = false;
+                _sceneCaptureActive = false;
+            }
         }
 
-        /// <summary>يلتقط المشهد الكامل خلف البانل في Bitmap</summary>
+        /// <summary>
+        /// ✅ FIXED v13: _sceneCaptureActive [ThreadStatic] + instance flag + try/catch
+        /// يلتقط المشهد الكامل خلف البانل في Bitmap دون cascading
+        /// </summary>
         private Bitmap CaptureSceneBehind()
         {
             var bmp = new Bitmap(Width, Height, PixelFormat.Format32bppArgb);
-            using var g = Graphics.FromImage(bmp);
-            g.TranslateTransform(-Left, -Top);
+            if (Parent == null) return bmp;
+            if (_isPaintingBackground) return bmp;   // منع الـ Recursion داخل نفس الـ Instance
+            if (_sceneCaptureActive) return bmp;   // ✅ منع الـ Cascading بين GradientPanels المتداخلة
 
-            using (var pe = new PaintEventArgs(g, new Rectangle(Left, Top, Width, Height)))
+            _isPaintingBackground = true;
+            _sceneCaptureActive = true;
+            try
             {
-                InvokePaintBackground(Parent, pe);
-                InvokePaint(Parent, pe);
-            }
+                using var g = Graphics.FromImage(bmp);
+                g.TranslateTransform(-Left, -Top);
 
-            DrawSiblingsBehind(g);
+                using (var pe = new PaintEventArgs(g, new Rectangle(Left, Top, Width, Height)))
+                {
+                    InvokePaintBackground(Parent, pe);
+                    InvokePaint(Parent, pe);
+                }
+
+                DrawSiblingsBehind(g);
+            }
+            catch { /* إذا فشل الـ Capture، ارجع Bitmap فاضي */ }
+            finally
+            {
+                _isPaintingBackground = false;
+                _sceneCaptureActive = false;
+            }
             return bmp;
         }
 
-        /// <summary>يرسم الكنترولات التي خلفنا في الـ Z-Order وتتقاطع مع مساحتنا</summary>
+        /// <summary>
+        /// ✅ FIXED v12: يتجاهل نفسه (sib == this) — يرسم الكنترولات التي خلفنا في الـ Z-Order
+        /// </summary>
         private void DrawSiblingsBehind(Graphics g)
         {
             if (Parent == null) return;
@@ -455,6 +507,7 @@ namespace BChat
             for (int i = Parent.Controls.Count - 1; i > myIndex; i--)
             {
                 var sib = Parent.Controls[i];
+                if (sib == this) continue;  // ✅ تجاهل نفسك
                 if (!sib.Visible) continue;
                 if (!sib.Bounds.IntersectsWith(myBounds)) continue;
 
@@ -476,6 +529,7 @@ namespace BChat
             _blurCache = null;
             _blurCacheSize = Size.Empty;
             _blurCacheRadius = -1;
+            _blurCacheLocation = new Point(-99999, -99999);
         }
 
         protected override void OnResize(EventArgs e)
@@ -483,6 +537,20 @@ namespace BChat
             base.OnResize(e);
             InvalidateBlurCache();
             UpdatePadding();
+            Invalidate();
+        }
+
+        protected override void OnLocationChanged(EventArgs e)
+        {
+            base.OnLocationChanged(e);
+            InvalidateBlurCache();
+            Invalidate();
+        }
+
+        protected override void OnParentChanged(EventArgs e)
+        {
+            base.OnParentChanged(e);
+            InvalidateBlurCache();
             Invalidate();
         }
 
@@ -521,18 +589,27 @@ namespace BChat
                 long b = 0, gr = 0, r = 0, a = 0;
 
                 for (int kx = -radius; kx <= radius; kx++)
-                { int px = Math.Clamp(kx, 0, w - 1) * 4; b += sRow[px]; gr += sRow[px + 1]; r += sRow[px + 2]; a += sRow[px + 3]; }
+                {
+                    int px = Math.Clamp(kx, 0, w - 1) * 4;
+                    b += sRow[px]; gr += sRow[px + 1]; r += sRow[px + 2]; a += sRow[px + 3];
+                }
 
                 for (int x = 0; x < w; x++)
                 {
-                    dRow[x * 4] = (byte)(b / kernel); dRow[x * 4 + 1] = (byte)(gr / kernel);
-                    dRow[x * 4 + 2] = (byte)(r / kernel); dRow[x * 4 + 3] = (byte)(a / kernel);
-                    int ap = Math.Clamp(x + radius + 1, 0, w - 1) * 4, rp = Math.Clamp(x - radius, 0, w - 1) * 4;
-                    b += sRow[ap] - sRow[rp]; gr += sRow[ap + 1] - sRow[rp + 1];
-                    r += sRow[ap + 2] - sRow[rp + 2]; a += sRow[ap + 3] - sRow[rp + 3];
+                    dRow[x * 4] = (byte)(b / kernel);
+                    dRow[x * 4 + 1] = (byte)(gr / kernel);
+                    dRow[x * 4 + 2] = (byte)(r / kernel);
+                    dRow[x * 4 + 3] = (byte)(a / kernel);
+                    int ap = Math.Clamp(x + radius + 1, 0, w - 1) * 4;
+                    int rp = Math.Clamp(x - radius, 0, w - 1) * 4;
+                    b += sRow[ap] - sRow[rp];
+                    gr += sRow[ap + 1] - sRow[rp + 1];
+                    r += sRow[ap + 2] - sRow[rp + 2];
+                    a += sRow[ap + 3] - sRow[rp + 3];
                 }
             }
-            src.UnlockBits(srcData); dst.UnlockBits(dstData);
+            src.UnlockBits(srcData);
+            dst.UnlockBits(dstData);
             return dst;
         }
 
@@ -542,25 +619,35 @@ namespace BChat
             var dst = new Bitmap(w, h, PixelFormat.Format32bppArgb);
             var srcData = src.LockBits(new Rectangle(0, 0, w, h), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
             var dstData = dst.LockBits(new Rectangle(0, 0, w, h), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-            int stride = srcData.Stride, kernel = radius * 2 + 1;
+            int stride = srcData.Stride;
+            int kernel = radius * 2 + 1;
 
             for (int x = 0; x < w; x++)
             {
                 long b = 0, gr = 0, r = 0, a = 0;
                 for (int ky = -radius; ky <= radius; ky++)
-                { byte* p = (byte*)srcData.Scan0 + Math.Clamp(ky, 0, h - 1) * stride + x * 4; b += p[0]; gr += p[1]; r += p[2]; a += p[3]; }
+                {
+                    byte* p = (byte*)srcData.Scan0 + Math.Clamp(ky, 0, h - 1) * stride + x * 4;
+                    b += p[0]; gr += p[1]; r += p[2]; a += p[3];
+                }
 
                 for (int y = 0; y < h; y++)
                 {
                     byte* dp = (byte*)dstData.Scan0 + y * stride + x * 4;
-                    dp[0] = (byte)(b / kernel); dp[1] = (byte)(gr / kernel);
-                    dp[2] = (byte)(r / kernel); dp[3] = (byte)(a / kernel);
+                    dp[0] = (byte)(b / kernel);
+                    dp[1] = (byte)(gr / kernel);
+                    dp[2] = (byte)(r / kernel);
+                    dp[3] = (byte)(a / kernel);
                     byte* ap = (byte*)srcData.Scan0 + Math.Clamp(y + radius + 1, 0, h - 1) * stride + x * 4;
                     byte* rp = (byte*)srcData.Scan0 + Math.Clamp(y - radius, 0, h - 1) * stride + x * 4;
-                    b += ap[0] - rp[0]; gr += ap[1] - rp[1]; r += ap[2] - rp[2]; a += ap[3] - rp[3];
+                    b += ap[0] - rp[0];
+                    gr += ap[1] - rp[1];
+                    r += ap[2] - rp[2];
+                    a += ap[3] - rp[3];
                 }
             }
-            src.UnlockBits(srcData); dst.UnlockBits(dstData);
+            src.UnlockBits(srcData);
+            dst.UnlockBits(dstData);
             return dst;
         }
 
@@ -639,13 +726,13 @@ namespace BChat
                     card.Left - i + ox, card.Top - i + oy,
                     card.Width + i * 2, card.Height + i * 2);
 
-                // الظل يستخدم نفس الـ CornerRadiusEx مع زيادة بسيطة
                 int grow = i;
+                int maxHalf = Math.Min(sr.Width, sr.Height) / 2;
                 var shadowCr = new CornerRadiusEx(
-                    Math.Min(_cornerRadiusEx.TopLeft + grow, Math.Min(sr.Width, sr.Height) / 2),
-                    Math.Min(_cornerRadiusEx.TopRight + grow, Math.Min(sr.Width, sr.Height) / 2),
-                    Math.Min(_cornerRadiusEx.BottomRight + grow, Math.Min(sr.Width, sr.Height) / 2),
-                    Math.Min(_cornerRadiusEx.BottomLeft + grow, Math.Min(sr.Width, sr.Height) / 2));
+                    Math.Min(_cornerRadiusEx.TopLeft + grow, maxHalf),
+                    Math.Min(_cornerRadiusEx.TopRight + grow, maxHalf),
+                    Math.Min(_cornerRadiusEx.BottomRight + grow, maxHalf),
+                    Math.Min(_cornerRadiusEx.BottomLeft + grow, maxHalf));
 
                 using var sp = BuildPath(sr, shadowCr);
                 using var sb = new SolidBrush(Color.FromArgb(Math.Min(255, alpha), clr.R, clr.G, clr.B));
