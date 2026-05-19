@@ -121,9 +121,6 @@
   <data name="add Template" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Froms Icon\add Template.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ad-campaign" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\Icon\Settings\ad-campaign.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="home" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Customers Icon\home.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -136,6 +133,12 @@
   <data name="template" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Settings\template.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="message (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Settings\message (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="edit (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Settings\edit (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="sent1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Froms Icon\Sent.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -147,6 +150,12 @@
   </data>
   <data name="users3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Froms Icon\users3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="users-static" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Customers Icon\users-static.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="message" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Customers Icon\message.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="layers" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Customers Icon\layers.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -172,14 +181,8 @@
   <data name="user-group" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Customers Icon\user-group.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="permissions" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\Icon\Settings\permissions.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="add_group" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Customers Icon\add_group.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="close (2)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\Icon\Forms Icon\close (2).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Customers1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Customers Icon\Customers.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -187,23 +190,20 @@
   <data name="group" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Customers Icon\group.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="group (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\Icon\Customers Icon\group (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Logo-Black" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Logo\Logo-Black.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Customers2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Customers Icon\Customers.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="edit" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\Icon\Customers Icon\edit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="permissions" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Settings\permissions.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="groups-networking" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Customers Icon\groups-networking.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="close (2)" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\Icon\Forms Icon\close (2).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="edit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Customers Icon\edit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="plus" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Customers Icon\plus.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -214,23 +214,29 @@
   <data name="users" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Customers Icon\users.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="add-f" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\Icon\Customers Icon\add-f.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="resize" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Froms Icon\resize.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="chat" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Settings\chat.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="chat (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\Icon\Settings\chat (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="close" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Froms Icon\close.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="message" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\Icon\Customers Icon\message.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="closed-eyes" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Forms Icon\closed-eyes.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="add-f" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Customers Icon\add-f.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Gif_Point_Loading" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Gif\Loding\Gif_Point_Loading.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="sent-hd" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Froms Icon\sent-hd.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="users-static" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\Icon\Customers Icon\users-static.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="add-user2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Customers Icon\add-user.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="cross (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Froms Icon\cross (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -250,11 +256,14 @@
   <data name="Show1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Customers Icon\Show1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="close" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\Icon\Froms Icon\close.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="close (1)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Forms Icon\close (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="resize" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\Icon\Froms Icon\resize.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="chat (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Settings\chat (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="edit-info" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Customers Icon\edit-info.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="add-user1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Customers Icon\add-user.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -262,8 +271,11 @@
   <data name="group (1)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Customers Icon\group (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="close (1)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\Icon\Forms Icon\close (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="close (2)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Forms Icon\close (2).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="close (2)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Forms Icon\close (2).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="refersh" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\refersh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -271,11 +283,11 @@
   <data name="Logo-Blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Logo\Logo-Blue.jpeg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="message (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\Icon\Settings\message (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="group (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Customers Icon\group (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="closed-eyes" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\Icon\Forms Icon\closed-eyes.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="ad-campaign" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Settings\ad-campaign.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Logo-Black1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Me\Logo-Black.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -286,16 +298,16 @@
   <data name="close (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Forms Icon\close (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="edit (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\Icon\Settings\edit (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="information" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Customers Icon\information.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="groups-networking1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\Icon\Customers Icon\groups-networking.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="add-user2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\Icon\Customers Icon\add-user.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="gmail" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Customers Icon\Profile\gmail.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="edit-info" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\Icon\Customers Icon\edit-info.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="phone" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Data\Icon\Customers Icon\Profile\phone.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

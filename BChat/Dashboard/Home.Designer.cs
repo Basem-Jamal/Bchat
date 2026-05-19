@@ -38,13 +38,13 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pictureBox3 = new PictureBox();
             btnNavMarketingAPI = new BChat.Controls.ModernNavButton();
-            lblUserCurrentName = new Guna.UI2.WinForms.Guna2HtmlLabel();
             btnNavMessages = new BChat.Controls.ModernNavButton();
             btnNavCustomers = new BChat.Controls.ModernNavButton();
             btnNavHome = new BChat.Controls.ModernNavButton();
             btnNavCustomerGroups = new BChat.Controls.ModernNavButton();
             customPanel1 = new Car_Rental_System.CustomControls.CustomPanel();
             pnlMenuSidebar = new GradientPanel();
+            pnlName = new Car_Rental_System.CustomControls.CustomPanel();
             btnLogout = new BChat.Controls.ModernButton();
             guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(components);
             gradientPanel3 = new GradientPanel();
@@ -57,9 +57,11 @@
             pnlContent = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             pnlBottom = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             gradientPanel2 = new GradientPanel();
+            lblUserCurrentName = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
             customPanel1.SuspendLayout();
             pnlMenuSidebar.SuspendLayout();
+            pnlName.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)picClose).BeginInit();
             pnlMain.SuspendLayout();
             pnlTop.SuspendLayout();
@@ -114,17 +116,6 @@
             btnNavMarketingAPI.UseActiveEffect = true;
             btnNavMarketingAPI.UseHoverEffect = true;
             btnNavMarketingAPI.Click += btnNavMarketingAPI_Click;
-            // 
-            // lblUserCurrentName
-            // 
-            lblUserCurrentName.BackColor = Color.Transparent;
-            lblUserCurrentName.Font = new Font("Segoe UI Semibold", 16F, FontStyle.Bold);
-            lblUserCurrentName.ForeColor = Color.WhiteSmoke;
-            lblUserCurrentName.Location = new Point(39, 140);
-            lblUserCurrentName.Name = "lblUserCurrentName";
-            lblUserCurrentName.Size = new Size(169, 32);
-            lblUserCurrentName.TabIndex = 1;
-            lblUserCurrentName.Text = "Customer Service";
             // 
             // btnNavMessages
             // 
@@ -288,15 +279,19 @@
             // pnlMenuSidebar
             // 
             pnlMenuSidebar.BackColor = Color.Transparent;
+            pnlMenuSidebar.Controls.Add(pnlName);
             pnlMenuSidebar.Controls.Add(btnLogout);
             pnlMenuSidebar.Controls.Add(pictureBox3);
             pnlMenuSidebar.Controls.Add(btnNavMarketingAPI);
             pnlMenuSidebar.Controls.Add(btnNavCustomerGroups);
             pnlMenuSidebar.Controls.Add(btnNavHome);
-            pnlMenuSidebar.Controls.Add(lblUserCurrentName);
             pnlMenuSidebar.Controls.Add(btnNavCustomers);
             pnlMenuSidebar.Controls.Add(btnNavMessages);
             pnlMenuSidebar.CornerRadius = 30;
+            pnlMenuSidebar.CornerRadiusEx.BottomLeft = 30;
+            pnlMenuSidebar.CornerRadiusEx.BottomRight = 30;
+            pnlMenuSidebar.CornerRadiusEx.TopLeft = 30;
+            pnlMenuSidebar.CornerRadiusEx.TopRight = 30;
             pnlMenuSidebar.GradientEndColor = Color.Teal;
             pnlMenuSidebar.GradientMidColor = Color.Transparent;
             pnlMenuSidebar.GradientStartColor = Color.FromArgb(85, 69, 205);
@@ -313,6 +308,29 @@
             pnlMenuSidebar.Size = new Size(250, 1025);
             pnlMenuSidebar.TabIndex = 24;
             // 
+            // pnlName
+            // 
+            pnlName.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            pnlName.BackColor = Color.Transparent;
+            pnlName.BackColorEx = Color.Transparent;
+            pnlName.BorderColor = Color.Transparent;
+            pnlName.BorderRadius = 1;
+            pnlName.BorderThickness = 1;
+            pnlName.Controls.Add(lblUserCurrentName);
+            pnlName.CornerRadius.BottomLeft = 1;
+            pnlName.CornerRadius.BottomRight = 1;
+            pnlName.CornerRadius.TopLeft = 1;
+            pnlName.CornerRadius.TopRight = 1;
+            pnlName.Font = new Font("Segoe UI", 10F);
+            pnlName.ForeColor = Color.Transparent;
+            pnlName.Location = new Point(9, 146);
+            pnlName.Name = "pnlName";
+            pnlName.ShadowColor = Color.Transparent;
+            pnlName.ShadowSize = 0;
+            pnlName.Size = new Size(228, 89);
+            pnlName.TabIndex = 26;
+            pnlName.UseShadow = true;
+            // 
             // btnLogout
             // 
             btnLogout.BackColor = Color.Transparent;
@@ -325,6 +343,7 @@
             btnLogout.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
             btnLogout.ForeColor = Color.White;
             btnLogout.Icon = null;
+            btnLogout.Image = null;
             btnLogout.Location = new Point(48, 951);
             btnLogout.Name = "btnLogout";
             btnLogout.RightToLeft = RightToLeft.Yes;
@@ -346,6 +365,10 @@
             // 
             gradientPanel3.BackColor = Color.Transparent;
             gradientPanel3.CornerRadius = 30;
+            gradientPanel3.CornerRadiusEx.BottomLeft = 30;
+            gradientPanel3.CornerRadiusEx.BottomRight = 30;
+            gradientPanel3.CornerRadiusEx.TopLeft = 30;
+            gradientPanel3.CornerRadiusEx.TopRight = 30;
             gradientPanel3.GradientEndColor = Color.Teal;
             gradientPanel3.GradientMidColor = Color.Violet;
             gradientPanel3.GradientStartColor = Color.FromArgb(85, 69, 205);
@@ -444,6 +467,10 @@
             gradientPanel5.Controls.Add(picClose);
             gradientPanel5.Controls.Add(btnFormMinimized);
             gradientPanel5.CornerRadius = 15;
+            gradientPanel5.CornerRadiusEx.BottomLeft = 15;
+            gradientPanel5.CornerRadiusEx.BottomRight = 15;
+            gradientPanel5.CornerRadiusEx.TopLeft = 15;
+            gradientPanel5.CornerRadiusEx.TopRight = 15;
             gradientPanel5.GlassBorderAlpha = 255;
             gradientPanel5.GradientAngle = 223F;
             gradientPanel5.GradientEndColor = Color.Turquoise;
@@ -483,10 +510,6 @@
             pnlContent.BorderRadius = 30;
             pnlContent.BorderThickness = 1;
             pnlContent.CustomizableEdges = customizableEdges3;
-            pnlContent.FillColor = Color.FromArgb(248, 247, 255);
-            pnlContent.FillColor2 = Color.FromArgb(248, 247, 255);
-            pnlContent.FillColor3 = Color.FromArgb(248, 247, 255);
-            pnlContent.FillColor4 = Color.FromArgb(248, 247, 255);
             pnlContent.Location = new Point(3, 63);
             pnlContent.Name = "pnlContent";
             pnlContent.Quality = 200;
@@ -509,6 +532,10 @@
             // 
             gradientPanel2.BackColor = Color.Transparent;
             gradientPanel2.CornerRadius = 15;
+            gradientPanel2.CornerRadiusEx.BottomLeft = 15;
+            gradientPanel2.CornerRadiusEx.BottomRight = 15;
+            gradientPanel2.CornerRadiusEx.TopLeft = 15;
+            gradientPanel2.CornerRadiusEx.TopRight = 15;
             gradientPanel2.GradientAngle = 81F;
             gradientPanel2.GradientEndColor = Color.Teal;
             gradientPanel2.GradientMidColor = Color.Violet;
@@ -526,6 +553,18 @@
             gradientPanel2.Size = new Size(1097, 47);
             gradientPanel2.TabIndex = 26;
             // 
+            // lblUserCurrentName
+            // 
+            lblUserCurrentName.AutoSize = true;
+            lblUserCurrentName.BackColor = Color.Transparent;
+            lblUserCurrentName.Font = new Font("Segoe UI Semibold", 16F, FontStyle.Bold);
+            lblUserCurrentName.Location = new Point(20, 33);
+            lblUserCurrentName.Name = "lblUserCurrentName";
+            lblUserCurrentName.Size = new Size(187, 30);
+            lblUserCurrentName.TabIndex = 27;
+            lblUserCurrentName.Text = "Customer Service";
+            lblUserCurrentName.TextAlign = ContentAlignment.MiddleCenter;
+            // 
             // Home
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -541,7 +580,8 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
             customPanel1.ResumeLayout(false);
             pnlMenuSidebar.ResumeLayout(false);
-            pnlMenuSidebar.PerformLayout();
+            pnlName.ResumeLayout(false);
+            pnlName.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)picClose).EndInit();
             pnlMain.ResumeLayout(false);
             pnlTop.ResumeLayout(false);
@@ -564,7 +604,6 @@
         private Controls.ModernNavButton btnNavCustomers;
         private Controls.ModernNavButton btnNavHome;
         private Controls.ModernNavButton btnNavMessages;
-        private Guna.UI2.WinForms.Guna2HtmlLabel lblUserCurrentName;
         private Controls.ModernNavButton btnNavMarketingAPI;
         private PictureBox btnFormMinimized;
         private Controls.ModernButton btnLogout;
@@ -574,5 +613,7 @@
         private GradientPanel gradientPanel2;
         private GradientPanel gradientPanel5;
         private Car_Rental_System.CustomControls.CustomPanel pnlHeader;
+        private Car_Rental_System.CustomControls.CustomPanel pnlName;
+        private Label lblUserCurrentName;
     }
 }

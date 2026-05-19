@@ -323,6 +323,26 @@ namespace BChat.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Gif_Point_Loading {
+            get {
+                object obj = ResourceManager.GetObject("Gif_Point_Loading", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap gmail {
+            get {
+                object obj = ResourceManager.GetObject("gmail", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap group {
             get {
                 object obj = ResourceManager.GetObject("group", resourceCulture);
@@ -386,6 +406,16 @@ namespace BChat.Properties {
         internal static System.Drawing.Bitmap home {
             get {
                 object obj = ResourceManager.GetObject("home", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap information {
+            get {
+                object obj = ResourceManager.GetObject("information", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -496,6 +526,16 @@ namespace BChat.Properties {
         internal static System.Drawing.Bitmap permissions {
             get {
                 object obj = ResourceManager.GetObject("permissions", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap phone {
+            get {
+                object obj = ResourceManager.GetObject("phone", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

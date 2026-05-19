@@ -37,8 +37,12 @@
             customPanel1 = new Car_Rental_System.CustomControls.CustomPanel();
             gradientPanel1 = new GradientPanel();
             customPanel2 = new Car_Rental_System.CustomControls.CustomPanel();
+            pictureBox1 = new PictureBox();
+            label1 = new Label();
             customPanel1.SuspendLayout();
             gradientPanel1.SuspendLayout();
+            customPanel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // monthlyMessagesCard1
@@ -295,8 +299,8 @@
             // customPanel1
             // 
             customPanel1.BackColor = Color.Transparent;
-            customPanel1.BackColorEx = Color.FromArgb(248, 247, 255);
-            customPanel1.BorderColor = Color.Gainsboro;
+            customPanel1.BackColorEx = Color.Transparent;
+            customPanel1.BorderColor = Color.Transparent;
             customPanel1.BorderRadius = 30;
             customPanel1.BorderThickness = 1;
             customPanel1.Controls.Add(gradientPanel1);
@@ -329,19 +333,18 @@
             gradientPanel1.CornerRadiusEx.BottomRight = 22;
             gradientPanel1.CornerRadiusEx.TopLeft = 22;
             gradientPanel1.CornerRadiusEx.TopRight = 22;
-            gradientPanel1.Dock = DockStyle.Fill;
-            gradientPanel1.GradientEndColor = Color.FromArgb(80, 20, 80, 180);
+            gradientPanel1.GradientEndColor = Color.White;
             gradientPanel1.GradientMidColor = Color.Empty;
             gradientPanel1.GradientStartColor = Color.FromArgb(80, 20, 80, 180);
             gradientPanel1.HoverGlowColor = Color.Transparent;
-            gradientPanel1.Location = new Point(0, 0);
+            gradientPanel1.Location = new Point(3, 3);
             gradientPanel1.Name = "gradientPanel1";
             gradientPanel1.Padding = new Padding(6, 6, 6, 8);
             gradientPanel1.ShadowColor = Color.Transparent;
             gradientPanel1.ShowGlassBorder = false;
             gradientPanel1.ShowShadow = false;
             gradientPanel1.ShowShimmer = false;
-            gradientPanel1.Size = new Size(1283, 782);
+            gradientPanel1.Size = new Size(1268, 763);
             gradientPanel1.TabIndex = 7;
             gradientPanel1.UseBlur = true;
             // 
@@ -351,19 +354,47 @@
             customPanel2.BackColorEx = Color.FromArgb(220, 255, 255, 255);
             customPanel2.BorderColor = Color.FromArgb(70, 255, 255, 255);
             customPanel2.BorderThickness = 1;
+            customPanel2.Controls.Add(pictureBox1);
+            customPanel2.Controls.Add(label1);
             customPanel2.CornerRadius.BottomLeft = 15;
             customPanel2.CornerRadius.BottomRight = 15;
             customPanel2.CornerRadius.TopLeft = 15;
             customPanel2.CornerRadius.TopRight = 15;
             customPanel2.Font = new Font("Segoe UI", 10F);
             customPanel2.ForeColor = Color.White;
-            customPanel2.Location = new Point(302, 188);
+            customPanel2.Location = new Point(332, 188);
             customPanel2.Name = "customPanel2";
             customPanel2.ShadowColor = Color.Transparent;
             customPanel2.ShadowSize = 6;
             customPanel2.Size = new Size(632, 353);
             customPanel2.TabIndex = 0;
             customPanel2.UseShadow = true;
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.BackColor = Color.Transparent;
+            pictureBox1.Cursor = Cursors.Hand;
+            pictureBox1.Image = Properties.Resources.information;
+            pictureBox1.Location = new Point(244, 25);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(135, 98);
+            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox1.TabIndex = 13;
+            pictureBox1.TabStop = false;
+            // 
+            // label1
+            // 
+            label1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            label1.AutoSize = true;
+            label1.BackColor = Color.Transparent;
+            label1.Font = new Font("Segoe UI", 20F);
+            label1.ForeColor = Color.Black;
+            label1.Location = new Point(117, 202);
+            label1.Name = "label1";
+            label1.Size = new Size(416, 37);
+            label1.TabIndex = 0;
+            label1.Text = ".الشاشة غير متاحة في الوقت الحالي";
+            label1.TextAlign = ContentAlignment.MiddleRight;
             // 
             // ucMonthlySummary
             // 
@@ -373,6 +404,9 @@
             Size = new Size(1315, 808);
             customPanel1.ResumeLayout(false);
             gradientPanel1.ResumeLayout(false);
+            customPanel2.ResumeLayout(false);
+            customPanel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             // 
         }
@@ -388,5 +422,7 @@
         private Car_Rental_System.CustomControls.CustomPanel customPanel1;
         private GradientPanel gradientPanel1;
         private Car_Rental_System.CustomControls.CustomPanel customPanel2;
+        private Label label1;
+        private PictureBox pictureBox1;
     }
 }

@@ -108,9 +108,7 @@ namespace BChat
                 ucMonthlySummary.Dock = DockStyle.Fill;
                 pnlContent.Controls.Add(ucMonthlySummary);
             }
-            //pnlContent.Controls["MonthlyReports_View"].Visible = true;
-
-            pnlContent.Controls["MonthlyReports_View"].BringToFront();
+            pnlContent.Controls["MonthlyReports_View"].Visible = true;            pnlContent.Controls["MonthlyReports_View"].BringToFront();
 
         }
         private void Customers_Page()

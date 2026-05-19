@@ -27,6 +27,7 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
         private CustomerProfile _customerProfile;
         public ucCustomerInfo()
         {
+
             InitializeComponent();
 
             this.SetStyle(
@@ -36,6 +37,8 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
                 ControlStyles.ResizeRedraw |
                 ControlStyles.SupportsTransparentBackColor, true);
 
+
+            AppEvents.OnCustomerUpdated -= LoadCustomer;
             AppEvents.OnCustomerUpdated += LoadCustomer;
 
 
@@ -46,11 +49,29 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
             SettingIcons();
         }
 
+        private async void ucCustomerInfo_Load(object sender, EventArgs e)
+        {
+            pnlLoading.BringToFront();
+            pnlLoading.Visible = true;
+
+
+            await Task.Run(async () =>
+            {
+                await Task.Delay(2000);
+            });
+
+            if (_customer != null)
+                LoadCustomer(_customer);
+
+            pnlLoading.Visible = false;
+
+
+        }
         public void LoadCustomer(Customer customer)
         {
 
             _customerProfile = CustomerProfileRepository.GetByCusotmerId(customer.Id);
-            
+
             _customer = customer;
             if (_customer == null) return;
 
@@ -159,12 +180,14 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
         {
             _customer.IsBlocked = !_customer.IsBlocked;
             CustomerRepository.Block(_customer);
-            
+
             string msg = _customer.IsBlocked ? "تم حجب العميل ✅" : "تم رفع الحجب ✅";
             MessageBox.Show(msg, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             btnBlock.Text = _customer.IsBlocked ? "رفع الحظر" : "حظر العميل";
 
         }
+
+    
     }
 }

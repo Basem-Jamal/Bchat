@@ -26,6 +26,8 @@ namespace BChat.UserControls
             AppEvents.OnRefreshCustomersTable += LoadCustomers;
             txbSearchCustomer.TextChanged += LoadCustomer;
 
+
+            progressBar1.Visible = false;
         }
 
         private void InitTable()
@@ -196,7 +198,7 @@ namespace BChat.UserControls
 
                     AppCache.GroupMembers.RemoveAll(m => m.CustomerId == id);
                     AppCache.Customers.RemoveAll(c => c.Id == id);
-                    AppCache.ChatMessages.RemoveAll(c => c.Id == id);
+                    AppCache.ChatMessages.RemoveAll(c => c.CustomerId == id);
                     AppEvents.NotifyCustomerDeleted(id);
 
                     foreach (var groupId in oldGroupIds)

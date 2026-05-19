@@ -59,6 +59,10 @@
             btnOrderCount = new BChat.Controls.ModernButton();
             customPanel3 = new Car_Rental_System.CustomControls.CustomPanel();
             btnBack = new BChat.Controls.ModernButton();
+            pnlLoading = new GradientPanel();
+            pnlSmallLoading = new Car_Rental_System.CustomControls.CustomPanel();
+            gifLoading = new PictureBox();
+            lblLoading = new Label();
             customPanel2.SuspendLayout();
             customPanel1.SuspendLayout();
             pnlSidebarProfile.SuspendLayout();
@@ -69,12 +73,15 @@
             customPanel4.SuspendLayout();
             customPanel7.SuspendLayout();
             customPanel5.SuspendLayout();
+            pnlLoading.SuspendLayout();
+            pnlSmallLoading.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)gifLoading).BeginInit();
             SuspendLayout();
             // 
             // customPanel2
             // 
             customPanel2.BackColor = Color.Transparent;
-            customPanel2.BackColorEx = Color.FromArgb(240, 247, 255);
+            customPanel2.BackColorEx = Color.White;
             customPanel2.BorderColor = Color.LightGray;
             customPanel2.BorderRadius = 30;
             customPanel2.BorderThickness = 1;
@@ -85,6 +92,7 @@
             customPanel2.Controls.Add(customPanel5);
             customPanel2.Controls.Add(customPanel3);
             customPanel2.Controls.Add(btnBack);
+            customPanel2.Controls.Add(pnlLoading);
             customPanel2.CornerRadius.BottomLeft = 30;
             customPanel2.CornerRadius.BottomRight = 30;
             customPanel2.CornerRadius.TopLeft = 30;
@@ -190,11 +198,11 @@
             pnlSidebarProfile.CornerRadius.TopRight = 30;
             pnlSidebarProfile.Font = new Font("Segoe UI", 10F);
             pnlSidebarProfile.ForeColor = Color.Black;
-            pnlSidebarProfile.Location = new Point(997, 15);
+            pnlSidebarProfile.Location = new Point(972, 63);
             pnlSidebarProfile.Name = "pnlSidebarProfile";
             pnlSidebarProfile.ShadowColor = Color.FromArgb(80, 0, 0, 0);
             pnlSidebarProfile.ShadowSize = 20;
-            pnlSidebarProfile.Size = new Size(291, 750);
+            pnlSidebarProfile.Size = new Size(316, 750);
             pnlSidebarProfile.TabIndex = 3;
             pnlSidebarProfile.UseShadow = true;
             // 
@@ -344,13 +352,14 @@
             btnCurrentEmail.CustomBackground = Color.FromArgb(13, 255, 255, 255);
             btnCurrentEmail.CustomBackgroundHover = Color.FromArgb(26, 255, 255, 255);
             btnCurrentEmail.CustomForeground = Color.White;
-            btnCurrentEmail.Font = new Font("IBM Plex Sans Arabic", 13F, FontStyle.Bold);
-            btnCurrentEmail.Icon = null;
-            btnCurrentEmail.Image = null;
-            btnCurrentEmail.Location = new Point(24, 342);
+            btnCurrentEmail.Font = new Font("IBM Plex Sans Arabic", 11F, FontStyle.Bold);
+            btnCurrentEmail.Icon = Properties.Resources.gmail;
+            btnCurrentEmail.IconSize = 30;
+            btnCurrentEmail.Image = Properties.Resources.gmail;
+            btnCurrentEmail.Location = new Point(22, 348);
             btnCurrentEmail.Name = "btnCurrentEmail";
             btnCurrentEmail.RightToLeft = RightToLeft.Yes;
-            btnCurrentEmail.Size = new Size(222, 58);
+            btnCurrentEmail.Size = new Size(259, 58);
             btnCurrentEmail.TabIndex = 23;
             btnCurrentEmail.Text = "Email";
             btnCurrentEmail.UseCustomColors = true;
@@ -365,13 +374,14 @@
             btnCurrentPhone.CustomBackground = Color.FromArgb(13, 255, 255, 255);
             btnCurrentPhone.CustomBackgroundHover = Color.FromArgb(26, 255, 255, 255);
             btnCurrentPhone.CustomForeground = Color.White;
-            btnCurrentPhone.Font = new Font("IBM Plex Sans Arabic", 13F, FontStyle.Bold);
-            btnCurrentPhone.Icon = null;
-            btnCurrentPhone.Image = null;
-            btnCurrentPhone.Location = new Point(24, 278);
+            btnCurrentPhone.Font = new Font("IBM Plex Sans Arabic", 11F, FontStyle.Bold);
+            btnCurrentPhone.Icon = Properties.Resources.phone;
+            btnCurrentPhone.IconSize = 30;
+            btnCurrentPhone.Image = Properties.Resources.phone;
+            btnCurrentPhone.Location = new Point(22, 284);
             btnCurrentPhone.Name = "btnCurrentPhone";
             btnCurrentPhone.RightToLeft = RightToLeft.Yes;
-            btnCurrentPhone.Size = new Size(222, 58);
+            btnCurrentPhone.Size = new Size(259, 58);
             btnCurrentPhone.TabIndex = 22;
             btnCurrentPhone.Text = "+966";
             btnCurrentPhone.UseCustomColors = true;
@@ -424,11 +434,11 @@
             customPanel4.CornerRadius.TopRight = 0;
             customPanel4.Font = new Font("Segoe UI", 10F);
             customPanel4.ForeColor = Color.Black;
-            customPanel4.Location = new Point(25, 775);
+            customPanel4.Location = new Point(25, 773);
             customPanel4.Name = "customPanel4";
             customPanel4.ShadowColor = Color.Transparent;
             customPanel4.ShadowSize = 0;
-            customPanel4.Size = new Size(1266, 95);
+            customPanel4.Size = new Size(905, 86);
             customPanel4.TabIndex = 6;
             customPanel4.UseShadow = true;
             // 
@@ -493,7 +503,7 @@
             customPanel7.CornerRadius.TopRight = 30;
             customPanel7.Font = new Font("Segoe UI", 10F);
             customPanel7.ForeColor = Color.Black;
-            customPanel7.Location = new Point(375, 128);
+            customPanel7.Location = new Point(347, 128);
             customPanel7.Name = "customPanel7";
             customPanel7.ShadowColor = Color.Black;
             customPanel7.ShadowSize = 10;
@@ -521,6 +531,7 @@
             // label2
             // 
             label2.AutoSize = true;
+            label2.BackColor = Color.Transparent;
             label2.Font = new Font("IBM Plex Sans Arabic", 13F, FontStyle.Bold);
             label2.Location = new Point(81, 22);
             label2.Name = "label2";
@@ -565,7 +576,7 @@
             customPanel5.CornerRadius.TopRight = 30;
             customPanel5.Font = new Font("Segoe UI", 10F);
             customPanel5.ForeColor = Color.Black;
-            customPanel5.Location = new Point(707, 128);
+            customPanel5.Location = new Point(670, 128);
             customPanel5.Name = "customPanel5";
             customPanel5.ShadowColor = Color.Black;
             customPanel5.ShadowSize = 10;
@@ -638,7 +649,7 @@
             customPanel3.Name = "customPanel3";
             customPanel3.ShadowColor = Color.Black;
             customPanel3.ShadowSize = 20;
-            customPanel3.Size = new Size(969, 424);
+            customPanel3.Size = new Size(908, 424);
             customPanel3.TabIndex = 5;
             customPanel3.UseShadow = true;
             // 
@@ -664,6 +675,77 @@
             btnBack.Variant = BChat.Controls.ButtonVariant.CustomBasem;
             btnBack.Click += btnBack_Click;
             // 
+            // pnlLoading
+            // 
+            pnlLoading.BackColor = Color.Transparent;
+            pnlLoading.Controls.Add(pnlSmallLoading);
+            pnlLoading.CornerRadiusEx.BottomLeft = 22;
+            pnlLoading.CornerRadiusEx.BottomRight = 22;
+            pnlLoading.CornerRadiusEx.TopLeft = 22;
+            pnlLoading.CornerRadiusEx.TopRight = 22;
+            pnlLoading.GradientEndColor = Color.White;
+            pnlLoading.GradientMidColor = Color.Empty;
+            pnlLoading.GradientStartColor = Color.FromArgb(80, 20, 80, 180);
+            pnlLoading.HoverGlowColor = Color.Transparent;
+            pnlLoading.Location = new Point(14, 13);
+            pnlLoading.Name = "pnlLoading";
+            pnlLoading.Padding = new Padding(6, 6, 6, 8);
+            pnlLoading.ShadowColor = Color.Transparent;
+            pnlLoading.ShowGlassBorder = false;
+            pnlLoading.ShowShadow = false;
+            pnlLoading.ShowShimmer = false;
+            pnlLoading.Size = new Size(1283, 857);
+            pnlLoading.TabIndex = 23;
+            pnlLoading.UseBlur = true;
+            // 
+            // pnlSmallLoading
+            // 
+            pnlSmallLoading.BackColor = Color.Transparent;
+            pnlSmallLoading.BackColorEx = Color.White;
+            pnlSmallLoading.BorderColor = Color.FromArgb(70, 255, 255, 255);
+            pnlSmallLoading.BorderThickness = 1;
+            pnlSmallLoading.Controls.Add(gifLoading);
+            pnlSmallLoading.Controls.Add(lblLoading);
+            pnlSmallLoading.CornerRadius.BottomLeft = 15;
+            pnlSmallLoading.CornerRadius.BottomRight = 15;
+            pnlSmallLoading.CornerRadius.TopLeft = 15;
+            pnlSmallLoading.CornerRadius.TopRight = 15;
+            pnlSmallLoading.Font = new Font("Segoe UI", 10F);
+            pnlSmallLoading.ForeColor = Color.White;
+            pnlSmallLoading.Location = new Point(365, 214);
+            pnlSmallLoading.Name = "pnlSmallLoading";
+            pnlSmallLoading.ShadowColor = Color.Transparent;
+            pnlSmallLoading.ShadowSize = 6;
+            pnlSmallLoading.Size = new Size(632, 353);
+            pnlSmallLoading.TabIndex = 0;
+            pnlSmallLoading.UseShadow = true;
+            // 
+            // gifLoading
+            // 
+            gifLoading.BackColor = Color.Transparent;
+            gifLoading.Cursor = Cursors.Hand;
+            gifLoading.Image = Properties.Resources.Gif_Point_Loading;
+            gifLoading.Location = new Point(245, 79);
+            gifLoading.Name = "gifLoading";
+            gifLoading.Size = new Size(135, 98);
+            gifLoading.SizeMode = PictureBoxSizeMode.Zoom;
+            gifLoading.TabIndex = 13;
+            gifLoading.TabStop = false;
+            // 
+            // lblLoading
+            // 
+            lblLoading.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            lblLoading.AutoSize = true;
+            lblLoading.BackColor = Color.Transparent;
+            lblLoading.Font = new Font("Segoe UI", 20F);
+            lblLoading.ForeColor = Color.Black;
+            lblLoading.Location = new Point(197, 200);
+            lblLoading.Name = "lblLoading";
+            lblLoading.Size = new Size(233, 37);
+            lblLoading.TabIndex = 0;
+            lblLoading.Text = "جاري تحميل البيانات";
+            lblLoading.TextAlign = ContentAlignment.MiddleRight;
+            // 
             // ucCustomerInfo
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -672,6 +754,7 @@
             Controls.Add(customPanel2);
             Name = "ucCustomerInfo";
             Size = new Size(1315, 890);
+            Load += ucCustomerInfo_Load;
             customPanel2.ResumeLayout(false);
             customPanel1.ResumeLayout(false);
             customPanel1.PerformLayout();
@@ -688,6 +771,10 @@
             customPanel7.PerformLayout();
             customPanel5.ResumeLayout(false);
             customPanel5.PerformLayout();
+            pnlLoading.ResumeLayout(false);
+            pnlSmallLoading.ResumeLayout(false);
+            pnlSmallLoading.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)gifLoading).EndInit();
             ResumeLayout(false);
         }
 
@@ -724,5 +811,9 @@
         private Controls.IconButton btnIconTotalSpent;
         private Controls.IconButton btnIconCancelledOrders;
         private Controls.IconButton btnIconOrderCount;
+        private GradientPanel pnlLoading;
+        private Car_Rental_System.CustomControls.CustomPanel pnlSmallLoading;
+        private PictureBox gifLoading;
+        private Label lblLoading;
     }
 }

@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pnlContent = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             pictureBox1 = new PictureBox();
             stcdCoustomers = new BChat.Controls.StatCard();
@@ -44,11 +44,11 @@
             // pnlContent
             // 
             pnlContent.BackColor = Color.White;
-            pnlContent.CustomizableEdges = customizableEdges1;
+            pnlContent.CustomizableEdges = customizableEdges5;
             pnlContent.Location = new Point(0, 190);
             pnlContent.Name = "pnlContent";
-            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            pnlContent.Size = new Size(1306, 461);
+            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            pnlContent.Size = new Size(1315, 556);
             pnlContent.TabIndex = 0;
             // 
             // pictureBox1
@@ -69,7 +69,7 @@
             stcdCoustomers.CardColor = Color.White;
             stcdCoustomers.IconBgColor = Color.FromArgb(220, 245, 235);
             stcdCoustomers.IconColor = Color.FromArgb(32, 201, 151);
-            stcdCoustomers.Location = new Point(868, 667);
+            stcdCoustomers.Location = new Point(887, 752);
             stcdCoustomers.Name = "stcdCoustomers";
             stcdCoustomers.ShadowColor = Color.FromArgb(30, 0, 0, 0);
             stcdCoustomers.Size = new Size(425, 135);
@@ -91,12 +91,14 @@
             btnAddCustomer.CustomForeground = Color.White;
             btnAddCustomer.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
             btnAddCustomer.Icon = Properties.Resources.plus;
-            btnAddCustomer.Location = new Point(1068, 50);
+            btnAddCustomer.Image = Properties.Resources.plus;
+            btnAddCustomer.Location = new Point(1085, 37);
             btnAddCustomer.Name = "btnAddCustomer";
             btnAddCustomer.RightToLeft = RightToLeft.Yes;
             btnAddCustomer.Size = new Size(209, 70);
             btnAddCustomer.TabIndex = 11;
             btnAddCustomer.Text = "اضافة عميل";
+            btnAddCustomer.UseCustomColors = true;
             btnAddCustomer.Click += btnAddCustomer_Click;
             // 
             // btnRefreshData
@@ -110,36 +112,43 @@
             btnRefreshData.CustomForeground = Color.White;
             btnRefreshData.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
             btnRefreshData.Icon = Properties.Resources.refersh;
+            btnRefreshData.Image = Properties.Resources.refersh;
             btnRefreshData.Location = new Point(245, 41);
             btnRefreshData.Name = "btnRefreshData";
             btnRefreshData.RightToLeft = RightToLeft.Yes;
             btnRefreshData.Size = new Size(110, 66);
             btnRefreshData.TabIndex = 12;
             btnRefreshData.Text = "تحديث";
+            btnRefreshData.UseCustomColors = true;
             btnRefreshData.Click += btnRefreshData_Click;
             // 
             // btnImportExcel
             // 
             btnImportExcel.BackColor = Color.Transparent;
-            btnImportExcel.BorderColor = Color.FromArgb(200, 196, 214);
+            btnImportExcel.BorderColor = Color.FromArgb(120, 200, 196, 214);
             btnImportExcel.BorderHoverColor = Color.FromArgb(85, 69, 205);
             btnImportExcel.BorderRadius = 20;
-            btnImportExcel.CustomBackground = Color.FromArgb(85, 69, 205);
+            btnImportExcel.BorderStyle = BChat.Controls.ModernBorderStyle.Solid;
+            btnImportExcel.BorderWidth = 0.5F;
+            btnImportExcel.CustomBackground = Color.FromArgb(240, 240, 255);
             btnImportExcel.CustomBackgroundHover = Color.FromArgb(63, 43, 184);
-            btnImportExcel.CustomForeground = Color.White;
+            btnImportExcel.CustomForeground = Color.FromArgb(87, 92, 126);
             btnImportExcel.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
             btnImportExcel.Icon = null;
-            btnImportExcel.Location = new Point(409, 41);
+            btnImportExcel.Image = null;
+            btnImportExcel.Location = new Point(861, 37);
             btnImportExcel.Name = "btnImportExcel";
             btnImportExcel.RightToLeft = RightToLeft.Yes;
-            btnImportExcel.Size = new Size(140, 66);
+            btnImportExcel.Size = new Size(207, 70);
             btnImportExcel.TabIndex = 13;
             btnImportExcel.Text = "رفع ملف عملاء";
+            btnImportExcel.UseCustomColors = true;
+            btnImportExcel.Variant = BChat.Controls.ButtonVariant.Secondary;
             btnImportExcel.Click += btnImportExcel_Click;
             // 
             // progressBar1
             // 
-            progressBar1.Location = new Point(658, 77);
+            progressBar1.Location = new Point(508, 51);
             progressBar1.Name = "progressBar1";
             progressBar1.Size = new Size(284, 43);
             progressBar1.TabIndex = 14;
@@ -154,12 +163,12 @@
             txbSearchCustomer.FocusBorderColor = Color.FromArgb(124, 111, 247);
             txbSearchCustomer.Font = new Font("Microsoft Sans Serif", 10F);
             txbSearchCustomer.LabelText = "";
-            txbSearchCustomer.Location = new Point(802, 134);
+            txbSearchCustomer.Location = new Point(877, 134);
             txbSearchCustomer.MaxLength = 32767;
             txbSearchCustomer.Name = "txbSearchCustomer";
             txbSearchCustomer.PlaceholderText = "ابحث عن عميل";
             txbSearchCustomer.RightToLeft = RightToLeft.Yes;
-            txbSearchCustomer.Size = new Size(446, 50);
+            txbSearchCustomer.Size = new Size(417, 50);
             txbSearchCustomer.TabIndex = 15;
             txbSearchCustomer.TextPadding = 14;
             txbSearchCustomer.UsePasswordChar = false;
@@ -168,7 +177,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.FromArgb(248, 247, 255);
+            BackColor = Color.White;
             Controls.Add(txbSearchCustomer);
             Controls.Add(progressBar1);
             Controls.Add(btnImportExcel);
@@ -178,7 +187,7 @@
             Controls.Add(pictureBox1);
             Controls.Add(pnlContent);
             Name = "CustomersControl";
-            Size = new Size(1315, 808);
+            Size = new Size(1315, 890);
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }

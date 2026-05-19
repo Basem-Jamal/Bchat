@@ -1,18 +1,14 @@
 // =====================================================================
-//  GradientPanel.cs — v13 (Fixed Cascading Between Nested GradientPanels)
+//  GradientPanel.cs — v14 (Performance Optimized)
 //
-//  ✅ إصلاح #1: OnLocationChanged → يمسح الـ Blur Cache عند التحريك
-//  ✅ إصلاح #2: _isPaintingBackground → instance field (مش static) لمنع مشاركة الحالة
-//  ✅ إصلاح #3: DrawSiblingsBehind → يتجاهل نفسه (sib == this)
-//  ✅ إصلاح #4: try/catch في PaintSceneBackground و CaptureSceneBehind
-//  ✅ إصلاح الحواف: PaintSceneBackground بدل GetSolidAncestorColor
-//  ✅ إصلاح بكسل الزوايا: TextureBrush + FillPath بدل SetClip
-//  ✅ Blur احترافي: Downscale → Blur → Upscale + Cache
-//  ✅ Blur يرى الـ Siblings (كنترولات خلفنا)
-//  ✅ Per-corner radius مستقل لكل زاوية
-//  ✅ Alpha / rgba كاملة
-//  ✅ إصلاح #5 (v13): _sceneCaptureActive [ThreadStatic] لمنع الـ Cascading
-//       بين GradientPanels المتداخلة — يمنع translate مضاعف وتشوّه الرسم
+//  🚀 تحسين #1: _sceneBmp Cache — المشهد الخلفي يُرسم مرة واحدة فقط
+//               ويُعاد الاستخدام في كل OnPaint بدل إعادة رسم الأب والأشقاء
+//  🚀 تحسين #2: _shadowBmp Cache — الظل يُحسب مرة واحدة وليس كل فريم
+//               بدلاً من إنشاء 18 GraphicsPath في كل رسمة!
+//  🚀 تحسين #3: _cachedPath Cache — GraphicsPath يُحفظ وليس يُعاد بناؤه
+//  🚀 تحسين #4: Blur من 6 passes → 4 passes (جودة كافية وأسرع بـ 33%)
+//  🚀 تحسين #5: كل الـ Cache يُلغى فقط عند الحاجة الفعلية
+//  ✅ كل الإصلاحات السابقة (v13) محفوظة بالكامل
 // =====================================================================
 
 using System;
@@ -25,7 +21,7 @@ using System.Windows.Forms;
 namespace BChat
 {
     // ══════════════════════════════════════════════════════════════
-    //  CornerRadiusEx — تخصيص كل زاوية بشكل مستقل
+    //  CornerRadiusEx
     // ══════════════════════════════════════════════════════════════
     [TypeConverter(typeof(CornerRadiusExConverter))]
     public class CornerRadiusEx
@@ -36,8 +32,7 @@ namespace BChat
         public int BottomLeft { get; set; }
 
         public CornerRadiusEx() { }
-        public CornerRadiusEx(int all)
-        { TopLeft = TopRight = BottomRight = BottomLeft = all; }
+        public CornerRadiusEx(int all) { TopLeft = TopRight = BottomRight = BottomLeft = all; }
         public CornerRadiusEx(int tl, int tr, int br, int bl)
         { TopLeft = tl; TopRight = tr; BottomRight = br; BottomLeft = bl; }
 
@@ -61,7 +56,6 @@ namespace BChat
                     int.TryParse(parts[2].Trim(), out int br) &&
                     int.TryParse(parts[3].Trim(), out int bl))
                     return new CornerRadiusEx(tl, tr, br, bl);
-
                 if (int.TryParse(s.Trim(), out int all))
                     return new CornerRadiusEx(all);
             }
@@ -118,24 +112,41 @@ namespace BChat
         private bool _useBlur = false;
         private int _blurRadius = 10;
 
-        // ─── Blur Cache ───────────────────────────────────────────
+        // ─── State ────────────────────────────────────────────────
+        private bool _isHovered = false;
+        private bool _isPaintingBackground;
+
+        [ThreadStatic]
+        private static bool _sceneCaptureActive;
+
+        // ══════════════════════════════════════════════════════════
+        //  🚀 PERF: Cached Bitmaps & Path
+        // ══════════════════════════════════════════════════════════
+
+        // Cache للمشهد الخلفي (الأب + الأشقاء) — يغني عن إعادة رسمهم كل فريم
+        private Bitmap? _sceneBmp;
+        private Size _sceneBmpSize = Size.Empty;
+        private Point _sceneBmpLoc = new Point(-99999, -99999);
+
+        // Cache للـ Blur (يبني فوق _sceneBmp)
         private Bitmap? _blurCache;
         private Size _blurCacheSize = Size.Empty;
         private int _blurCacheRadius = -1;
-        private Point _blurCacheLocation = new Point(-99999, -99999);
+        private Point _blurCacheLoc = new Point(-99999, -99999);
 
-        // ─── State ────────────────────────────────────────────────
-        private bool _isHovered = false;
+        // Cache للظل — يُحسب مرة واحدة بدلاً من 18 GraphicsPath كل فريم!
+        private Bitmap? _shadowBmp;
+        private Size _shadowBmpSize = Size.Empty;
+        private int _shadowBmpRadius = -1;
+        private int _shadowBmpOffsetX = int.MinValue;
+        private int _shadowBmpOffsetY = int.MinValue;
+        private Color _shadowBmpColor = Color.Empty;
+        private CornerRadiusEx? _shadowBmpCorner;
 
-        // ─── ✅ FIXED v12: instance field — كل بانل له حالته المستقلة
-        private bool _isPaintingBackground;
-
-        // ─── ✅ NEW v13: [ThreadStatic] — يمنع الـ Cascading بين GradientPanels المتداخلة
-        //     عندما GradientPanel يكون فوق GradientPanel آخر (أب أو أخ)
-        //     بدون هذا الـ Flag، الـ Parent.InvokePaint يستدعي PaintSceneBackground مرة ثانية
-        //     مما يسبب translate مضاعف وتشوّه الرسم بين الأب والأولاد
-        [ThreadStatic]
-        private static bool _sceneCaptureActive;
+        // Cache للـ GraphicsPath — بدلاً من بنائه كل فريم
+        private GraphicsPath? _cachedPath;
+        private Rectangle _cachedPathRect = Rectangle.Empty;
+        private CornerRadiusEx? _cachedPathCorner;
 
         // ─── Win32 ────────────────────────────────────────────────
         private const int WM_NCPAINT = 0x0085;
@@ -188,17 +199,14 @@ namespace BChat
         //  Properties — Gradient
         // ══════════════════════════════════════════════════════════
         [Category("✦ Gradient")]
-        [Description("لون بداية الجراديينت")]
         public Color GradientStartColor
         { get => _gradientStart; set { _gradientStart = value; Invalidate(); } }
 
         [Category("✦ Gradient")]
-        [Description("لون نهاية الجراديينت")]
         public Color GradientEndColor
         { get => _gradientEnd; set { _gradientEnd = value; Invalidate(); } }
 
         [Category("✦ Gradient")]
-        [Description("لون وسط اختياري")]
         public Color GradientMidColor
         { get => _gradientMid; set { _gradientMid = value; Invalidate(); } }
 
@@ -217,7 +225,6 @@ namespace BChat
         // ══════════════════════════════════════════════════════════
         [Category("✦ Corner")]
         [DefaultValue(22)]
-        [Description("يضبط الـ 4 زوايا بنفس القيمة — للتخصيص المستقل استخدم CornerRadiusEx")]
         public int CornerRadius
         {
             get => _cornerRadius;
@@ -225,18 +232,17 @@ namespace BChat
             {
                 _cornerRadius = Math.Max(0, value);
                 _cornerRadiusEx = new CornerRadiusEx(_cornerRadius);
-                InvalidateBlurCache();
+                InvalidateAllCaches();
                 Invalidate();
             }
         }
 
         [Category("✦ Corner")]
-        [Description("تخصيص كل زاوية بشكل مستقل — TopLeft, TopRight, BottomRight, BottomLeft")]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public CornerRadiusEx CornerRadiusEx
         {
             get => _cornerRadiusEx;
-            set { _cornerRadiusEx = value ?? new CornerRadiusEx(0); InvalidateBlurCache(); Invalidate(); }
+            set { _cornerRadiusEx = value ?? new CornerRadiusEx(0); InvalidateAllCaches(); Invalidate(); }
         }
 
         // ══════════════════════════════════════════════════════════
@@ -245,26 +251,26 @@ namespace BChat
         [Category("✦ Shadow")]
         [DefaultValue(true)]
         public bool ShowShadow
-        { get => _showShadow; set { _showShadow = value; UpdatePadding(); Invalidate(); } }
+        { get => _showShadow; set { _showShadow = value; UpdatePadding(); InvalidateShadowCache(); Invalidate(); } }
 
         [Category("✦ Shadow")]
         public Color ShadowColor
-        { get => _shadowColor; set { _shadowColor = value; Invalidate(); } }
+        { get => _shadowColor; set { _shadowColor = value; InvalidateShadowCache(); Invalidate(); } }
 
         [Category("✦ Shadow")]
         [DefaultValue(18)]
         public int ShadowRadius
-        { get => _shadowRadius; set { _shadowRadius = Math.Max(0, value); UpdatePadding(); Invalidate(); } }
+        { get => _shadowRadius; set { _shadowRadius = Math.Max(0, value); UpdatePadding(); InvalidateShadowCache(); Invalidate(); } }
 
         [Category("✦ Shadow")]
         [DefaultValue(0)]
         public int ShadowOffsetX
-        { get => _shadowOffsetX; set { _shadowOffsetX = value; UpdatePadding(); Invalidate(); } }
+        { get => _shadowOffsetX; set { _shadowOffsetX = value; UpdatePadding(); InvalidateShadowCache(); Invalidate(); } }
 
         [Category("✦ Shadow")]
         [DefaultValue(4)]
         public int ShadowOffsetY
-        { get => _shadowOffsetY; set { _shadowOffsetY = value; UpdatePadding(); Invalidate(); } }
+        { get => _shadowOffsetY; set { _shadowOffsetY = value; UpdatePadding(); InvalidateShadowCache(); Invalidate(); } }
 
         [Category("✦ Shadow")]
         [DefaultValue(true)]
@@ -308,13 +314,11 @@ namespace BChat
         // ══════════════════════════════════════════════════════════
         [Category("✦ Glass")]
         [DefaultValue(false)]
-        [Description("تفعيل الـ Blur خلف البانل (Glassmorphism)")]
         public bool UseBlur
-        { get => _useBlur; set { _useBlur = value; InvalidateBlurCache(); Invalidate(); } }
+        { get => _useBlur; set { _useBlur = value; InvalidateAllCaches(); Invalidate(); } }
 
         [Category("✦ Glass")]
         [DefaultValue(10)]
-        [Description("شدة الضبابية: 1 = خفيف  |  40 = كثيف")]
         public int BlurRadius
         { get => _blurRadius; set { _blurRadius = Math.Clamp(value, 1, 40); InvalidateBlurCache(); Invalidate(); } }
 
@@ -324,7 +328,7 @@ namespace BChat
         protected override void OnPaintBackground(PaintEventArgs e) { }
 
         // ══════════════════════════════════════════════════════════
-        //  OnPaint
+        //  OnPaint — محسّن: يستخدم الـ Cache قدر الإمكان
         // ══════════════════════════════════════════════════════════
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -337,138 +341,183 @@ namespace BChat
             var rc = GetCardRect();
             if (rc.Width <= 0 || rc.Height <= 0) { base.OnPaint(e); return; }
 
-            using var path = BuildPath(rc, _cornerRadiusEx);
+            // 🚀 احصل على الـ Path من الـ Cache
+            var path = GetCachedPath(rc, _cornerRadiusEx);
 
-            // ── 1: امسح الكنترول كله بالمشهد الحقيقي خلفنا ────
+            // ── 1: امسح بالـ Scene Cache (يُرسم الأب والأشقاء مرة واحدة فقط)
             PaintSceneBackground(g);
 
-            // ── 2: Blur مضبّب داخل الـ Path فقط ────────────────
+            // ── 2: Blur داخل الـ Path
             if (_useBlur)
                 DrawBlurredBackground(g, path);
 
-            // ── 3: الظل / Glow ───────────────────────────────────
+            // ── 3: الظل / Glow — من الـ Cache
             if (_showShadow)
             {
                 bool isHov = _isHovered && _hoverGlow && !DesignMode;
                 var glowC = isHov ? _hoverGlowColor : _shadowColor;
                 int glowR = isHov ? _hoverGlowRadius : _shadowRadius;
-                PaintShadow(g, rc, glowC, DesignMode ? 4 : glowR);
+                PaintShadowCached(g, rc, glowC, DesignMode ? 4 : glowR, isHov);
             }
 
-            // ── 4: Gradient داخل الـ Path ────────────────────────
+            // ── 4: Gradient داخل الـ Path
             g.SetClip(path);
             PaintGradient(g, rc);
             if (_showShimmer && _shimmerOpacity > 0)
                 PaintShimmer(g, rc);
             g.ResetClip();
 
-            // ── 5: Glass Border ───────────────────────────────────
+            // ── 5: Glass Border
             if (_showGlassBorder && _glassBorderAlpha > 0)
                 using (var pen = new Pen(Color.FromArgb(_glassBorderAlpha, 255, 255, 255), 1.2f))
                     g.DrawPath(pen, path);
 
-            // ── 6: أبناء الكنترول ────────────────────────────────
+            // ── 6: أبناء الكنترول
             base.OnPaint(e);
         }
 
         // ══════════════════════════════════════════════════════════
-        //  Glassmorphism Blur Engine
+        //  🚀 Path Cache — يمنع بناء GraphicsPath في كل فريم
         // ══════════════════════════════════════════════════════════
-        private void DrawBlurredBackground(Graphics g, GraphicsPath clipPath)
+        private GraphicsPath GetCachedPath(Rectangle rc, CornerRadiusEx cr)
         {
-            if (Parent == null) return;
+            bool sameRect = _cachedPathRect == rc;
+            bool sameCr = _cachedPathCorner != null &&
+                            _cachedPathCorner.TopLeft == cr.TopLeft &&
+                            _cachedPathCorner.TopRight == cr.TopRight &&
+                            _cachedPathCorner.BottomRight == cr.BottomRight &&
+                            _cachedPathCorner.BottomLeft == cr.BottomLeft;
 
-            if (_blurCache == null ||
-                _blurCacheSize != Size ||
-                _blurCacheRadius != _blurRadius ||
-                _blurCacheLocation != Location)
-            {
-                _blurCache?.Dispose();
-                _blurCache = BuildBlurredBitmap();
-                _blurCacheSize = Size;
-                _blurCacheRadius = _blurRadius;
-                _blurCacheLocation = Location;
-            }
+            if (_cachedPath != null && sameRect && sameCr)
+                return _cachedPath;
 
-            using var tb = new TextureBrush(_blurCache);
-            g.FillPath(tb, clipPath);
-        }
-
-        private Bitmap BuildBlurredBitmap()
-        {
-            const float scale = 0.25f;
-            int smallW = Math.Max(1, (int)(Width * scale));
-            int smallH = Math.Max(1, (int)(Height * scale));
-
-            using var full = CaptureSceneBehind();
-
-            using var small = new Bitmap(smallW, smallH, PixelFormat.Format32bppArgb);
-            using (var sg = Graphics.FromImage(small))
-            {
-                sg.InterpolationMode = InterpolationMode.Bilinear;
-                sg.DrawImage(full, 0, 0, smallW, smallH);
-            }
-
-            int smallRadius = Math.Max(1, (int)(_blurRadius * scale));
-            using var blurredSmall = GaussianBlur(small, smallRadius);
-
-            var result = new Bitmap(Width, Height, PixelFormat.Format32bppArgb);
-            using (var rg = Graphics.FromImage(result))
-            {
-                rg.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                rg.DrawImage(blurredSmall, 0, 0, Width, Height);
-            }
-            return result;
+            _cachedPath?.Dispose();
+            _cachedPath = BuildPath(rc, cr);
+            _cachedPathRect = rc;
+            _cachedPathCorner = new CornerRadiusEx(cr.TopLeft, cr.TopRight, cr.BottomRight, cr.BottomLeft);
+            return _cachedPath;
         }
 
         // ══════════════════════════════════════════════════════════
-        //  Scene Capture (Parent + Siblings behind us)
+        //  🚀 Shadow Cache — يرسم الظل على Bitmap ويُعيد استخدامه
+        //     بدلاً من 18 GraphicsPath × FillPath كل فريم!
         // ══════════════════════════════════════════════════════════
+        private void PaintShadowCached(Graphics g, Rectangle card, Color clr, int radius, bool isHover)
+        {
+            if (radius <= 0 || clr.A == 0) return;
 
-        /// <summary>
-        /// ✅ FIXED v13: _sceneCaptureActive [ThreadStatic] + instance flag + try/catch
-        /// يرسم المشهد الكامل خلف البانل دون cascading عند التداخل بين GradientPanels
-        /// </summary>
+            // لا نُشغل Cache عند Hover لأن اللون يتغير باستمرار — نرسم مباشرةً (سريع)
+            if (isHover)
+            {
+                PaintShadowDirect(g, card, clr, radius);
+                return;
+            }
+
+            bool sameSize = _shadowBmpSize == Size;
+            bool sameRadius = _shadowBmpRadius == radius;
+            bool sameOffset = _shadowBmpOffsetX == _shadowOffsetX && _shadowBmpOffsetY == _shadowOffsetY;
+            bool sameColor = _shadowBmpColor == clr;
+            bool sameCorner = _shadowBmpCorner != null &&
+                              _shadowBmpCorner.TopLeft == _cornerRadiusEx.TopLeft &&
+                              _shadowBmpCorner.TopRight == _cornerRadiusEx.TopRight &&
+                              _shadowBmpCorner.BottomRight == _cornerRadiusEx.BottomRight &&
+                              _shadowBmpCorner.BottomLeft == _cornerRadiusEx.BottomLeft;
+
+            if (_shadowBmp == null || !sameSize || !sameRadius || !sameOffset || !sameColor || !sameCorner)
+            {
+                _shadowBmp?.Dispose();
+                _shadowBmp = BuildShadowBitmap(card, clr, radius);
+                _shadowBmpSize = Size;
+                _shadowBmpRadius = radius;
+                _shadowBmpOffsetX = _shadowOffsetX;
+                _shadowBmpOffsetY = _shadowOffsetY;
+                _shadowBmpColor = clr;
+                _shadowBmpCorner = new CornerRadiusEx(
+                    _cornerRadiusEx.TopLeft, _cornerRadiusEx.TopRight,
+                    _cornerRadiusEx.BottomRight, _cornerRadiusEx.BottomLeft);
+            }
+
+            g.DrawImage(_shadowBmp, 0, 0);
+        }
+
+        private Bitmap BuildShadowBitmap(Rectangle card, Color clr, int radius)
+        {
+            var bmp = new Bitmap(Width, Height, PixelFormat.Format32bppArgb);
+            using var bg = Graphics.FromImage(bmp);
+            bg.SmoothingMode = SmoothingMode.AntiAlias;
+            PaintShadowDirect(bg, card, clr, radius);
+            return bmp;
+        }
+
+        // الرسم المباشر للظل (مُستخدم لبناء الـ Cache أو عند Hover)
+        private void PaintShadowDirect(Graphics g, Rectangle card, Color clr, int radius)
+        {
+            if (radius <= 0 || clr.A == 0) return;
+            int ox = DesignMode ? 0 : _shadowOffsetX;
+            int oy = DesignMode ? 0 : _shadowOffsetY;
+
+            for (int i = radius; i >= 1; i--)
+            {
+                float t = (float)i / radius;
+                int alpha = (int)(clr.A * (1f - t * t) * 0.75f);
+                if (alpha <= 0) continue;
+
+                var sr = new Rectangle(
+                    card.Left - i + ox, card.Top - i + oy,
+                    card.Width + i * 2, card.Height + i * 2);
+
+                int grow = i;
+                int maxHalf = Math.Min(sr.Width, sr.Height) / 2;
+                var shadowCr = new CornerRadiusEx(
+                    Math.Min(_cornerRadiusEx.TopLeft + grow, maxHalf),
+                    Math.Min(_cornerRadiusEx.TopRight + grow, maxHalf),
+                    Math.Min(_cornerRadiusEx.BottomRight + grow, maxHalf),
+                    Math.Min(_cornerRadiusEx.BottomLeft + grow, maxHalf));
+
+                using var sp = BuildPath(sr, shadowCr);
+                using var sb = new SolidBrush(Color.FromArgb(Math.Min(255, alpha), clr.R, clr.G, clr.B));
+                g.FillPath(sb, sp);
+            }
+        }
+
+        // ══════════════════════════════════════════════════════════
+        //  🚀 Scene Cache — يرسم الأب + الأشقاء مرة واحدة فقط
+        // ══════════════════════════════════════════════════════════
         private void PaintSceneBackground(Graphics g)
         {
             if (Parent == null) return;
-            if (_isPaintingBackground) return;   // منع الـ Recursion داخل نفس الـ Instance
-            if (_sceneCaptureActive) return;   // ✅ منع الـ Cascading بين GradientPanels المتداخلة
+            if (_isPaintingBackground) return;
+            if (_sceneCaptureActive) return;
 
-            _isPaintingBackground = true;
-            _sceneCaptureActive = true;
-            try
-            {
-                var state = g.Save();
-                g.TranslateTransform(-Left, -Top);
+            // تأكد من وجود الـ Cache أو أعد بناءه
+            EnsureSceneCache();
+            if (_sceneBmp == null) return;
 
-                using (var pe = new PaintEventArgs(g, new Rectangle(Left, Top, Width, Height)))
-                {
-                    InvokePaintBackground(Parent, pe);
-                    InvokePaint(Parent, pe);           // ← الآن أي GradientPanel أب لن يستدعي PaintSceneBackground
-                }
-
-                DrawSiblingsBehind(g);
-                g.Restore(state);
-            }
-            catch { /* تجاهل أخطاء الرسم الخلفي */ }
-            finally
-            {
-                _isPaintingBackground = false;
-                _sceneCaptureActive = false;
-            }
+            g.DrawImage(_sceneBmp, 0, 0);
         }
 
-        /// <summary>
-        /// ✅ FIXED v13: _sceneCaptureActive [ThreadStatic] + instance flag + try/catch
-        /// يلتقط المشهد الكامل خلف البانل في Bitmap دون cascading
-        /// </summary>
+        private void EnsureSceneCache()
+        {
+            if (_sceneBmp != null &&
+                _sceneBmpSize == Size &&
+                _sceneBmpLoc == Location) return;
+
+            _sceneBmp?.Dispose();
+            _sceneBmp = CaptureSceneBehind();
+            _sceneBmpSize = Size;
+            _sceneBmpLoc = Location;
+
+            // لما نجدد Scene Cache نجدد Blur Cache كمان لأنه يبني فوقه
+            InvalidateBlurCache();
+        }
+
+        /// <summary>يلتقط المشهد خلف البانل (الأب + الأشقاء) في Bitmap</summary>
         private Bitmap CaptureSceneBehind()
         {
             var bmp = new Bitmap(Width, Height, PixelFormat.Format32bppArgb);
             if (Parent == null) return bmp;
-            if (_isPaintingBackground) return bmp;   // منع الـ Recursion داخل نفس الـ Instance
-            if (_sceneCaptureActive) return bmp;   // ✅ منع الـ Cascading بين GradientPanels المتداخلة
+            if (_isPaintingBackground) return bmp;
+            if (_sceneCaptureActive) return bmp;
 
             _isPaintingBackground = true;
             _sceneCaptureActive = true;
@@ -485,7 +534,7 @@ namespace BChat
 
                 DrawSiblingsBehind(g);
             }
-            catch { /* إذا فشل الـ Capture، ارجع Bitmap فاضي */ }
+            catch { /* إذا فشل الـ Capture ارجع Bitmap فاضي */ }
             finally
             {
                 _isPaintingBackground = false;
@@ -494,20 +543,16 @@ namespace BChat
             return bmp;
         }
 
-        /// <summary>
-        /// ✅ FIXED v12: يتجاهل نفسه (sib == this) — يرسم الكنترولات التي خلفنا في الـ Z-Order
-        /// </summary>
         private void DrawSiblingsBehind(Graphics g)
         {
             if (Parent == null) return;
             int myIndex = Parent.Controls.GetChildIndex(this);
             var myBounds = new Rectangle(Left, Top, Width, Height);
 
-            // index أعلى = خلفي في WinForms
             for (int i = Parent.Controls.Count - 1; i > myIndex; i--)
             {
                 var sib = Parent.Controls[i];
-                if (sib == this) continue;  // ✅ تجاهل نفسك
+                if (sib == this) continue;
                 if (!sib.Visible) continue;
                 if (!sib.Bounds.IntersectsWith(myBounds)) continue;
 
@@ -521,21 +566,129 @@ namespace BChat
         }
 
         // ══════════════════════════════════════════════════════════
-        //  Blur Cache Management
+        //  Glassmorphism Blur Engine (محسّن: 4 passes بدل 6)
         // ══════════════════════════════════════════════════════════
+        private void DrawBlurredBackground(Graphics g, GraphicsPath clipPath)
+        {
+            if (Parent == null) return;
+
+            if (_blurCache == null ||
+                _blurCacheSize != Size ||
+                _blurCacheRadius != _blurRadius ||
+                _blurCacheLoc != Location)
+            {
+                _blurCache?.Dispose();
+                _blurCache = BuildBlurredBitmap();
+                _blurCacheSize = Size;
+                _blurCacheRadius = _blurRadius;
+                _blurCacheLoc = Location;
+            }
+
+            using var tb = new TextureBrush(_blurCache);
+            g.FillPath(tb, clipPath);
+        }
+
+        private Bitmap BuildBlurredBitmap()
+        {
+            const float scale = 0.25f;
+            int smallW = Math.Max(1, (int)(Width * scale));
+            int smallH = Math.Max(1, (int)(Height * scale));
+
+            // 🚀 استخدم _sceneBmp إن وُجد بدلاً من CaptureSceneBehind مرة ثانية
+            Bitmap? full = null;
+            bool ownFull = false;
+            if (_sceneBmp != null && _sceneBmpSize == Size)
+            {
+                full = _sceneBmp;
+            }
+            else
+            {
+                full = CaptureSceneBehind();
+                ownFull = true;
+            }
+
+            try
+            {
+                using var small = new Bitmap(smallW, smallH, PixelFormat.Format32bppArgb);
+                using (var sg = Graphics.FromImage(small))
+                {
+                    sg.InterpolationMode = InterpolationMode.Bilinear;
+                    sg.DrawImage(full, 0, 0, smallW, smallH);
+                }
+
+                int smallRadius = Math.Max(1, (int)(_blurRadius * scale));
+                // 🚀 4 passes بدل 6 — جودة جيدة جداً وأسرع بـ 33%
+                using var blurredSmall = GaussianBlur(small, smallRadius);
+
+                var result = new Bitmap(Width, Height, PixelFormat.Format32bppArgb);
+                using (var rg = Graphics.FromImage(result))
+                {
+                    rg.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    rg.DrawImage(blurredSmall, 0, 0, Width, Height);
+                }
+                return result;
+            }
+            finally
+            {
+                if (ownFull) full?.Dispose();
+            }
+        }
+
+        // ══════════════════════════════════════════════════════════
+        //  Cache Invalidation
+        // ══════════════════════════════════════════════════════════
+        private void InvalidateAllCaches()
+        {
+            InvalidateSceneCache();
+            InvalidateBlurCache();
+            InvalidateShadowCache();
+            InvalidatePathCache();
+        }
+
+        private void InvalidateSceneCache()
+        {
+            _sceneBmp?.Dispose();
+            _sceneBmp = null;
+            _sceneBmpSize = Size.Empty;
+            _sceneBmpLoc = new Point(-99999, -99999);
+        }
+
         private void InvalidateBlurCache()
         {
             _blurCache?.Dispose();
             _blurCache = null;
             _blurCacheSize = Size.Empty;
             _blurCacheRadius = -1;
-            _blurCacheLocation = new Point(-99999, -99999);
+            _blurCacheLoc = new Point(-99999, -99999);
         }
 
+        private void InvalidateShadowCache()
+        {
+            _shadowBmp?.Dispose();
+            _shadowBmp = null;
+            _shadowBmpSize = Size.Empty;
+            _shadowBmpRadius = -1;
+            _shadowBmpOffsetX = int.MinValue;
+            _shadowBmpOffsetY = int.MinValue;
+            _shadowBmpColor = Color.Empty;
+            _shadowBmpCorner = null;
+        }
+
+        private void InvalidatePathCache()
+        {
+            _cachedPath?.Dispose();
+            _cachedPath = null;
+            _cachedPathRect = Rectangle.Empty;
+            _cachedPathCorner = null;
+        }
+
+        // ══════════════════════════════════════════════════════════
+        //  Lifecycle Overrides
+        // ══════════════════════════════════════════════════════════
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
-            InvalidateBlurCache();
+            InvalidateAllCaches();   // الحجم تغير = كل الـ Cache منتهي الصلاحية
             UpdatePadding();
             Invalidate();
         }
@@ -543,6 +696,7 @@ namespace BChat
         protected override void OnLocationChanged(EventArgs e)
         {
             base.OnLocationChanged(e);
+            InvalidateSceneCache();  // الموقع تغير = المشهد الخلفي تغير
             InvalidateBlurCache();
             Invalidate();
         }
@@ -550,18 +704,19 @@ namespace BChat
         protected override void OnParentChanged(EventArgs e)
         {
             base.OnParentChanged(e);
-            InvalidateBlurCache();
+            InvalidateAllCaches();
             Invalidate();
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing) InvalidateBlurCache();
+            if (disposing) InvalidateAllCaches();
             base.Dispose(disposing);
         }
 
         // ══════════════════════════════════════════════════════════
-        //  Gaussian Blur (3 × Box Blur H+V = Gaussian تقريبي سريع)
+        //  🚀 Gaussian Blur — 4 passes (H+V × 2) بدلاً من 6
+        //     جودة مرئية ممتازة مع 33% أداء أفضل
         // ══════════════════════════════════════════════════════════
         private static Bitmap GaussianBlur(Bitmap src, int radius)
         {
@@ -569,9 +724,7 @@ namespace BChat
             Bitmap b = BoxBlurV(a, radius); a.Dispose();
             Bitmap c = BoxBlurH(b, radius); b.Dispose();
             Bitmap d = BoxBlurV(c, radius); c.Dispose();
-            Bitmap e = BoxBlurH(d, radius); d.Dispose();
-            Bitmap f = BoxBlurV(e, radius); e.Dispose();
-            return f;
+            return d;
         }
 
         private static unsafe Bitmap BoxBlurH(Bitmap src, int radius)
@@ -708,40 +861,7 @@ namespace BChat
         }
 
         // ══════════════════════════════════════════════════════════
-        //  Shadow / Glow
-        // ══════════════════════════════════════════════════════════
-        private void PaintShadow(Graphics g, Rectangle card, Color clr, int radius)
-        {
-            if (radius <= 0 || clr.A == 0) return;
-            int ox = DesignMode ? 0 : _shadowOffsetX;
-            int oy = DesignMode ? 0 : _shadowOffsetY;
-
-            for (int i = radius; i >= 1; i--)
-            {
-                float t = (float)i / radius;
-                int alpha = (int)(clr.A * (1f - t * t) * 0.75f);
-                if (alpha <= 0) continue;
-
-                var sr = new Rectangle(
-                    card.Left - i + ox, card.Top - i + oy,
-                    card.Width + i * 2, card.Height + i * 2);
-
-                int grow = i;
-                int maxHalf = Math.Min(sr.Width, sr.Height) / 2;
-                var shadowCr = new CornerRadiusEx(
-                    Math.Min(_cornerRadiusEx.TopLeft + grow, maxHalf),
-                    Math.Min(_cornerRadiusEx.TopRight + grow, maxHalf),
-                    Math.Min(_cornerRadiusEx.BottomRight + grow, maxHalf),
-                    Math.Min(_cornerRadiusEx.BottomLeft + grow, maxHalf));
-
-                using var sp = BuildPath(sr, shadowCr);
-                using var sb = new SolidBrush(Color.FromArgb(Math.Min(255, alpha), clr.R, clr.G, clr.B));
-                g.FillPath(sb, sp);
-            }
-        }
-
-        // ══════════════════════════════════════════════════════════
-        //  GetCardRect
+        //  GetCardRect & UpdatePadding
         // ══════════════════════════════════════════════════════════
         private Rectangle GetCardRect()
         {
@@ -757,9 +877,6 @@ namespace BChat
                 Math.Max(1, Height - t - b - 1));
         }
 
-        // ══════════════════════════════════════════════════════════
-        //  UpdatePadding
-        // ══════════════════════════════════════════════════════════
         private void UpdatePadding()
         {
             int sr = _showShadow ? _shadowRadius : 4;
@@ -819,7 +936,7 @@ namespace BChat
         }
 
         // ══════════════════════════════════════════════════════════
-        //  Path Builder — Per-Corner Radius
+        //  Path Builder
         // ══════════════════════════════════════════════════════════
         private static GraphicsPath BuildPath(Rectangle r, CornerRadiusEx cr)
         {
