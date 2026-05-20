@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pnlContent = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             pictureBox1 = new PictureBox();
             stcdCoustomers = new BChat.Controls.StatCard();
@@ -44,11 +44,11 @@
             // pnlContent
             // 
             pnlContent.BackColor = Color.White;
-            pnlContent.CustomizableEdges = customizableEdges5;
-            pnlContent.Location = new Point(0, 190);
+            pnlContent.CustomizableEdges = customizableEdges1;
+            pnlContent.Location = new Point(6, 190);
             pnlContent.Name = "pnlContent";
-            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges6;
-            pnlContent.Size = new Size(1315, 556);
+            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            pnlContent.Size = new Size(1304, 556);
             pnlContent.TabIndex = 0;
             // 
             // pictureBox1

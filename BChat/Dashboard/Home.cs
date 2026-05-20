@@ -1,253 +1,210 @@
 using BChat.Auth;
 using BChat.Controls;
+using BChat.Custom_Controal.Custom_Bchat.Animated;
 using BChat.Events;
 using BChat.Global;
 using BChat.Menu___Nav.Nav___Marketing;
 using BChat.Menu___Nav.UserControls.Today_s_Summary_Report_UC;
 using BChat.Salla;
 using BChat.UserControls;
-using FontAwesome.Sharp;
-using Guna.UI2.WinForms;
-using ReaLTaiizor.Animate.Parrot;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
-using static Guna.UI2.WinForms.Suite.Descriptions;
 
 namespace BChat
 {
     public partial class Home : Form
     {
+        // ─────────────────────────────────────────────
+        // Window Drag
+        // ─────────────────────────────────────────────
+
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
+
         [DllImport("User32.dll")]
         public static extern bool ReleaseCapture();
-        [DllImport("User32.dll")]
-        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-        private void pnlHeader_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                ReleaseCapture();
-                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
-            }
 
-        }
+        [DllImport("User32.dll")]
+        public static extern int SendMessage(
+            IntPtr hWnd,
+            int Msg,
+            int wParam,
+            int lParam
+        );
+
+        // ─────────────────────────────────────────────
+        // Constructor
+        // ─────────────────────────────────────────────
 
         public Home()
         {
             InitializeComponent();
 
-            this.SetStyle(ControlStyles.OptimizedDoubleBuffer |
-                          ControlStyles.AllPaintingInWmPaint |
-                          ControlStyles.UserPaint, true);
-            this.DoubleBuffered = true;
+            // تحسين الرسم
+            SetStyle(
+                ControlStyles.OptimizedDoubleBuffer |
+                ControlStyles.AllPaintingInWmPaint |
+                ControlStyles.UserPaint,
+                true
+            );
 
+            DoubleBuffered = true;
+
+            // تفعيل DoubleBuffer لـ pnlContent
+            typeof(Panel).InvokeMember(
+                "DoubleBuffered",
+                System.Reflection.BindingFlags.SetProperty |
+                System.Reflection.BindingFlags.Instance |
+                System.Reflection.BindingFlags.NonPublic,
+                null,
+                pnlContent,
+                new object[] { true }
+            );
+
+            // Events
             AppEvents.AppUsers.OnRefershUsers += RefreshUserUI;
 
+            // User Name
             lblUserCurrentName.Text = AppCache.CurrentUser.Name;
+
+            // ─────────────────────────────────────────
+            // Animation Settings
+            // ─────────────────────────────────────────
+            //pnlContent.TransitionType = PageTransitionType.ZoomIn;
+
+            //pnlContent.EasingFunction = EasingType.EaseIn;
+
+            //pnlContent.TransitionDuration = 70;
+
+            //pnlContent.FramesPerSecond = 20;
+
+            //pnlContent.AnimationsEnabled = true;
+
+            //pnlContent.QueueTransitions = true;
         }
 
-        private async void Home_Load(object sender, EventArgs e)
+        // ─────────────────────────────────────────────
+        // Form Load
+        // ─────────────────────────────────────────────
+
+        private void Home_Load(object sender, EventArgs e)
         {
-            MonthlySummaryReport_Page();
+            OpenPage<ucMonthlySummary>(
+                "MonthlyReports_View"
+            );
+
+            btnNavHome.IsActive = true;
         }
+
+        // ─────────────────────────────────────────────
+        // Window Drag
+        // ─────────────────────────────────────────────
+
+        private void pnlHeader_MouseDown(
+            object sender,
+            MouseEventArgs e
+        )
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+
+                SendMessage(
+                    Handle,
+                    WM_NCLBUTTONDOWN,
+                    HT_CAPTION,
+                    0
+                );
+            }
+        }
+
+        // ─────────────────────────────────────────────
+        // User Refresh
+        // ─────────────────────────────────────────────
 
         public void RefreshUserUI()
         {
-            lblUserCurrentName.Text = AppCache.CurrentUser.Name;
+            lblUserCurrentName.Text =
+                AppCache.CurrentUser.Name;
 
             PermissionsInHome();
         }
+
         private void PermissionsInHome()
         {
             MessageBox.Show("تم تحديث الصلاحيات");
         }
 
-        private void btnNavHome_Click(object sender, EventArgs e)
+        // ─────────────────────────────────────────────
+        // Navigation
+        // ─────────────────────────────────────────────
+
+        private void btnNavHome_Click(
+            object sender,
+            EventArgs e
+        )
         {
             ResetButtons();
+
             btnNavHome.IsActive = true;
 
-            // أخفِ كل الكنترولات بدل حذفها
-            foreach (Control c in pnlContent.Controls)
-                c.Visible = false;
-
-
-            MonthlySummaryReport_Page();
+            OpenPage<ucMonthlySummary>(
+                "MonthlyReports_View"
+            );
         }
 
-        private void btnCustomers_Click(object sender, EventArgs e)
+        private void btnCustomers_Click(
+            object sender,
+            EventArgs e
+        )
         {
             ResetButtons();
+
             btnNavCustomers.IsActive = true;
 
-            foreach (Control c in pnlContent.Controls)
-                c.Visible = false;
-
-            Customers_Page();
+            OpenPage<CustomersControl>(
+                "Customers_View"
+            );
         }
-        private void btnMessages_Click(object sender, EventArgs e)
+
+        private void btnMessages_Click(
+            object sender,
+            EventArgs e
+        )
         {
             ResetButtons();
+
             btnNavMessages.IsActive = true;
 
-
-            foreach (Control c in pnlContent.Controls)
-                c.Visible = false;
-
-            Messages_Page();
+            OpenPage<ucMessageControl>(
+                "Messages_View"
+            );
         }
 
-        private void MonthlySummaryReport_Page()
-        {
-         
-            if (!pnlContent.Controls.ContainsKey("MonthlyReports_View"))
-            {
-                ucMonthlySummary ucMonthlySummary = new ucMonthlySummary();
-                ucMonthlySummary.Name = "MonthlyReports_View";
-                ucMonthlySummary.Dock = DockStyle.Fill;
-                pnlContent.Controls.Add(ucMonthlySummary);
-            }
-            pnlContent.Controls["MonthlyReports_View"].Visible = true;            pnlContent.Controls["MonthlyReports_View"].BringToFront();
-
-        }
-        private void Customers_Page()
-        {
-            if (!pnlContent.Controls.ContainsKey("Customers_View"))
-            {
-                CustomersControl customersPage = new CustomersControl();
-                customersPage.Name = "Customers_View";
-                customersPage.Dock = DockStyle.Fill;
-                pnlContent.Controls.Add(customersPage);
-            }
-            pnlContent.Controls["Customers_View"].Visible = true;
-            pnlContent.Controls["Customers_View"].BringToFront();
-
-        }
-
-        private void Messages_Page()
-        {
-            if (!pnlContent.Controls.ContainsKey("Messages_View"))
-            {
-                ucMessageControl messagesPage = new ucMessageControl();
-                messagesPage.Name = "Messages_View";
-                messagesPage.Dock = DockStyle.Fill;
-                pnlContent.Controls.Add(messagesPage);
-            }
-
-            pnlContent.Controls["Messages_View"].Visible = true;
-            pnlContent.Controls["Messages_View"].BringToFront();
-
-        }
-        //private void btnOrders_Click(object sender, EventArgs e)
-        //{
-        //    ResetButtons();
-        //    btnOrders.IconColor = Color.WhiteSmoke;
-
-        //    MessageBox.Show("الصفحة غير متوفرة, ولن تتوفر حتى يتم الربط مع سلة!", "Salla", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-        //    //if (!pnlContent.Controls.ContainsKey("Messages_View"))
-        //    //{
-        //    //    MessagesControl messagesPage = new MessagesControl();
-        //    //    messagesPage.Name = "Messages_View";
-        //    //    messagesPage.Dock = DockStyle.Fill;
-        //    //    pnlContent.Controls.Add(messagesPage);
-        //    //}
-
-        //    //pnlContent.Controls["Messages_View"].BringToFront();
-
-        //}
-
-
-        //private void btnScheduledMessages_Click(object sender, EventArgs e)
-        //{
-        //    ResetButtons();
-        //    //btnScheduledMessages.IconColor = Color.WhiteSmoke;
-
-
-        //    if (!pnlContent.Controls.ContainsKey("ScheduledMessages_View"))
-        //    {
-
-        //        ScheduledControl scheduledPage = new ScheduledControl();
-        //        scheduledPage.Name = "ScheduledMessages_View";
-        //        scheduledPage.Dock = DockStyle.Fill;
-        //        pnlContent.Controls.Add(scheduledPage);
-        //    }
-
-        //    pnlContent.Controls["ScheduledMessages_View"].BringToFront();
-
-        //}
-        //private void btnTemplates_Click(object sender, EventArgs e)
-        //{
-        //    ResetButtons();
-        //    btnTemplates.IconColor = Color.WhiteSmoke;
-
-
-        //    if (!pnlContent.Controls.ContainsKey("Templates_View"))
-        //    {
-        //        ucTemplatesControl templatesPage = new ucTemplatesControl();
-        //        templatesPage.Name = "Templates_View";
-        //        templatesPage.Dock = DockStyle.Fill;
-        //        pnlContent.Controls.Add(templatesPage);
-        //    }
-
-        //    pnlContent.Controls["Templates_View"].BringToFront();
-
-        //}
-        private void ResetButtons()
-        {
-            foreach (Control ctrl in pnlMenuSidebar.Controls)
-            {
-                if (ctrl is BChat.Controls.ModernNavButton btn)
-                {
-
-                    //btn.BaseBackground = Color.FromName("White");
-                    btn.NormalTextColor = Color.White;
-                    btn.IsActive = false;
-                }
-            }
-        }
-
-        private void picClose_Click(object sender, EventArgs e)
-        {
-            FormClosed += (s, e) =>
-            {
-                AppEvents.AppUsers.OnRefershUsers -= RefreshUserUI;
-            };
-
-            this.Close();
-        }
-
-        private void btnSettings_Click(object sender, EventArgs e)
-        {
-            MainForm frm = new MainForm();
-            frm.ShowDialog();
-        }
-
-        private void btnNavCustomerGroups_Click(object sender, EventArgs e)
+        private void btnNavCustomerGroups_Click(
+            object sender,
+            EventArgs e
+        )
         {
             ResetButtons();
+
             btnNavCustomerGroups.IsActive = true;
 
-            foreach (Control c in pnlContent.Controls)
-                c.Visible = false;
-
-
-            if (!pnlContent.Controls.ContainsKey("CustomerGroups_View"))
-            {
-                ucGroupsControl customerGroupsPage = new ucGroupsControl();
-                customerGroupsPage.Name = "CustomerGroups_View";
-                customerGroupsPage.Dock = DockStyle.Fill;
-                pnlContent.Controls.Add(customerGroupsPage);
-            }
-
-            pnlContent.Controls["CustomerGroups_View"].Visible = true;
-            pnlContent.Controls["CustomerGroups_View"].BringToFront();
-
+            OpenPage<ucGroupsControl>(
+                "CustomerGroups_View"
+            );
         }
 
-        private void btnNavMarketingAPI_Click(object sender, EventArgs e)
+        // ─────────────────────────────────────────────
+        // Marketing
+        // ─────────────────────────────────────────────
+
+        private void btnNavMarketingAPI_Click(
+            object sender,
+            EventArgs e
+        )
         {
             ResetButtons();
+
             btnNavMarketingAPI.IsActive = true;
 
             var mainForm = this.FindForm();
@@ -259,30 +216,104 @@ namespace BChat
             marketing.ShowDialog();
 
             overlay.Close(marketing);
-
-
-
-            //if (!pnlContent.Controls.ContainsKey("MarketingAPI_View"))
-            //{
-            //    GroupsControl customerGroupsPage = new GroupsControl();
-            //    customerGroupsPage.Name = "MarketingAPI_View";
-            //    customerGroupsPage.Dock = DockStyle.Fill;
-            //    pnlContent.Controls.Add(customerGroupsPage);
-            //}
-
-            //pnlContent.Controls["MarketingAPI_View"].BringToFront();
         }
 
-        private void btnLogout_Click(object sender, EventArgs e)
+        // ─────────────────────────────────────────────
+        // Open Pages
+        // ─────────────────────────────────────────────
+
+        private void OpenPage<T>(string pageName)
+            where T : Control, new()
+        {
+            if (pnlContent.GetPage(pageName) == null)
+            {
+                var page = new T
+                {
+                    Name = pageName,
+                    Dock = DockStyle.Fill
+                };
+
+                pnlContent.RegisterPage(page);
+            }
+
+            pnlContent.NavigateTo(
+                pnlContent.GetPage(pageName)
+            );
+        }
+
+        // ─────────────────────────────────────────────
+        // Reset Buttons
+        // ─────────────────────────────────────────────
+
+        private void ResetButtons()
+        {
+            foreach (Control ctrl in pnlMenuSidebar.Controls)
+            {
+                if (ctrl is ModernNavButton btn)
+                {
+                    btn.NormalTextColor = Color.White;
+
+                    btn.IsActive = false;
+                }
+            }
+        }
+
+        // ─────────────────────────────────────────────
+        // Close
+        // ─────────────────────────────────────────────
+
+        private void picClose_Click(
+            object sender,
+            EventArgs e
+        )
+        {
+            FormClosed += (s, args) =>
+            {
+                AppEvents.AppUsers.OnRefershUsers
+                    -= RefreshUserUI;
+            };
+
+            Close();
+        }
+
+        // ─────────────────────────────────────────────
+        // Settings
+        // ─────────────────────────────────────────────
+
+        private void btnSettings_Click(
+            object sender,
+            EventArgs e
+        )
+        {
+            MainForm frm = new MainForm();
+
+            frm.ShowDialog();
+        }
+
+        // ─────────────────────────────────────────────
+        // Logout
+        // ─────────────────────────────────────────────
+
+        private void btnLogout_Click(
+            object sender,
+            EventArgs e
+        )
         {
             AppCache.CurrentUser = null;
-            this.Close(); // يرجع للـ Program ويعيد فتح Login
+
+            Close();
         }
 
-        private void btnFormMinimized_Click(object sender, EventArgs e)
-        {
-            this.WindowState = FormWindowState.Minimized;
+        // ─────────────────────────────────────────────
+        // Minimize
+        // ─────────────────────────────────────────────
 
+        private void btnFormMinimized_Click(
+            object sender,
+            EventArgs e
+        )
+        {
+            WindowState = FormWindowState.Minimized;
         }
     }
 }

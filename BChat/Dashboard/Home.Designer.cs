@@ -34,8 +34,6 @@
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges5 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges6 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             pictureBox3 = new PictureBox();
             btnNavMarketingAPI = new BChat.Controls.ModernNavButton();
             btnNavMessages = new BChat.Controls.ModernNavButton();
@@ -45,19 +43,19 @@
             customPanel1 = new Car_Rental_System.CustomControls.CustomPanel();
             pnlMenuSidebar = new GradientPanel();
             pnlName = new Car_Rental_System.CustomControls.CustomPanel();
+            lblUserCurrentName = new Label();
             btnLogout = new BChat.Controls.ModernButton();
             guna2BorderlessForm1 = new Guna.UI2.WinForms.Guna2BorderlessForm(components);
             gradientPanel3 = new GradientPanel();
             picClose = new PictureBox();
             pnlMain = new Car_Rental_System.CustomControls.CustomPanel();
+            pnlContent = new BChat.Custom_Controal.Custom_Bchat.Animated.AnimatedPagePanel();
             pnlTop = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             pnlHeader = new Car_Rental_System.CustomControls.CustomPanel();
             gradientPanel5 = new GradientPanel();
             btnFormMinimized = new PictureBox();
-            pnlContent = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             pnlBottom = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             gradientPanel2 = new GradientPanel();
-            lblUserCurrentName = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
             customPanel1.SuspendLayout();
             pnlMenuSidebar.SuspendLayout();
@@ -331,6 +329,18 @@
             pnlName.TabIndex = 26;
             pnlName.UseShadow = true;
             // 
+            // lblUserCurrentName
+            // 
+            lblUserCurrentName.AutoSize = true;
+            lblUserCurrentName.BackColor = Color.Transparent;
+            lblUserCurrentName.Font = new Font("Segoe UI Semibold", 16F, FontStyle.Bold);
+            lblUserCurrentName.Location = new Point(20, 33);
+            lblUserCurrentName.Name = "lblUserCurrentName";
+            lblUserCurrentName.Size = new Size(187, 30);
+            lblUserCurrentName.TabIndex = 27;
+            lblUserCurrentName.Text = "Customer Service";
+            lblUserCurrentName.TextAlign = ContentAlignment.MiddleCenter;
+            // 
             // btnLogout
             // 
             btnLogout.BackColor = Color.Transparent;
@@ -406,8 +416,8 @@
             pnlMain.BorderColor = Color.Transparent;
             pnlMain.BorderRadius = 1;
             pnlMain.BorderThickness = 1;
-            pnlMain.Controls.Add(pnlTop);
             pnlMain.Controls.Add(pnlContent);
+            pnlMain.Controls.Add(pnlTop);
             pnlMain.Controls.Add(pnlBottom);
             pnlMain.Controls.Add(customPanel1);
             pnlMain.CornerRadius.BottomLeft = 1;
@@ -424,6 +434,19 @@
             pnlMain.Size = new Size(1561, 998);
             pnlMain.TabIndex = 3;
             pnlMain.UseShadow = true;
+            // 
+            // pnlContent
+            // 
+            pnlContent.AnimationsEnabled = true;
+            pnlContent.EasingFunction = Custom_Controal.Custom_Bchat.Animated.EasingType.EaseInOut;
+            pnlContent.FramesPerSecond = 60;
+            pnlContent.Location = new Point(3, 59);
+            pnlContent.Name = "pnlContent";
+            pnlContent.QueueTransitions = true;
+            pnlContent.Size = new Size(1312, 894);
+            pnlContent.TabIndex = 10;
+            pnlContent.TransitionDuration = 50;
+            pnlContent.TransitionType = Custom_Controal.Custom_Bchat.Animated.PageTransitionType.None;
             // 
             // pnlTop
             // 
@@ -503,28 +526,14 @@
             btnFormMinimized.TabStop = false;
             btnFormMinimized.Click += btnFormMinimized_Click;
             // 
-            // pnlContent
-            // 
-            pnlContent.BackColor = Color.Transparent;
-            pnlContent.BorderColor = Color.Gainsboro;
-            pnlContent.BorderRadius = 30;
-            pnlContent.BorderThickness = 1;
-            pnlContent.CustomizableEdges = customizableEdges3;
-            pnlContent.Location = new Point(3, 63);
-            pnlContent.Name = "pnlContent";
-            pnlContent.Quality = 200;
-            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges4;
-            pnlContent.Size = new Size(1315, 890);
-            pnlContent.TabIndex = 0;
-            // 
             // pnlBottom
             // 
             pnlBottom.Controls.Add(gradientPanel2);
-            pnlBottom.CustomizableEdges = customizableEdges5;
+            pnlBottom.CustomizableEdges = customizableEdges3;
             pnlBottom.Dock = DockStyle.Bottom;
             pnlBottom.Location = new Point(0, 959);
             pnlBottom.Name = "pnlBottom";
-            pnlBottom.ShadowDecoration.CustomizableEdges = customizableEdges6;
+            pnlBottom.ShadowDecoration.CustomizableEdges = customizableEdges4;
             pnlBottom.Size = new Size(1321, 39);
             pnlBottom.TabIndex = 9;
             // 
@@ -552,18 +561,6 @@
             gradientPanel2.ShowShimmer = false;
             gradientPanel2.Size = new Size(1097, 47);
             gradientPanel2.TabIndex = 26;
-            // 
-            // lblUserCurrentName
-            // 
-            lblUserCurrentName.AutoSize = true;
-            lblUserCurrentName.BackColor = Color.Transparent;
-            lblUserCurrentName.Font = new Font("Segoe UI Semibold", 16F, FontStyle.Bold);
-            lblUserCurrentName.Location = new Point(20, 33);
-            lblUserCurrentName.Name = "lblUserCurrentName";
-            lblUserCurrentName.Size = new Size(187, 30);
-            lblUserCurrentName.TabIndex = 27;
-            lblUserCurrentName.Text = "Customer Service";
-            lblUserCurrentName.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // Home
             // 
@@ -597,7 +594,6 @@
         private Car_Rental_System.CustomControls.CustomPanel pnlMain;
         private Guna.UI2.WinForms.Guna2CustomGradientPanel pnlBottom;
         private Guna.UI2.WinForms.Guna2CustomGradientPanel pnlTop;
-        private Guna.UI2.WinForms.Guna2CustomGradientPanel pnlContent;
         private Car_Rental_System.CustomControls.CustomPanel customPanel1;
         private PictureBox picClose;
         private Controls.ModernNavButton btnNavCustomerGroups;
@@ -615,5 +611,6 @@
         private Car_Rental_System.CustomControls.CustomPanel pnlHeader;
         private Car_Rental_System.CustomControls.CustomPanel pnlName;
         private Label lblUserCurrentName;
+        private Custom_Controal.Custom_Bchat.Animated.AnimatedPagePanel pnlContent;
     }
 }

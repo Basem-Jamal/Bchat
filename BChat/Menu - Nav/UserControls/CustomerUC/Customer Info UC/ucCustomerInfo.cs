@@ -25,7 +25,7 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
     {
         private Customer _customer;
         private CustomerProfile _customerProfile;
-        public ucCustomerInfo()
+        public ucCustomerInfo(Customer customer = null)
         {
 
             InitializeComponent();
@@ -38,6 +38,8 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
                 ControlStyles.SupportsTransparentBackColor, true);
 
 
+
+            _customer = customer;
             AppEvents.OnCustomerUpdated -= LoadCustomer;
             AppEvents.OnCustomerUpdated += LoadCustomer;
 
@@ -51,17 +53,21 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
 
         private async void ucCustomerInfo_Load(object sender, EventArgs e)
         {
+            if (_customer == null) return;
+
             pnlLoading.BringToFront();
             pnlLoading.Visible = true;
 
 
             await Task.Run(async () =>
             {
-                await Task.Delay(2000);
+                await Task.Delay(1000);
+
+                _customerProfile = CustomerProfileRepository.GetByCusotmerId(_customer.Id);
+
             });
 
-            if (_customer != null)
-                LoadCustomer(_customer);
+            LoadCustomer(_customer);
 
             pnlLoading.Visible = false;
 
@@ -69,11 +75,13 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
         }
         public void LoadCustomer(Customer customer)
         {
+            if (customer == null) return;
 
-            _customerProfile = CustomerProfileRepository.GetByCusotmerId(customer.Id);
+            _customer = customer; // ✅ حدّث الـ state
 
-            _customer = customer;
-            if (_customer == null) return;
+            if (_customerProfile == null || _customerProfile.CustomerId != customer.Id)
+                _customerProfile = CustomerProfileRepository.GetByCusotmerId(customer.Id);
+
 
             //Profile Info
             Profile(_customer);

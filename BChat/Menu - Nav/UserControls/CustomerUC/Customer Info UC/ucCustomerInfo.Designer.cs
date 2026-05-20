@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ucCustomerInfo));
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             customPanel2 = new Car_Rental_System.CustomControls.CustomPanel();
             customPanel1 = new Car_Rental_System.CustomControls.CustomPanel();
             label3 = new Label();
@@ -63,6 +65,7 @@
             pnlSmallLoading = new Car_Rental_System.CustomControls.CustomPanel();
             gifLoading = new PictureBox();
             lblLoading = new Label();
+            pnlContent = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             customPanel2.SuspendLayout();
             customPanel1.SuspendLayout();
             pnlSidebarProfile.SuspendLayout();
@@ -395,6 +398,7 @@
             pnlName.BorderRadius = 1;
             pnlName.BorderThickness = 1;
             pnlName.Controls.Add(lblCurrentCustomerName);
+            pnlName.Controls.Add(pnlContent);
             pnlName.CornerRadius.BottomLeft = 1;
             pnlName.CornerRadius.BottomRight = 1;
             pnlName.CornerRadius.TopLeft = 1;
@@ -687,14 +691,14 @@
             pnlLoading.GradientMidColor = Color.Empty;
             pnlLoading.GradientStartColor = Color.FromArgb(80, 20, 80, 180);
             pnlLoading.HoverGlowColor = Color.Transparent;
-            pnlLoading.Location = new Point(14, 13);
+            pnlLoading.Location = new Point(3, 13);
             pnlLoading.Name = "pnlLoading";
             pnlLoading.Padding = new Padding(6, 6, 6, 8);
             pnlLoading.ShadowColor = Color.Transparent;
             pnlLoading.ShowGlassBorder = false;
             pnlLoading.ShowShadow = false;
             pnlLoading.ShowShimmer = false;
-            pnlLoading.Size = new Size(1283, 857);
+            pnlLoading.Size = new Size(1294, 857);
             pnlLoading.TabIndex = 23;
             pnlLoading.UseBlur = true;
             // 
@@ -745,6 +749,20 @@
             lblLoading.TabIndex = 0;
             lblLoading.Text = "جاري تحميل البيانات";
             lblLoading.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // pnlContent
+            // 
+            pnlContent.BackColor = Color.Transparent;
+            pnlContent.BorderColor = Color.Gainsboro;
+            pnlContent.BorderRadius = 30;
+            pnlContent.BorderThickness = 1;
+            pnlContent.CustomizableEdges = customizableEdges1;
+            pnlContent.Location = new Point(-553, -401);
+            pnlContent.Name = "pnlContent";
+            pnlContent.Quality = 200;
+            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges2;
+            pnlContent.Size = new Size(1315, 890);
+            pnlContent.TabIndex = 23;
             // 
             // ucCustomerInfo
             // 
@@ -815,5 +833,6 @@
         private Car_Rental_System.CustomControls.CustomPanel pnlSmallLoading;
         private PictureBox gifLoading;
         private Label lblLoading;
+        private Guna.UI2.WinForms.Guna2CustomGradientPanel pnlContent;
     }
 }
