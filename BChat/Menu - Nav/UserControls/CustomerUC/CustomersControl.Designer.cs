@@ -86,8 +86,8 @@
             btnAddCustomer.BorderColor = Color.FromArgb(200, 196, 214);
             btnAddCustomer.BorderHoverColor = Color.FromArgb(85, 69, 205);
             btnAddCustomer.BorderRadius = 20;
-            btnAddCustomer.CustomBackground = Color.FromArgb(85, 69, 205);
-            btnAddCustomer.CustomBackgroundHover = Color.FromArgb(63, 43, 184);
+            btnAddCustomer.CustomBackground = Color.DodgerBlue;
+            btnAddCustomer.CustomBackgroundHover = Color.SteelBlue;
             btnAddCustomer.CustomForeground = Color.White;
             btnAddCustomer.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
             btnAddCustomer.Icon = Properties.Resources.plus;
@@ -107,9 +107,9 @@
             btnRefreshData.BorderColor = Color.FromArgb(200, 196, 214);
             btnRefreshData.BorderHoverColor = Color.FromArgb(85, 69, 205);
             btnRefreshData.BorderRadius = 20;
-            btnRefreshData.CustomBackground = Color.FromArgb(85, 69, 205);
-            btnRefreshData.CustomBackgroundHover = Color.FromArgb(63, 43, 184);
-            btnRefreshData.CustomForeground = Color.White;
+            btnRefreshData.CustomBackground = Color.FromArgb(240, 240, 255);
+            btnRefreshData.CustomBackgroundHover = Color.WhiteSmoke;
+            btnRefreshData.CustomForeground = Color.FromArgb(87, 92, 126);
             btnRefreshData.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
             btnRefreshData.Icon = Properties.Resources.refersh;
             btnRefreshData.Image = Properties.Resources.refersh;
@@ -131,7 +131,7 @@
             btnImportExcel.BorderStyle = BChat.Controls.ModernBorderStyle.Solid;
             btnImportExcel.BorderWidth = 0.5F;
             btnImportExcel.CustomBackground = Color.FromArgb(240, 240, 255);
-            btnImportExcel.CustomBackgroundHover = Color.FromArgb(63, 43, 184);
+            btnImportExcel.CustomBackgroundHover = Color.WhiteSmoke;
             btnImportExcel.CustomForeground = Color.FromArgb(87, 92, 126);
             btnImportExcel.Font = new Font("IBM Plex Sans Arabic", 10F, FontStyle.Bold);
             btnImportExcel.Icon = null;

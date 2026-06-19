@@ -1,9 +1,10 @@
 ﻿using BChat.Data.DataStore;
+using BChat.Data.DataStore.CustomerProfile_Repository;
 using BChat.Data.DataStore.Customers_Repository;
 using BChat.Events;
 using BChat.Global;
 using BChat.Models;
-
+using BChat.Models.Customer_Module.CustomerProfiles_Module;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,9 +19,11 @@ namespace BChat.Forms
 {
     public partial class AddCustomerForm : Form
     {
+        private CustomerProfile _profile;
+
         private Customer _customer;
         private CustomerStatus _status;
-        public AddCustomerForm(Customer customer , CustomerStatus status)
+        public AddCustomerForm(Customer customer , CustomerStatus status , CustomerProfile profile = null)
         {
             InitializeComponent();
 
@@ -29,6 +32,7 @@ namespace BChat.Forms
             _customer = customer;
             _status = status;
 
+            _profile = profile;
 
             AppEvents.AppGroups.OnGroupAdded += (group) => groupSelector.LoadGroups(AppCache.Groups, GeneralFunctions.Base64ToImage);
 
@@ -45,6 +49,8 @@ namespace BChat.Forms
             {
                 txbCustomerName.Text = customer.Name;
                 txbCustomerPhone.Text = customer.Phone;
+
+                txbCustomerEmail.Text = _profile.Email;
 
                 var groupIds = AppCache.GetGroupIdsByCustomer(_customer.Id);
                 groupSelector.SetSelectedGroupIds(groupIds);
@@ -64,7 +70,7 @@ namespace BChat.Forms
         {
 
             iconTop.Image = status == CustomerStatus.Add 
-                ? Properties.Resources.add_user 
+                ? Properties.Resources.add_user1 
                 : Properties.Resources.edit_info;
 
             btnAddCustomer.IconChar = status == CustomerStatus.Add 
@@ -104,7 +110,7 @@ namespace BChat.Forms
             if (_customer != null && _status == CustomerStatus.Add)
             {
 
-
+              
                 Customer customer = new Customer()
                 {
                     Name = txbCustomerName.Text,
@@ -117,6 +123,13 @@ namespace BChat.Forms
                     customer.Id = added;
                     AppCache.Customers.Add(customer);
 
+                    _profile = new CustomerProfile()
+                    {
+                        CustomerId = customer.Id,
+                        Email = txbCustomerEmail.Text,
+                    };
+
+                    CustomerProfileRepository.Add(_profile);
 
                     // ← هنا
                     var selectedIds = groupSelector.GetSelectedGroupIds();
@@ -170,8 +183,11 @@ namespace BChat.Forms
                 _customer.Name = txbCustomerName.Text;
                 _customer.Phone = txbCustomerPhone.Text;
 
+                _profile.Email = txbCustomerEmail.Text;
 
                 CustomerRepository.Update(_customer);
+
+                CustomerProfileRepository.Update(_profile);
 
                 var oldGroupIds = AppCache.GetGroupIdsByCustomer(_customer.Id);
 

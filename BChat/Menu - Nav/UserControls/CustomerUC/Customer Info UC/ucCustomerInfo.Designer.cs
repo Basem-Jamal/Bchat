@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ucCustomerInfo));
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             customPanel2 = new Car_Rental_System.CustomControls.CustomPanel();
             customPanel1 = new Car_Rental_System.CustomControls.CustomPanel();
             label3 = new Label();
@@ -48,6 +48,7 @@
             btnCurrentPhone = new BChat.Controls.ModernButton();
             pnlName = new Car_Rental_System.CustomControls.CustomPanel();
             lblCurrentCustomerName = new Label();
+            pnlContent = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             customPanel4 = new Car_Rental_System.CustomControls.CustomPanel();
             btnBlock = new BChat.Controls.ModernButton();
             btnEdit = new BChat.Controls.ModernButton();
@@ -65,7 +66,6 @@
             pnlSmallLoading = new Car_Rental_System.CustomControls.CustomPanel();
             gifLoading = new PictureBox();
             lblLoading = new Label();
-            pnlContent = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
             customPanel2.SuspendLayout();
             customPanel1.SuspendLayout();
             pnlSidebarProfile.SuspendLayout();
@@ -423,6 +423,20 @@
             lblCurrentCustomerName.TabIndex = 22;
             lblCurrentCustomerName.Text = "اسم العميل";
             // 
+            // pnlContent
+            // 
+            pnlContent.BackColor = Color.Transparent;
+            pnlContent.BorderColor = Color.Gainsboro;
+            pnlContent.BorderRadius = 30;
+            pnlContent.BorderThickness = 1;
+            pnlContent.CustomizableEdges = customizableEdges3;
+            pnlContent.Location = new Point(-553, -401);
+            pnlContent.Name = "pnlContent";
+            pnlContent.Quality = 200;
+            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges4;
+            pnlContent.Size = new Size(1315, 890);
+            pnlContent.TabIndex = 23;
+            // 
             // customPanel4
             // 
             customPanel4.BackColor = Color.Transparent;
@@ -459,6 +473,7 @@
             btnBlock.Font = new Font("IBM Plex Sans Arabic", 13F, FontStyle.Bold);
             btnBlock.ForeColor = Color.IndianRed;
             btnBlock.Icon = null;
+            btnBlock.IconSize = 25;
             btnBlock.Image = null;
             btnBlock.Location = new Point(259, 13);
             btnBlock.Name = "btnBlock";
@@ -481,6 +496,7 @@
             btnEdit.Font = new Font("IBM Plex Sans Arabic", 13F, FontStyle.Bold);
             btnEdit.Icon = Properties.Resources.refersh;
             btnEdit.IconChar = FontAwesome.Sharp.IconChar.Edit;
+            btnEdit.IconSize = 25;
             btnEdit.Image = Properties.Resources.refersh;
             btnEdit.Location = new Point(14, 13);
             btnEdit.Name = "btnEdit";
@@ -749,20 +765,6 @@
             lblLoading.TabIndex = 0;
             lblLoading.Text = "جاري تحميل البيانات";
             lblLoading.TextAlign = ContentAlignment.MiddleRight;
-            // 
-            // pnlContent
-            // 
-            pnlContent.BackColor = Color.Transparent;
-            pnlContent.BorderColor = Color.Gainsboro;
-            pnlContent.BorderRadius = 30;
-            pnlContent.BorderThickness = 1;
-            pnlContent.CustomizableEdges = customizableEdges1;
-            pnlContent.Location = new Point(-553, -401);
-            pnlContent.Name = "pnlContent";
-            pnlContent.Quality = 200;
-            pnlContent.ShadowDecoration.CustomizableEdges = customizableEdges2;
-            pnlContent.Size = new Size(1315, 890);
-            pnlContent.TabIndex = 23;
             // 
             // ucCustomerInfo
             // 

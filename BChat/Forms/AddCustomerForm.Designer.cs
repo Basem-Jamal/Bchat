@@ -38,6 +38,8 @@
             iconTop = new PictureBox();
             btnAddCustomer = new BChat.Controls.ModernButton();
             guna2CustomGradientPanel1 = new Guna.UI2.WinForms.Guna2CustomGradientPanel();
+            txbCustomerEmail = new BChat.Controls.ModernTextBox();
+            bigLabel2 = new ReaLTaiizor.Controls.BigLabel();
             lblNotGroupFound = new ReaLTaiizor.Controls.BigLabel();
             bigLabel1 = new ReaLTaiizor.Controls.BigLabel();
             groupSelector = new BChat.Custom_Controal.Custom_Bchat.GroupSelectorPanel();
@@ -73,11 +75,11 @@
             lblCustomerName.BackColor = Color.Transparent;
             lblCustomerName.Font = new Font("Microsoft Sans Serif", 20F);
             lblCustomerName.ForeColor = Color.FromArgb(80, 80, 80);
-            lblCustomerName.Location = new Point(790, 110);
+            lblCustomerName.Location = new Point(818, 33);
             lblCustomerName.Name = "lblCustomerName";
-            lblCustomerName.Size = new Size(107, 31);
+            lblCustomerName.Size = new Size(60, 31);
             lblCustomerName.TabIndex = 2;
-            lblCustomerName.Text = "اسم العميل";
+            lblCustomerName.Text = "الإسم";
             // 
             // lblCustomerPhone
             // 
@@ -85,11 +87,11 @@
             lblCustomerPhone.BackColor = Color.Transparent;
             lblCustomerPhone.Font = new Font("Microsoft Sans Serif", 20F);
             lblCustomerPhone.ForeColor = Color.FromArgb(80, 80, 80);
-            lblCustomerPhone.Location = new Point(791, 271);
+            lblCustomerPhone.Location = new Point(769, 297);
             lblCustomerPhone.Name = "lblCustomerPhone";
-            lblCustomerPhone.Size = new Size(106, 31);
+            lblCustomerPhone.Size = new Size(109, 31);
             lblCustomerPhone.TabIndex = 7;
-            lblCustomerPhone.Text = "رقم العميل";
+            lblCustomerPhone.Text = "رقم الجوال";
             // 
             // iconTop
             // 
@@ -120,13 +122,15 @@
             btnAddCustomer.Name = "btnAddCustomer";
             btnAddCustomer.RightToLeft = RightToLeft.Yes;
             btnAddCustomer.Size = new Size(162, 62);
-            btnAddCustomer.TabIndex = 10;
+            btnAddCustomer.TabIndex = 5;
             btnAddCustomer.Text = "اضافة ";
             btnAddCustomer.UseCustomColors = true;
             btnAddCustomer.Click += btnAddCustomer_Click;
             // 
             // guna2CustomGradientPanel1
             // 
+            guna2CustomGradientPanel1.Controls.Add(txbCustomerEmail);
+            guna2CustomGradientPanel1.Controls.Add(bigLabel2);
             guna2CustomGradientPanel1.Controls.Add(lblNotGroupFound);
             guna2CustomGradientPanel1.Controls.Add(bigLabel1);
             guna2CustomGradientPanel1.Controls.Add(groupSelector);
@@ -142,13 +146,45 @@
             guna2CustomGradientPanel1.Size = new Size(918, 718);
             guna2CustomGradientPanel1.TabIndex = 9;
             // 
+            // txbCustomerEmail
+            // 
+            txbCustomerEmail.BackColor = Color.Transparent;
+            txbCustomerEmail.BackColorEx = Color.White;
+            txbCustomerEmail.BorderColor = Color.FromArgb(220, 215, 250);
+            txbCustomerEmail.BorderRadius = 14;
+            txbCustomerEmail.Direction = BChat.Controls.TextDirection.Auto;
+            txbCustomerEmail.FocusBorderColor = Color.DodgerBlue;
+            txbCustomerEmail.Font = new Font("Microsoft Sans Serif", 12F);
+            txbCustomerEmail.LabelText = "";
+            txbCustomerEmail.Location = new Point(242, 164);
+            txbCustomerEmail.MaxLength = 32767;
+            txbCustomerEmail.Name = "txbCustomerEmail";
+            txbCustomerEmail.PlaceholderText = "";
+            txbCustomerEmail.RightToLeft = RightToLeft.Yes;
+            txbCustomerEmail.Size = new Size(460, 70);
+            txbCustomerEmail.TabIndex = 2;
+            txbCustomerEmail.TextPadding = 14;
+            txbCustomerEmail.UsePasswordChar = false;
+            // 
+            // bigLabel2
+            // 
+            bigLabel2.AutoSize = true;
+            bigLabel2.BackColor = Color.Transparent;
+            bigLabel2.Font = new Font("Microsoft Sans Serif", 20F);
+            bigLabel2.ForeColor = Color.FromArgb(80, 80, 80);
+            bigLabel2.Location = new Point(804, 164);
+            bigLabel2.Name = "bigLabel2";
+            bigLabel2.Size = new Size(74, 31);
+            bigLabel2.TabIndex = 14;
+            bigLabel2.Text = "الإيميل";
+            // 
             // lblNotGroupFound
             // 
             lblNotGroupFound.AutoSize = true;
             lblNotGroupFound.BackColor = Color.IndianRed;
             lblNotGroupFound.Font = new Font("IBM Plex Sans Arabic", 14F);
             lblNotGroupFound.ForeColor = Color.White;
-            lblNotGroupFound.Location = new Point(711, 470);
+            lblNotGroupFound.Location = new Point(707, 492);
             lblNotGroupFound.Name = "lblNotGroupFound";
             lblNotGroupFound.Size = new Size(195, 32);
             lblNotGroupFound.TabIndex = 12;
@@ -161,7 +197,7 @@
             bigLabel1.BackColor = Color.Transparent;
             bigLabel1.Font = new Font("Microsoft Sans Serif", 20F);
             bigLabel1.ForeColor = Color.FromArgb(80, 80, 80);
-            bigLabel1.Location = new Point(715, 421);
+            bigLabel1.Location = new Point(711, 443);
             bigLabel1.Name = "bigLabel1";
             bigLabel1.Size = new Size(182, 31);
             bigLabel1.TabIndex = 11;
@@ -171,11 +207,11 @@
             // 
             groupSelector.AutoScroll = true;
             groupSelector.BackColor = Color.White;
-            groupSelector.Location = new Point(244, 421);
+            groupSelector.Location = new Point(240, 443);
             groupSelector.Name = "groupSelector";
             groupSelector.Padding = new Padding(8);
             groupSelector.Size = new Size(462, 231);
-            groupSelector.TabIndex = 8;
+            groupSelector.TabIndex = 4;
             // 
             // txbCustomerPhone
             // 
@@ -184,16 +220,16 @@
             txbCustomerPhone.BorderColor = Color.FromArgb(220, 215, 250);
             txbCustomerPhone.BorderRadius = 14;
             txbCustomerPhone.Direction = BChat.Controls.TextDirection.Auto;
-            txbCustomerPhone.FocusBorderColor = Color.FromArgb(124, 111, 247);
+            txbCustomerPhone.FocusBorderColor = Color.DodgerBlue;
             txbCustomerPhone.Font = new Font("Microsoft Sans Serif", 12F);
             txbCustomerPhone.LabelText = "";
-            txbCustomerPhone.Location = new Point(249, 271);
+            txbCustomerPhone.Location = new Point(240, 297);
             txbCustomerPhone.MaxLength = 32767;
             txbCustomerPhone.Name = "txbCustomerPhone";
             txbCustomerPhone.PlaceholderText = "";
             txbCustomerPhone.RightToLeft = RightToLeft.Yes;
             txbCustomerPhone.Size = new Size(460, 70);
-            txbCustomerPhone.TabIndex = 2;
+            txbCustomerPhone.TabIndex = 3;
             txbCustomerPhone.TextPadding = 14;
             txbCustomerPhone.UsePasswordChar = false;
             // 
@@ -204,10 +240,10 @@
             txbCustomerName.BorderColor = Color.FromArgb(220, 215, 250);
             txbCustomerName.BorderRadius = 14;
             txbCustomerName.Direction = BChat.Controls.TextDirection.Auto;
-            txbCustomerName.FocusBorderColor = Color.FromArgb(124, 111, 247);
+            txbCustomerName.FocusBorderColor = Color.DodgerBlue;
             txbCustomerName.Font = new Font("Microsoft Sans Serif", 12F);
             txbCustomerName.LabelText = "";
-            txbCustomerName.Location = new Point(247, 110);
+            txbCustomerName.Location = new Point(240, 33);
             txbCustomerName.MaxLength = 32767;
             txbCustomerName.Name = "txbCustomerName";
             txbCustomerName.PlaceholderText = "";
@@ -254,5 +290,6 @@
         private Custom_Controal.Custom_Bchat.GroupSelectorPanel groupSelector;
         private ReaLTaiizor.Controls.BigLabel bigLabel1;
         private ReaLTaiizor.Controls.BigLabel lblNotGroupFound;
+        private Controls.ModernTextBox txbCustomerEmail;
     }
 }

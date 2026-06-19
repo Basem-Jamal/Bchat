@@ -1,10 +1,12 @@
 ﻿using BChat.Controls;
+using BChat.Data.DataStore.CustomerProfile_Repository;
 using BChat.Data.DataStore.Customers_Repository;
 using BChat.Events;
 using BChat.Forms;
 using BChat.Global;
 using BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC;
 using BChat.Models;
+using BChat.Models.Customer_Module.CustomerProfiles_Module;
 using BChat.Services;
 
 namespace BChat.UserControls
@@ -12,8 +14,7 @@ namespace BChat.UserControls
     public partial class CustomersControl : UserControl
     {
         private SlickTable _table;
-
-        public CustomersControl()
+         public CustomersControl()
         {
             InitializeComponent();
             InitTable();
@@ -88,7 +89,14 @@ namespace BChat.UserControls
             //AppCache.Customers = CustomerRepository.GetAll();
             var customers = AppCache.Customers;
 
-            stcdCoustomers.Value = customers.Count.ToString("N0")+"K";
+            if (customers.Count < 1000)
+            {
+                stcdCoustomers.Value = customers.Count.ToString();
+            }
+            else
+            {
+                stcdCoustomers.Value = customers.Count.ToString("N0") + "K";
+            }
 
             var rows = new List<Dictionary<string, object>>();
 
@@ -125,6 +133,8 @@ namespace BChat.UserControls
                 MessageBox.Show("لا يوجد عميل ", "Null Customer", MessageBoxButtons.OK, MessageBoxIcon.Information);
                  return;
             }
+
+
 
             var ucCustomerInfo = new ucCustomerInfo();
             ucCustomerInfo.Name = "CustomerInfo_View";
@@ -168,8 +178,11 @@ namespace BChat.UserControls
             var customer = AppCache.Customers.FirstOrDefault(c => c.Id == id);
             if (customer == null) return;
 
+            
+            // هنا فقط يحتاج نرسله فاضي وهناك راح يتم تهيئته وتعبئته
+            var profile = CustomerProfileRepository.GetByCusotmerId(customer.Id);
 
-            AddCustomerForm updateCustomer = new AddCustomerForm(customer, CustomerStatus.Update);
+            AddCustomerForm updateCustomer = new (customer, CustomerStatus.Update, profile);
             updateCustomer.ShowDialog();
 
             overlay.Close(mainForm);
@@ -194,6 +207,8 @@ namespace BChat.UserControls
 
                 if (deleted)
                 {
+
+
                     var oldGroupIds = AppCache.GetGroupIdsByCustomer(id);
 
                     AppCache.GroupMembers.RemoveAll(m => m.CustomerId == id);

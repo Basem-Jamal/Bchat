@@ -24,7 +24,7 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
     public partial class ucCustomerInfo : UserControl
     {
         private Customer _customer;
-        private CustomerProfile _customerProfile;
+        private CustomerProfile _profile;
         public ucCustomerInfo(Customer customer = null)
         {
 
@@ -63,7 +63,7 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
             {
                 await Task.Delay(1000);
 
-                _customerProfile = CustomerProfileRepository.GetByCusotmerId(_customer.Id);
+                _profile = CustomerProfileRepository.GetByCusotmerId(_customer.Id);
 
             });
 
@@ -79,8 +79,8 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
 
             _customer = customer; // ✅ حدّث الـ state
 
-            if (_customerProfile == null || _customerProfile.CustomerId != customer.Id)
-                _customerProfile = CustomerProfileRepository.GetByCusotmerId(customer.Id);
+            if (_profile == null || _profile.CustomerId != customer.Id)
+                _profile = CustomerProfileRepository.GetByCusotmerId(customer.Id);
 
 
             //Profile Info
@@ -137,7 +137,7 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
 
             lblCurrentCustomerName.Text = customer.Name;
             btnCurrentPhone.Text = customer.Phone;
-            btnCurrentEmail.Text = _customerProfile.Email;
+            btnCurrentEmail.Text = _profile.Email;
 
             var GroupMembers = AppCache.GroupMembers.FirstOrDefault(gm => gm.CustomerId == customer.Id);
 
@@ -148,17 +148,17 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
         private void OrderCount(Customer customer)
         {
 
-            btnOrderCount.Text = _customerProfile?.OrderCount != null ? _customerProfile.OrderCount.ToString() : "0";
+            btnOrderCount.Text = _profile?.OrderCount != null ? _profile.OrderCount.ToString() : "0";
         }
 
         private void CancelledOrders(Customer customer)
         {
-            btnCancelledOrders.Text = _customerProfile?.CancelledOrders != null ? _customerProfile.CancelledOrders.ToString() : "0";
+            btnCancelledOrders.Text = _profile?.CancelledOrders != null ? _profile.CancelledOrders.ToString() : "0";
         }
 
         private void TotalSpent(Customer customer)
         {
-            btnTotalSpent.Text = _customerProfile?.TotalSpent != null ? $"ريـال {_customerProfile.TotalSpent:N2}" : "ريـال " + "0.00";
+            btnTotalSpent.Text = _profile?.TotalSpent != null ? $"ريـال {_profile.TotalSpent:N2}" : "ريـال " + "0.00";
 
         }
         private void modernPanel1_Paint(object sender, PaintEventArgs e)
@@ -178,7 +178,7 @@ namespace BChat.Menu___Nav.UserControls.CustomerUC.Customer_Info_UC
             var overlaye = OverlayPanel.Show(mainForm);
 
 
-            AddCustomerForm customerForm = new AddCustomerForm(_customer, CustomerStatus.Update);
+            AddCustomerForm customerForm = new AddCustomerForm(_customer, CustomerStatus.Update , _profile);
             customerForm.ShowDialog();
 
             overlaye.Close(customerForm);

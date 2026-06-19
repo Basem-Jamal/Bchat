@@ -331,12 +331,12 @@
             // 
             // lblUserCurrentName
             // 
-            lblUserCurrentName.AutoSize = true;
             lblUserCurrentName.BackColor = Color.Transparent;
+            lblUserCurrentName.Dock = DockStyle.Fill;
             lblUserCurrentName.Font = new Font("Segoe UI Semibold", 16F, FontStyle.Bold);
-            lblUserCurrentName.Location = new Point(20, 33);
+            lblUserCurrentName.Location = new Point(0, 0);
             lblUserCurrentName.Name = "lblUserCurrentName";
-            lblUserCurrentName.Size = new Size(187, 30);
+            lblUserCurrentName.Size = new Size(228, 89);
             lblUserCurrentName.TabIndex = 27;
             lblUserCurrentName.Text = "Customer Service";
             lblUserCurrentName.TextAlign = ContentAlignment.MiddleCenter;
@@ -437,12 +437,20 @@
             // 
             // pnlContent
             // 
-            pnlContent.AnimationsEnabled = true;
+            pnlContent.BackColor = Color.Transparent;
+            pnlContent.BackColorEx = Color.FromArgb(40, 255, 255, 255);
+            pnlContent.BorderColor = Color.FromArgb(60, 255, 255, 255);
+            pnlContent.BorderThickness = 1;
+            pnlContent.CornerRadius.BottomLeft = 15;
+            pnlContent.CornerRadius.BottomRight = 15;
+            pnlContent.CornerRadius.TopLeft = 15;
+            pnlContent.CornerRadius.TopRight = 15;
             pnlContent.EasingFunction = Custom_Controal.Custom_Bchat.Animated.EasingType.EaseInOut;
-            pnlContent.FramesPerSecond = 60;
             pnlContent.Location = new Point(3, 59);
             pnlContent.Name = "pnlContent";
             pnlContent.QueueTransitions = true;
+            pnlContent.ShadowColor = Color.Transparent;
+            pnlContent.ShadowSize = 6;
             pnlContent.Size = new Size(1312, 894);
             pnlContent.TabIndex = 10;
             pnlContent.TransitionDuration = 50;
@@ -578,7 +586,6 @@
             customPanel1.ResumeLayout(false);
             pnlMenuSidebar.ResumeLayout(false);
             pnlName.ResumeLayout(false);
-            pnlName.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)picClose).EndInit();
             pnlMain.ResumeLayout(false);
             pnlTop.ResumeLayout(false);

@@ -121,6 +121,8 @@ namespace BChat.Data.DataStore.Customers_Repository
                 {
                     try
                     {
+
+                        //Customer Member in group
                         string queryDeleteMember = "DELETE FROM CustomerGroupMembers WHERE CustomerId = @Id";
                         using (SqlCommand cmd = new SqlCommand(queryDeleteMember, conn, trans))
                         {
@@ -128,6 +130,15 @@ namespace BChat.Data.DataStore.Customers_Repository
                             cmd.ExecuteNonQuery();
                         }
 
+                        //Customer Profile
+                        string queryDeleteProfile = "DELETE FROM CustomerProfiles WHERE CustomerId = @Id";
+                        using (SqlCommand cmd = new SqlCommand(queryDeleteProfile, conn, trans))
+                        {
+                            cmd.Parameters.AddWithValue("@Id", Id);
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        //Customer
                         string queryDeleteCustomer = "DELETE FROM Customers WHERE Id = @Id";
                         using (SqlCommand cmd = new SqlCommand(queryDeleteCustomer, conn, trans))
                         {
@@ -137,6 +148,8 @@ namespace BChat.Data.DataStore.Customers_Repository
                             AppEvents.ChangeRefreshCustomesTable();
                             return result;
                         }
+
+
                     }
                     catch
                     {

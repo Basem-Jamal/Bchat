@@ -20,6 +20,10 @@ namespace BChat.Data
                     "Connection Timeout=30;";
 
 
+        //WaBusinessManagerDB  = للعمل
+
+        //WaBusinessManagerDB_Empty  = فاضية للتجربة
+
 
 
 

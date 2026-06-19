@@ -40,12 +40,12 @@ namespace BChat.Auth
             btnLogin = new BChat.Controls.ModernButton();
             pictureBox1 = new PictureBox();
             txtEmail = new BChat.Controls.ModernTextBox();
-            gradientPanel3 = new GradientPanel();
+            pnlHeader = new GradientPanel();
             gradientPanel1 = new GradientPanel();
             pnlContent = new GradientPanel();
             ((System.ComponentModel.ISupportInitialize)picClose).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-            gradientPanel3.SuspendLayout();
+            pnlHeader.SuspendLayout();
             gradientPanel1.SuspendLayout();
             pnlContent.SuspendLayout();
             SuspendLayout();
@@ -78,7 +78,7 @@ namespace BChat.Auth
             txtPassword.BorderColor = Color.FromArgb(220, 215, 250);
             txtPassword.BorderRadius = 14;
             txtPassword.Direction = BChat.Controls.TextDirection.LTR;
-            txtPassword.FocusBorderColor = Color.FromArgb(124, 111, 247);
+            txtPassword.FocusBorderColor = Color.DodgerBlue;
             txtPassword.Font = new Font("Microsoft Sans Serif", 12F);
             txtPassword.LabelText = "";
             txtPassword.Location = new Point(246, 298);
@@ -119,13 +119,14 @@ namespace BChat.Auth
             // 
             btnLogin.BackColor = Color.Transparent;
             btnLogin.BorderColor = Color.FromArgb(200, 196, 214);
-            btnLogin.BorderHoverColor = Color.FromArgb(85, 69, 205);
+            btnLogin.BorderHoverColor = Color.Transparent;
             btnLogin.BorderRadius = 15;
-            btnLogin.CustomBackground = Color.FromArgb(85, 69, 205);
-            btnLogin.CustomBackgroundHover = Color.FromArgb(63, 43, 184);
+            btnLogin.CustomBackground = Color.Black;
+            btnLogin.CustomBackgroundHover = Color.FromArgb(64, 64, 64);
             btnLogin.CustomForeground = Color.White;
             btnLogin.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
             btnLogin.Icon = (Image)resources.GetObject("btnLogin.Icon");
+            btnLogin.Image = (Image)resources.GetObject("btnLogin.Image");
             btnLogin.Location = new Point(345, 404);
             btnLogin.Name = "btnLogin";
             btnLogin.RightToLeft = RightToLeft.Yes;
@@ -155,7 +156,7 @@ namespace BChat.Auth
             txtEmail.BorderColor = Color.FromArgb(220, 215, 250);
             txtEmail.BorderRadius = 14;
             txtEmail.Direction = BChat.Controls.TextDirection.LTR;
-            txtEmail.FocusBorderColor = Color.FromArgb(124, 111, 247);
+            txtEmail.FocusBorderColor = Color.DodgerBlue;
             txtEmail.Font = new Font("Microsoft Sans Serif", 12F);
             txtEmail.LabelText = "";
             txtEmail.Location = new Point(246, 174);
@@ -168,32 +169,33 @@ namespace BChat.Auth
             txtEmail.TextPadding = 14;
             txtEmail.UsePasswordChar = false;
             // 
-            // gradientPanel3
+            // pnlHeader
             // 
-            gradientPanel3.BackColor = Color.Transparent;
-            gradientPanel3.Controls.Add(picClose);
-            gradientPanel3.CornerRadius = 15;
-            gradientPanel3.CornerRadiusEx.BottomLeft = 15;
-            gradientPanel3.CornerRadiusEx.BottomRight = 15;
-            gradientPanel3.CornerRadiusEx.TopLeft = 15;
-            gradientPanel3.CornerRadiusEx.TopRight = 15;
-            gradientPanel3.GradientEndColor = Color.White;
-            gradientPanel3.GradientMidColor = Color.Violet;
-            gradientPanel3.GradientStartColor = Color.White;
-            gradientPanel3.HoverGlowColor = Color.Transparent;
-            gradientPanel3.HoverGlowRadius = 0;
-            gradientPanel3.Location = new Point(-7, -26);
-            gradientPanel3.Name = "gradientPanel3";
-            gradientPanel3.Padding = new Padding(6);
-            gradientPanel3.ShadowColor = Color.Transparent;
-            gradientPanel3.ShadowOffsetY = 0;
-            gradientPanel3.ShadowRadius = 0;
-            gradientPanel3.ShowGlassBorder = false;
-            gradientPanel3.ShowShadow = false;
-            gradientPanel3.ShowShimmer = false;
-            gradientPanel3.Size = new Size(870, 91);
-            gradientPanel3.TabIndex = 30;
-            gradientPanel3.UseBlur = true;
+            pnlHeader.BackColor = Color.Transparent;
+            pnlHeader.Controls.Add(picClose);
+            pnlHeader.CornerRadius = 15;
+            pnlHeader.CornerRadiusEx.BottomLeft = 15;
+            pnlHeader.CornerRadiusEx.BottomRight = 15;
+            pnlHeader.CornerRadiusEx.TopLeft = 15;
+            pnlHeader.CornerRadiusEx.TopRight = 15;
+            pnlHeader.GradientEndColor = Color.White;
+            pnlHeader.GradientMidColor = Color.Violet;
+            pnlHeader.GradientStartColor = Color.White;
+            pnlHeader.HoverGlowColor = Color.Transparent;
+            pnlHeader.HoverGlowRadius = 0;
+            pnlHeader.Location = new Point(-7, -26);
+            pnlHeader.Name = "pnlHeader";
+            pnlHeader.Padding = new Padding(6);
+            pnlHeader.ShadowColor = Color.Transparent;
+            pnlHeader.ShadowOffsetY = 0;
+            pnlHeader.ShadowRadius = 0;
+            pnlHeader.ShowGlassBorder = false;
+            pnlHeader.ShowShadow = false;
+            pnlHeader.ShowShimmer = false;
+            pnlHeader.Size = new Size(870, 92);
+            pnlHeader.TabIndex = 30;
+            pnlHeader.UseBlur = true;
+            pnlHeader.MouseDown += pnlHeader_MouseDown;
             // 
             // gradientPanel1
             // 
@@ -211,11 +213,11 @@ namespace BChat.Auth
             gradientPanel1.CornerRadiusEx.TopRight = 15;
             gradientPanel1.GlassBorderAlpha = 29;
             gradientPanel1.GradientEndColor = Color.FromArgb(100, 255, 255, 255);
-            gradientPanel1.GradientMidColor = Color.Violet;
+            gradientPanel1.GradientMidColor = Color.Transparent;
             gradientPanel1.GradientStartColor = Color.FromArgb(100, 255, 255, 255);
             gradientPanel1.HoverGlowColor = Color.Transparent;
             gradientPanel1.HoverGlowRadius = 0;
-            gradientPanel1.Location = new Point(33, 65);
+            gradientPanel1.Location = new Point(33, 84);
             gradientPanel1.Name = "gradientPanel1";
             gradientPanel1.Padding = new Padding(6);
             gradientPanel1.ShadowColor = Color.Transparent;
@@ -224,7 +226,7 @@ namespace BChat.Auth
             gradientPanel1.ShimmerOpacity = 0;
             gradientPanel1.ShowShadow = false;
             gradientPanel1.ShowShimmer = false;
-            gradientPanel1.Size = new Size(771, 540);
+            gradientPanel1.Size = new Size(769, 497);
             gradientPanel1.TabIndex = 32;
             gradientPanel1.UseBlur = true;
             // 
@@ -232,15 +234,15 @@ namespace BChat.Auth
             // 
             pnlContent.BackColor = Color.Transparent;
             pnlContent.Controls.Add(gradientPanel1);
-            pnlContent.Controls.Add(gradientPanel3);
+            pnlContent.Controls.Add(pnlHeader);
             pnlContent.CornerRadius = 15;
             pnlContent.CornerRadiusEx.BottomLeft = 15;
             pnlContent.CornerRadiusEx.BottomRight = 15;
             pnlContent.CornerRadiusEx.TopLeft = 15;
             pnlContent.CornerRadiusEx.TopRight = 15;
-            pnlContent.GradientEndColor = Color.Teal;
+            pnlContent.GradientEndColor = Color.DodgerBlue;
             pnlContent.GradientMidColor = Color.Violet;
-            pnlContent.GradientStartColor = Color.FromArgb(85, 69, 205);
+            pnlContent.GradientStartColor = Color.Gainsboro;
             pnlContent.HoverGlowColor = Color.Transparent;
             pnlContent.HoverGlowRadius = 0;
             pnlContent.Location = new Point(-21, -6);
@@ -269,7 +271,7 @@ namespace BChat.Auth
             Text = "Login";
             ((System.ComponentModel.ISupportInitialize)picClose).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
-            gradientPanel3.ResumeLayout(false);
+            pnlHeader.ResumeLayout(false);
             gradientPanel1.ResumeLayout(false);
             gradientPanel1.PerformLayout();
             pnlContent.ResumeLayout(false);
@@ -287,7 +289,7 @@ namespace BChat.Auth
         private Controls.ModernButton btnLogin;
         private PictureBox pictureBox1;
         private GradientPanel gradientPanel1;
-        private GradientPanel gradientPanel3;
+        private GradientPanel pnlHeader;
         private GradientPanel pnlContent;
     }
 }

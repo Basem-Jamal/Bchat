@@ -111,6 +111,8 @@ namespace BChat.Data.DataStore.CustomerProfile_Repository
 
             }
         }
+
+        
         private static CustomerProfile Map(SqlDataReader r) => new()
         {
 

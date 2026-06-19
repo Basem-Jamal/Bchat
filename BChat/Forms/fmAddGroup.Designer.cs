@@ -81,9 +81,15 @@
             // btnAddOrEditCustomerGroups
             // 
             btnAddOrEditCustomerGroups.BackColor = SystemColors.ControlLightLight;
+            btnAddOrEditCustomerGroups.BorderColor = Color.FromArgb(200, 196, 214);
+            btnAddOrEditCustomerGroups.BorderHoverColor = Color.FromArgb(85, 69, 205);
             btnAddOrEditCustomerGroups.BorderRadius = 23;
+            btnAddOrEditCustomerGroups.CustomBackground = Color.FromArgb(85, 69, 205);
+            btnAddOrEditCustomerGroups.CustomBackgroundHover = Color.FromArgb(63, 43, 184);
+            btnAddOrEditCustomerGroups.CustomForeground = Color.White;
             btnAddOrEditCustomerGroups.Font = new Font("IBM Plex Sans Arabic", 12F, FontStyle.Bold);
             btnAddOrEditCustomerGroups.Icon = Properties.Resources.plus;
+            btnAddOrEditCustomerGroups.Image = Properties.Resources.plus;
             btnAddOrEditCustomerGroups.Location = new Point(23, 684);
             btnAddOrEditCustomerGroups.Name = "btnAddOrEditCustomerGroups";
             btnAddOrEditCustomerGroups.RightToLeft = RightToLeft.Yes;
@@ -135,6 +141,7 @@
             btnUplaodFileIcon.ActiveBarFullHeight = true;
             btnUplaodFileIcon.ActiveBarPadding = 0;
             btnUplaodFileIcon.ActiveBarWidth = 4;
+            btnUplaodFileIcon.ActiveIconColor = Color.White;
             btnUplaodFileIcon.ActiveTextColor = Color.White;
             btnUplaodFileIcon.BackColor = Color.Transparent;
             btnUplaodFileIcon.BaseBackground = Color.FromArgb(124, 111, 247);
@@ -143,12 +150,14 @@
             btnUplaodFileIcon.ContentPadding = 12;
             btnUplaodFileIcon.Font = new Font("IBM Plex Sans Arabic", 9.5F, FontStyle.Bold);
             btnUplaodFileIcon.HoverBackground = Color.Transparent;
+            btnUplaodFileIcon.HoverIconColor = Color.White;
             btnUplaodFileIcon.HoverTextColor = Color.White;
             btnUplaodFileIcon.Icon = null;
             btnUplaodFileIcon.IconSize = 20;
             btnUplaodFileIcon.IsActive = false;
             btnUplaodFileIcon.Location = new Point(444, 349);
             btnUplaodFileIcon.Name = "btnUplaodFileIcon";
+            btnUplaodFileIcon.NormalIconColor = Color.White;
             btnUplaodFileIcon.NormalTextColor = Color.White;
             btnUplaodFileIcon.RightToLeft = RightToLeft.Yes;
             btnUplaodFileIcon.Size = new Size(220, 46);
@@ -193,11 +202,12 @@
             // txbGroupDescription
             // 
             txbGroupDescription.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            txbGroupDescription.BackColorEx = Color.FromArgb(237, 235, 255);
+            txbGroupDescription.BackColor = Color.Transparent;
+            txbGroupDescription.BackColorEx = Color.White;
             txbGroupDescription.BorderColor = Color.FromArgb(220, 215, 250);
             txbGroupDescription.BorderRadius = 14;
             txbGroupDescription.Direction = BChat.Controls.TextDirection.Auto;
-            txbGroupDescription.FocusBorderColor = Color.FromArgb(124, 111, 247);
+            txbGroupDescription.FocusBorderColor = Color.DodgerBlue;
             txbGroupDescription.Font = new Font("IBM Plex Sans Arabic", 12F);
             txbGroupDescription.LabelText = "";
             txbGroupDescription.Location = new Point(245, 214);
@@ -213,11 +223,12 @@
             // txbGroupName
             // 
             txbGroupName.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            txbGroupName.BackColorEx = Color.FromArgb(237, 235, 255);
+            txbGroupName.BackColor = Color.Transparent;
+            txbGroupName.BackColorEx = Color.White;
             txbGroupName.BorderColor = Color.FromArgb(220, 215, 250);
             txbGroupName.BorderRadius = 14;
             txbGroupName.Direction = BChat.Controls.TextDirection.Auto;
-            txbGroupName.FocusBorderColor = Color.FromArgb(124, 111, 247);
+            txbGroupName.FocusBorderColor = Color.DodgerBlue;
             txbGroupName.Font = new Font("IBM Plex Sans Arabic", 12F);
             txbGroupName.LabelText = "";
             txbGroupName.Location = new Point(245, 93);

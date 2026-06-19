@@ -55,30 +55,24 @@ namespace BChat
 
             while (true)
             {
-                //using (var login = new Login())
-                //{
-                //    if (login.ShowDialog() != DialogResult.OK)
-                //        break;
-                //}
-
-                string email = "BASEM";
-                string password = "123";
-
-                User? user = UsersRepository.Login(email, password);
-                if (user == null)
+                using (var login = new Login())
                 {
-                    MessageBox.Show("البريد أو كلمة المرور غير صحيحة", "BChat",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
+                    if (login.ShowDialog() != DialogResult.OK)
+                        break;
                 }
 
-                AppCache.CurrentUser = user;
+               
+                using (var home = new Home())
+                {
+                    home.Shown += (s, e) =>
+                    {
+                        AppCache.WhatsAppListener.Start();
+                    };
 
-                var home = new Home();
-                home.Shown += (s, e) => AppCache.WhatsAppListener.Start(); // ← ابدأ بعد تحميل الـ UI
-                Application.Run(home);
-                AppCache.WhatsAppListener.Stop();
+                    Application.Run(home);
 
+                    AppCache.WhatsAppListener.Stop();
+                }
             }
         }
 
