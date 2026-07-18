@@ -68,7 +68,7 @@ namespace BChat.Data.DataStore.Campaigns_Repository
                                        TotalCount = @TotalCount, 
                                        SuccessCount = @SuccessCount,
                                        FailedCount  = @FailedCount,
-                                       Status       = @Status
+                          ر             Status       = @Status
                                 WHERE Id = @Id";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -86,7 +86,7 @@ namespace BChat.Data.DataStore.Campaigns_Repository
             {
                 Id = Convert.ToInt32(r["Id"]),
                 Name = Convert.ToString(r["Name"]),
-                GroupId = Convert.ToInt32(r["GroupId"]),
+                GroupId = r["GroupId"] == DBNull.Value ? 0 : Convert.ToInt32(r["GroupId"]),
                 TemplateId = Convert.ToInt32(r["TemplateId"]),
                 SentAt = Convert.ToDateTime(r["SentAt"]),
                 Status = Enum.Parse<CampaignStatus>(r["Status"].ToString()),

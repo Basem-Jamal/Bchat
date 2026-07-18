@@ -438,8 +438,7 @@ namespace BChat.Controls
             };
         }
 
-        private Color GetFgColor()
-        {
+        private Color GetFgColor() {
             if (_useCustomColors) return _customFg;
 
             return _variant switch

@@ -84,7 +84,7 @@ namespace BChat.Forms
                 .Where(c => groupMemberIds.Contains(c.Id))
                 .Where(c => !recentlySentIds.Contains(c.Id))
                 .Where(c => !c.IsBlocked) // ← استثني المحجوبين
-                .Take(20000)
+                .Take(6000)
                 .ToList();
 
 
