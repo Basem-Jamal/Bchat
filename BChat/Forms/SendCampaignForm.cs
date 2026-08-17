@@ -72,7 +72,7 @@ namespace BChat.Forms
             }
 
             // ── 4. جيب عملاء المجموعة ─────────────────────────
-            int groupId = 5;
+            int groupId = 8;
             var groupMemberIds = AppCache.GroupMembers
                 .Where(m => m.GroupId == groupId)
                 .Select(m => m.CustomerId)

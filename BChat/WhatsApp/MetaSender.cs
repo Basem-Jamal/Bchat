@@ -62,8 +62,11 @@ namespace BChat.WhatsApp
 
                 object templatePayload;
 
-                if (headerType == "VIDEO" && !string.IsNullOrEmpty(mediaId))
+
+                if ((headerType == "VIDEO" || headerType == "IMAGE") && !string.IsNullOrEmpty(mediaId))
                 {
+                    var mediaType = headerType.ToLower(); // ← "video" أو "image" حسب النوع الحقيقي
+
                     // ← Media ID (الأفضل)
                     templatePayload = new
                     {
@@ -73,7 +76,12 @@ namespace BChat.WhatsApp
                         {
                             new { type = "header", parameters = new object[]
                                 {
-                                    new { type = "video", video = new { id = mediaId } }
+                                    new Dictionary<string,object>
+                                    {
+                                          { "type", mediaType },      // ← يتغير حسب النوع
+                                          { mediaType, new { id = mediaId } }  // ← يتغير حسب النوع
+
+                                    }
                                 }
                             }
                         }
